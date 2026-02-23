@@ -64,12 +64,23 @@ function readProjects() {
       continue;
     }
 
-    // Validate required fields
-    const required = ['name', 'description', 'category', 'status'];
-    const missing = required.filter(f => !data[f]);
-    if (missing.length) {
-      console.error(`[generate-projects] Skipping "${slug}" - missing fields: ${missing.join(', ')}`);
-      continue;
+    // Optional fields with sensible defaults
+    const name = data.name || slug;
+    const description = data.description || '';
+    const category = data.category || 'Web App';
+    const status = data.status || 'IN DEVELOPMENT';
+
+    if (!data.name) {
+      console.warn(`[generate-projects] "${slug}" has no name - using folder name.`);
+    }
+    if (!data.description) {
+      console.warn(`[generate-projects] "${slug}" has no description - leaving empty.`);
+    }
+    if (!data.category) {
+      console.warn(`[generate-projects] "${slug}" has no category - defaulting to "Web App".`);
+    }
+    if (!data.status) {
+      console.warn(`[generate-projects] "${slug}" has no status - defaulting to "IN DEVELOPMENT".`);
     }
 
     // Check if card.png exists locally (for local runs). In Actions it always passes.
@@ -81,10 +92,10 @@ function readProjects() {
 
     projects.push({
       slug,
-      name: data.name,
-      description: data.description,
-      category: data.category,           // e.g. "Web App" | "Mobile" | "Dashboard"
-      status: data.status,               // e.g. "COMPLETED" | "IN DEVELOPMENT" | "LIVE DEMO"
+      name,
+      description,
+      category,           // e.g. "Web App" | "Mobile" | "Dashboard"
+      status,             // e.g. "COMPLETED" | "IN DEVELOPMENT" | "LIVE DEMO"
       tech: data.tech || [],             // e.g. ["javascript", "laravel", "tailwindcss"]
       icon: data.icon || 'rocket',       // fallback if no icon
       demo_url: data.demo_url || null,

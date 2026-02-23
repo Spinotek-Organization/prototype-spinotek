@@ -6,24 +6,27 @@
 - [ ] Nama folder bukan salah satu dari: `script`, `asset`, `assets`, `.github`, `dist`, `public`
 
 ### File Wajib
-- [ ] File `index.html` ada di dalam folder proyek
+- [ ] File `project.json` ada di dalam folder proyek
+- [ ] Field `category` terisi (`Web App` / `Mobile` / `Dashboard` / `AI`)
+- [ ] Field `status` terisi (`COMPLETED` / `IN DEVELOPMENT` / `LIVE DEMO`)
+- [ ] Field `added_at` terisi format `YYYY-MM-DD`
 
-### Thumbnail (Disarankan)
+### Thumbnail
 - [ ] File `card.png` ada di dalam folder proyek
 - [ ] Ukuran: 1200 x 630 px (rasio 16:9)
 - [ ] Ukuran file: <= 500 KB
 
 ---
 
-## Metadata Proyek (untuk didaftarkan ke `projects.json`)
+## Metadata Proyek
 
-**Nama Proyek:** <!-- isi -->
+**Nama Proyek (opsional, jika kosong pakai nama folder):** <!-- isi -->
 
 **Kategori:** <!-- Web App / Mobile / Dashboard / AI -->
 
 **Status:** <!-- COMPLETED / IN DEVELOPMENT / LIVE DEMO -->
 
-**Deskripsi Singkat:** <!-- satu-dua kalimat (<= 150 karakter) -->
+**Deskripsi Singkat (opsional):** <!-- satu-dua kalimat (<= 150 karakter) -->
 
 **Tech:** <!-- contoh: javascript, tailwindcss, laravel -->
 
@@ -35,19 +38,17 @@
 
 ---
 
-## Contoh Entry `projects.json`
+## Contoh `project.json`
 ```json
 {
-  "slug": "nama-proyek-kamu",
   "name": "Nama Proyek Kamu",
   "description": "Deskripsi singkat satu-dua kalimat.",
-  "icon": "🚀",
+  "icon": "rocket",
   "category": "Web App",
   "status": "COMPLETED",
   "tech": ["javascript", "tailwindcss"],
   "demo_url": null,
   "repo_url": null,
-  "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/nama-proyek-kamu/card.png",
   "added_at": "2026-02-23"
 }
 ```
