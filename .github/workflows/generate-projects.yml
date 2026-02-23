@@ -1,0 +1,44 @@
+name: Generate projects.json
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '*/project.json'
+      - '*/card.png'
+      - 'script/generate-projects.js'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    name: Aggregate project data
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run generate-projects.js
+        run: node script/generate-projects.js
+
+      - name: Commit and push projects.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add projects.json
+          if git diff --staged --quiet; then
+            echo "projects.json unchanged, nothing to commit."
+          else
+            git commit -m "chore(auto): regenerate projects.json [skip ci]"
+            git push
+          fi
