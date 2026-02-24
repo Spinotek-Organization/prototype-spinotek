@@ -212,8 +212,10 @@
     renderCards();
   }
 
-  // 1. Use static fallback if available (file:// local preview)
-  if (window.PROJECTS_DATA) {
+  const isFileProtocol = window.location.protocol === 'file:';
+
+  // 1. Use static fallback only for file:// local preview
+  if (isFileProtocol && window.PROJECTS_DATA) {
     initWithData(window.PROJECTS_DATA);
   } else {
     // 2. Fetch from projects.json (GitHub Pages / any HTTP server)
@@ -225,6 +227,11 @@
       .then(data => initWithData(data))
       .catch(err => {
         console.error('[portfolio.js] Failed to load projects.json:', err);
+        // If fetch fails on file://, try fallback data if present
+        if (isFileProtocol && window.PROJECTS_DATA) {
+          initWithData(window.PROJECTS_DATA);
+          return;
+        }
         renderError();
       });
   }

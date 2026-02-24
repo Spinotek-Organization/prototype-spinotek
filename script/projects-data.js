@@ -5,6 +5,19 @@
  */
 window.PROJECTS_DATA = [
   {
-
+    "slug": "pandora-wedding-planner",
+    "name": "Pandora Wedding Planner",
+    "description": "Pandora Wedding Planner adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
+    "category": "Web App",
+    "status": "COMPLETED",
+    "tech": [
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "rocket",
+    "demo_url": "https://demo.spinotek.com/pandora-wedding-planner/",
+    "repo_url": null,
+    "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/pandora-wedding-planner/card.png",
+    "added_at": "2026-02-23"
   }
 ];
