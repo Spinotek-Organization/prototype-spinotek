@@ -56,11 +56,27 @@
     return `<i class="${cls} proto-tech-icon" title="${slug}"></i>`;
   }
 
+  function isImageRef(value) {
+    if (typeof value !== 'string') return false;
+    const v = value.trim();
+    if (!v) return false;
+    return /^data:image\//i.test(v)
+      || /^(https?:)?\/\//i.test(v)
+      || /\.(png|jpe?g|webp|svg|gif)$/i.test(v)
+      || v.startsWith('/') || v.startsWith('./');
+  }
+
   /** Build one card HTML string */
   function buildCard(project) {
     const statusCls = STATUS_STYLES[project.status] || STATUS_DEFAULT;
     const techHtml = (project.tech || []).slice(0, 5).map(techIcon).join('');
     const displayName = project.name || project.slug || 'Prototype';
+    const fallbackIcon = '';
+    const rawIcon = project.icon || fallbackIcon;
+    const iconHtml = isImageRef(rawIcon)
+      ? `<img src="${rawIcon}" alt="" class="proto-icon-img" loading="lazy"
+           onerror="this.remove(); this.parentElement.textContent='${fallbackIcon}';">`
+      : rawIcon;
 
     const demoBtn = project.demo_url
       ? `<a href="${project.demo_url}" target="_blank" rel="noopener"
@@ -99,7 +115,7 @@
       <div class="proto-card-body">
         <!-- Icon box + Status badge -->
         <div class="proto-card-header">
-          <div class="proto-icon-box">${project.icon || '🚀'}</div>
+          <div class="proto-icon-box">${iconHtml}</div>
           <span class="proto-badge ${statusCls}">${project.status}</span>
         </div>
 
