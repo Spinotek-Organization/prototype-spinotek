@@ -36,6 +36,10 @@
   /** Build a tech icon span using Devicons class names */
   function techIcon(slug) {
     const map = {
+      html: 'devicon-html5-plain colored',
+      html5: 'devicon-html5-plain colored',
+      css: 'devicon-css3-plain colored',
+      css3: 'devicon-css3-plain colored',
       javascript: 'devicon-javascript-plain colored',
       typescript: 'devicon-typescript-plain colored',
       tailwindcss: 'devicon-tailwindcss-plain colored',
