@@ -1,0 +1,14 @@
+{
+    "name": "LPK Talenta",
+    "description": "LPK Talenta adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
+    "icon": "rocket",
+    "category": "Web App",
+    "status": "COMPLETED",
+    "tech": [
+        "javascript",
+        "tailwindcss"
+    ],
+    "demo_url": "https://demo.spinotek.com/lpk-talenta",
+    "repo_url": null,
+    "added_at": "2026-02-23"
+}
