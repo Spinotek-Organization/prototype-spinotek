@@ -119,7 +119,7 @@
       <div class="proto-card-body">
         <!-- Icon box + Status badge -->
         <div class="proto-card-header">
-          <div class="proto-icon-box">${iconHtml}</div>
+          <div class="proto-icon-box"> </div> 
           <span class="proto-badge ${statusCls}">${project.status}</span>
         </div>
 
