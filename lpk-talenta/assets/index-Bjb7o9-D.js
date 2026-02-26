@@ -1,4 +1,5 @@
-(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const s of document.querySelectorAll('link[rel="modulepreload"]'))n(s);new MutationObserver(s=>{for(const r of s)if(r.type==="childList")for(const t of r.addedNodes)t.tagName==="LINK"&&t.rel==="modulepreload"&&n(t)}).observe(document,{childList:!0,subtree:!0});function i(s){const r={};return s.integrity&&(r.integrity=s.integrity),s.referrerPolicy&&(r.referrerPolicy=s.referrerPolicy),s.crossOrigin==="use-credentials"?r.credentials="include":s.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function n(s){if(s.ep)return;s.ep=!0;const r=i(s);fetch(s.href,r)}})();function l(){const a=document.getElementById("navbar-container");a.innerHTML=`
+(function () { const e = document.createElement("link").relList; if (e && e.supports && e.supports("modulepreload")) return; for (const s of document.querySelectorAll('link[rel="modulepreload"]')) n(s); new MutationObserver(s => { for (const r of s) if (r.type === "childList") for (const t of r.addedNodes) t.tagName === "LINK" && t.rel === "modulepreload" && n(t) }).observe(document, { childList: !0, subtree: !0 }); function i(s) { const r = {}; return s.integrity && (r.integrity = s.integrity), s.referrerPolicy && (r.referrerPolicy = s.referrerPolicy), s.crossOrigin === "use-credentials" ? r.credentials = "include" : s.crossOrigin === "anonymous" ? r.credentials = "omit" : r.credentials = "same-origin", r } function n(s) { if (s.ep) return; s.ep = !0; const r = i(s); fetch(s.href, r) } })(); function l() {
+    const a = document.getElementById("navbar-container"); a.innerHTML = `
         <div class="nav-wrapper glass">
             <nav class="navbar">
                 <a href="#" class="logo">
@@ -58,7 +59,8 @@
                 </div>
             </nav>
         </div>
-    `}function d(){const a=document.getElementById("hero-section"),e="https://www.smadwiwarna.sch.id/wp-content/uploads/2023/02/model-pembelajaran-interaktif-768x509.jpg";a.innerHTML=`
+    `} function d() {
+    const a = document.getElementById("hero-section"), e = "https://www.smadwiwarna.sch.id/wp-content/uploads/2023/02/model-pembelajaran-interaktif-768x509.jpg"; a.innerHTML = `
         <div class="hero">
             <div class="container hero-container">
                 <div class="hero-content reveal">
@@ -96,7 +98,8 @@
                 </div>
             </div>
         </div>
-    `}function c(){const a=document.getElementById("about-section");a.innerHTML=`
+    `} function c() {
+    const a = document.getElementById("about-section"); a.innerHTML = `
         <div class="about">
             <div class="container">
                 <div class="about-grid">
@@ -123,7 +126,8 @@
                 </div>
             </div>
         </div>
-    `}const o="/assets/administrasi-keuangan-Bb6M6vcd.png",m="/assets/administrasi-perkantoran-VxDrxFso.png",p="/assets/aplikasi-perkantoran-BYg1AkYF.png",v="/assets/pelayanan-pelanggan-BW9NpFJ3.png",u="/assets/service-excellence-pelayanan-prima-CJxyxn-S.png",g="/assets/sumber-daya-manusia-sdm-Bed68WHa.png",h="/assets/training-of-trainer-C1SoSZGd.png";function k(){const a=document.getElementById("programs-section");a.innerHTML=`
+    `} const o = "/lpk-talenta/assets/administrasi-keuangan-Bb6M6vcd.png", m = "/lpk-talenta/assets/administrasi-perkantoran-VxDrxFso.png", p = "/lpk-talenta/assets/aplikasi-perkantoran-BYg1AkYF.png", v = "/lpk-talenta/assets/pelayanan-pelanggan-BW9NpFJ3.png", u = "/lpk-talenta/assets/service-excellence-pelayanan-prima-CJxyxn-S.png", g = "/lpk-talenta/assets/sumber-daya-manusia-sdm-Bed68WHa.png", h = "/lpk-talenta/assets/training-of-trainer-C1SoSZGd.png"; function k() {
+    const a = document.getElementById("programs-section"); a.innerHTML = `
         <div class="programs">
             <div class="container">
                 <span class="section-subtitle">Keunggulan Kami</span>
@@ -195,7 +199,8 @@
                 </div>
             </div>
         </div>
-    `}function f(){const a=document.getElementById("testimonial-section"),i=[{initials:"AD",name:"Alex Danvers",role:"Software Engineer di TechCorp",quote:"Talenta Academy mengubah jalur karir saya. Para mentor sangat mendukung dan kurikulumnya sangat tepat sasaran."},{initials:"SK",name:"Sarah Kim",role:"UX Designer di CreativeHub",quote:"Proyek langsung membantu saya membangun portofolio yang membuat saya mendapatkan pekerjaan desain pertama saya dalam beberapa bulan setelah lulus."},{initials:"BP",name:"Budi Pratama",role:"Fullstack Developer di StartupGo",quote:"Belajar di sini bukan cuma soal teori, tapi benar-benar praktek industri. Saya sekarang jauh lebih percaya diri saat interview."},{initials:"DN",name:"Dewi Novita",role:"Data Analyst di FinTech Solution",quote:"Networking yang saya dapatkan di Talenta Academy sangat luar biasa. Saya bertemu banyak rekan profesional yang sangat inspiratif."},{initials:"RS",name:"Rizky Syahputra",role:"Mobile Developer di TechIndo",quote:"Kurikulum IT-nya sangat update. Tidak hanya diajarkan coding, tapi juga problem solving yang sangat dibutuhkan di industri saat ini."},{initials:"AL",name:"Amanda Lestari",role:"Product Manager di E-Commerce X",quote:"Bimbingan karir dan persiapan berkas kerja di sini benar-benar membantu saya mendapatkan pekerjaan kurang dari sebulan."}].map(n=>`
+    `} function f() {
+    const a = document.getElementById("testimonial-section"), i = [{ initials: "AD", name: "Alex Danvers", role: "Software Engineer di TechCorp", quote: "Talenta Academy mengubah jalur karir saya. Para mentor sangat mendukung dan kurikulumnya sangat tepat sasaran." }, { initials: "SK", name: "Sarah Kim", role: "UX Designer di CreativeHub", quote: "Proyek langsung membantu saya membangun portofolio yang membuat saya mendapatkan pekerjaan desain pertama saya dalam beberapa bulan setelah lulus." }, { initials: "BP", name: "Budi Pratama", role: "Fullstack Developer di StartupGo", quote: "Belajar di sini bukan cuma soal teori, tapi benar-benar praktek industri. Saya sekarang jauh lebih percaya diri saat interview." }, { initials: "DN", name: "Dewi Novita", role: "Data Analyst di FinTech Solution", quote: "Networking yang saya dapatkan di Talenta Academy sangat luar biasa. Saya bertemu banyak rekan profesional yang sangat inspiratif." }, { initials: "RS", name: "Rizky Syahputra", role: "Mobile Developer di TechIndo", quote: "Kurikulum IT-nya sangat update. Tidak hanya diajarkan coding, tapi juga problem solving yang sangat dibutuhkan di industri saat ini." }, { initials: "AL", name: "Amanda Lestari", role: "Product Manager di E-Commerce X", quote: "Bimbingan karir dan persiapan berkas kerja di sini benar-benar membantu saya mendapatkan pekerjaan kurang dari sebulan." }].map(n => `
         <div class="testimonial-browser-card">
             <div class="browser-header">
                 <div class="browser-dots"><span></span><span></span><span></span></div>
@@ -213,7 +218,7 @@
                 </div>
             </div>
         </div>
-    `).join("");a.innerHTML=`
+    `).join(""); a.innerHTML = `
         <div class="testimonials-infinite-wrapper">
             <div class="container testimonial-header-container">
                 <span class="section-subtitle">Kisah Sukses</span>
@@ -227,7 +232,8 @@
                 </div>
             </div>
         </div>
-    `}function b(){const a=document.getElementById("cta-section");a.innerHTML=`
+    `} function b() {
+    const a = document.getElementById("cta-section"); a.innerHTML = `
         <div class="why-us-section">
             <div class="container">
                 <div class="section-header-blue reveal">
@@ -262,7 +268,8 @@
                 </div>
             </div>
         </div>
-    `}function y(){const a=document.getElementById("footer-section");a.innerHTML=`
+    `} function y() {
+    const a = document.getElementById("footer-section"); a.innerHTML = `
         <div class="footer">
             <div class="container">
                 <div class="footer-grid">
@@ -336,7 +343,8 @@
                 </div>
             </div>
         </div>
-    `}function A(){const a=document.getElementById("talenta-program-section"),e=document.getElementById("academy-services-section"),i={personality:"https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80",secretary:"https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=600&q=80",pemasaran:"https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80",penjualan:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=600&q=80",reguler:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80",public:"https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=600&q=80",inhouse:"https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80"};a&&(a.innerHTML=`
+    `} function A() {
+    const a = document.getElementById("talenta-program-section"), e = document.getElementById("academy-services-section"), i = { personality: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80", secretary: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=600&q=80", pemasaran: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80", penjualan: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=600&q=80", reguler: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80", public: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=600&q=80", inhouse: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80" }; a && (a.innerHTML = `
             <div class="special-section programs-accent">
                 <div class="container">
                     <span class="section-subtitle">Talenta Program</span>
@@ -400,7 +408,7 @@
                     </div>
                 </div>
             </div>
-        `),e&&(e.innerHTML=`
+        `), e && (e.innerHTML = `
             <div class="special-section services-bg">
                 <div class="container">
                     <span class="section-subtitle">Layanan Kami</span>
@@ -445,4 +453,5 @@
                     </div>
                 </div>
             </div>
-        `)}document.addEventListener("DOMContentLoaded",()=>{l(),d(),c(),k(),A(),f(),b(),y();const a={threshold:.1,rootMargin:"0px 0px -50px 0px"},e=new IntersectionObserver(i=>{i.forEach(n=>{n.isIntersecting&&(n.target.classList.add("reveal-active"),e.unobserve(n.target))})},a);document.querySelectorAll(".reveal").forEach(i=>e.observe(i))});
+        `)
+} document.addEventListener("DOMContentLoaded", () => { l(), d(), c(), k(), A(), f(), b(), y(); const a = { threshold: .1, rootMargin: "0px 0px -50px 0px" }, e = new IntersectionObserver(i => { i.forEach(n => { n.isIntersecting && (n.target.classList.add("reveal-active"), e.unobserve(n.target)) }) }, a); document.querySelectorAll(".reveal").forEach(i => e.observe(i)) });
