@@ -1298,6 +1298,15 @@ img {
 }
 
 @media (max-width: 768px) {
+    .logo {
+        font-size: 1.1rem;
+        gap: 8px;
+    }
+
+    .logo img {
+        height: 32px;
+    }
+
     .menu-toggle {
         display: flex
     }
