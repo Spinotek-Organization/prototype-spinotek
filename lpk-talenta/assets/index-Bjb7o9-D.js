@@ -64,9 +64,9 @@
         <div class="hero">
             <div class="container hero-container">
                 <div class="hero-content reveal">
-                    <span class="section-subtitle">Berdayakan Masa Depan Anda</span>
-                    <h1 class="hero-title">Wujudkan Potensi Anda bersama <br><span>Talenta Academy</span></h1>
-                    <p class="hero-description">Kuasai keterampilan yang paling dibutuhkan dengan program yang dipandu oleh para ahli. Bergabunglah dengan ribuan profesional yang telah mentransformasi karir mereka melalui platform pendidikan premium kami.</p>
+                    <span class="section-subtitle">Akselerasi Karir Anda</span>
+                    <h1 class="hero-title">Bangun Masa Depan Gemilang bersama <br><span>Talenta Academy</span></h1>
+                    <p class="hero-description">Tingkatkan skill profesional Anda dengan program bersertifikasi yang disusun langsung oleh praktisi industri. Bergabunglah dengan puluhan ribu profesional yang telah sukses bertransformasi.</p>
                     <div class="hero-btns">
                         <a href="#programs-section" class="btn btn-primary">Jelajahi Program</a>
                         <a href="#about-section" class="btn btn-outline">Pelajari Lebih Lanjut</a>
@@ -74,15 +74,15 @@
                     <div class="hero-stats">
                         <div class="stat-item">
                             <span class="stat-num">15rb+</span>
-                            <span class="stat-label">Lulusan</span>
+                            <span class="stat-label">Lulusan Sukses</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-num">4.9/5</span>
-                            <span class="stat-label">Rating</span>
+                            <span class="stat-label">Rating Kepuasan</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-num">50+</span>
-                            <span class="stat-label">Program</span>
+                            <span class="stat-label">Program Pilihan</span>
                         </div>
                     </div>
                 </div>
@@ -90,11 +90,11 @@
                     <div class="visual-card glass">
                         <div class="card-dots"><span></span><span></span><span></span></div>
                         <div class="card-image-container">
-                            <img src="${e}" alt="Talenta Academy Platform" class="visual-image">
+                            <img src="${e}" alt="Talenta Academy Platform" class="visual-image" loading="lazy">
                         </div>
                     </div>
-                    <div class="floating-badge badge-1 glass">Instruktur Ahli</div>
-                    <div class="floating-badge badge-2 glass">Siap Kerja</div>
+                    <div class="floating-badge badge-1 glass">Instruktur Praktisi Ahli</div>
+                    <div class="floating-badge badge-2 glass">Kurikulum Siap Kerja</div>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
                 <div class="about-grid">
                     <div class="about-image reveal">
                         <div class="image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Students learning">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Students learning" loading="lazy">
                             <div class="exp-badge glass">
                                 <strong>10+</strong>
                                 <span>Tahun Pengalaman</span>
@@ -113,14 +113,14 @@
                         </div>
                     </div>
                     <div class="about-content reveal">
-                        <span class="section-subtitle">Mengapa Talenta Academy</span>
-                        <h2 class="section-title">Standar Keunggulan Profesional</h2>
-                        <p class="about-text">Di Talenta Academy, kami memberikan lebih dari sekadar pendidikan. Kami membangun jembatan menuju masa depan Anda. Kurikulum kami dirancang oleh pakar industri untuk memastikan Anda mendapatkan keterampilan praktis dan siap kerja yang penting di dunia kerja yang kompetitif saat ini.</p>
+                        <span class="section-subtitle">Mengapa Memilih Kami</span>
+                        <h2 class="section-title">Standar Keunggulan Pelatihan Profesional</h2>
+                        <p class="about-text">Talenta Academy hadir untuk menjembatani kesenjangan antara dunia pendidikan dan kebutuhan industri sejati. Kurikulum adaptif kami dirancang khusus oleh pakar lapangan untuk memastikan setiap lulusan memiliki daya saing tinggi.</p>
                         <ul class="benefit-list">
-                            <li><strong>Mentorship Ahli:</strong> Belajar langsung dari para pemimpin industri dengan pengalaman bertahun-tahun.</li>
-                            <li><strong>Kurikulum Modern:</strong> Tetap unggul dengan konten yang diperbarui sesuai tren global.</li>
-                            <li><strong>Dukungan Karir:</strong> Bantuan khusus untuk membantu Anda mendapatkan pekerjaan impian.</li>
-                            <li><strong>Pembelajaran Praktis:</strong> Tidak hanya menonton, tapi melakukan. Pembelajaran berbasis proyek adalah inti kami.</li>
+                            <li><strong>Mentorship Eksklusif:</strong> Belajar langsung dari praktisi top yang membagikan wawasan dunia nyata.</li>
+                            <li><strong>Kurikulum Relevan:</strong> Materi selalu diperbarui mengikuti tren teknologi dan bisnis global terkini.</li>
+                            <li><strong>Dukungan Karir Aktif:</strong> Sesi bimbingan karir, review CV, hingga koneksi ke hiring partners.</li>
+                            <li><strong>Studi Kasus Nyata:</strong> Pendekatan pembelajaran berbasis proyek nyata (Project-Based Learning).</li>
                         </ul>
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                 <div class="program-grid">
                     <div class="program-card reveal">
                         <div class="card-image">
-                            <img src="${o}" alt="Administrasi Keuangan">
+                            <img src="${o}" alt="Administrasi Keuangan" loading="lazy">
                         </div>
                         <div class="card-body">
                             <h3>Administrasi Keuangan</h3>
@@ -144,7 +144,7 @@
                     </div>
                     <div class="program-card reveal">
                         <div class="card-image">
-                            <img src="${m}" alt="Administrasi Perkantoran">
+                            <img src="${m}" alt="Administrasi Perkantoran" loading="lazy">
                         </div>
                         <div class="card-body">
                             <h3>Administrasi Perkantoran</h3>
@@ -153,7 +153,7 @@
                     </div>
                     <div class="program-card reveal">
                         <div class="card-image">
-                            <img src="${p}" alt="Aplikasi Perkantoran">
+                            <img src="${p}" alt="Aplikasi Perkantoran" loading="lazy">
                         </div>
                         <div class="card-body">
                             <h3>Aplikasi Perkantoran</h3>
@@ -162,7 +162,7 @@
                     </div>
                     <div class="program-card reveal">
                         <div class="card-image">
-                            <img src="${v}" alt="Pelayanan Pelanggan">
+                            <img src="${v}" alt="Pelayanan Pelanggan" loading="lazy">
                         </div>
                         <div class="card-body">
                             <h3>Pelayanan Pelanggan</h3>
@@ -171,7 +171,7 @@
                     </div>
                     <div class="program-card reveal">
                         <div class="card-image">
-                            <img src="${u}" alt="Service Excellence">
+                            <img src="${u}" alt="Service Excellence" loading="lazy">
                         </div>
                         <div class="card-body">
                             <h3>Service Excellence</h3>
@@ -180,7 +180,7 @@
                     </div>
                     <div class="program-card reveal">
                         <div class="card-image">
-                            <img src="${g}" alt="Sumber Daya Manusia">
+                            <img src="${g}" alt="Sumber Daya Manusia" loading="lazy">
                         </div>
                         <div class="card-body">
                             <h3>Sumber Daya Manusia</h3>
@@ -189,7 +189,7 @@
                     </div>
                     <div class="program-card reveal">
                         <div class="card-image">
-                            <img src="${h}" alt="Training of Trainer">
+                            <img src="${h}" alt="Training of Trainer" loading="lazy">
                         </div>
                         <div class="card-body">
                             <h3>Training of Trainer</h3>
@@ -200,7 +200,7 @@
             </div>
         </div>
     `} function f() {
-    const a = document.getElementById("testimonial-section"), i = [{ initials: "AD", name: "Alex Danvers", role: "Software Engineer di TechCorp", quote: "Talenta Academy mengubah jalur karir saya. Para mentor sangat mendukung dan kurikulumnya sangat tepat sasaran." }, { initials: "SK", name: "Sarah Kim", role: "UX Designer di CreativeHub", quote: "Proyek langsung membantu saya membangun portofolio yang membuat saya mendapatkan pekerjaan desain pertama saya dalam beberapa bulan setelah lulus." }, { initials: "BP", name: "Budi Pratama", role: "Fullstack Developer di StartupGo", quote: "Belajar di sini bukan cuma soal teori, tapi benar-benar praktek industri. Saya sekarang jauh lebih percaya diri saat interview." }, { initials: "DN", name: "Dewi Novita", role: "Data Analyst di FinTech Solution", quote: "Networking yang saya dapatkan di Talenta Academy sangat luar biasa. Saya bertemu banyak rekan profesional yang sangat inspiratif." }, { initials: "RS", name: "Rizky Syahputra", role: "Mobile Developer di TechIndo", quote: "Kurikulum IT-nya sangat update. Tidak hanya diajarkan coding, tapi juga problem solving yang sangat dibutuhkan di industri saat ini." }, { initials: "AL", name: "Amanda Lestari", role: "Product Manager di E-Commerce X", quote: "Bimbingan karir dan persiapan berkas kerja di sini benar-benar membantu saya mendapatkan pekerjaan kurang dari sebulan." }].map(n => `
+    const a = document.getElementById("testimonial-section"), i = [{ initials: "AP", name: "Aditya Pratama", role: "Software Engineer di Bank Swasta", quote: "Talenta Academy sangat tepat sasaran. Mentor membantu merapikan alur pikir coding saya sehingga lebih terstruktur untuk level enterprise." }, { initials: "SN", name: "Siti Nurbaya", role: "UI/UX Designer di Startup", quote: "Proyek desain akhirnya langsung saya gunakan untuk portofolio, dan dari sanalah saya dipanggil interview hingga diterima bekerja." }, { initials: "BP", name: "Budi Pratama", role: "Fullstack Developer di TechIndo", quote: "Belajar di sini bukan cuma soal teori, tapi benar-benar praktek studi kasus nyata. Saya sekarang jauh lebih percaya diri saat interview technical." }, { initials: "DN", name: "Dewi Novita", role: "Data Analyst di FinTech", quote: "Jejaring (networking) alumni dari Talenta sangat luas dan aktif. Saya sering mendapat insight baru dari para senior di grup komunitas." }, { initials: "RS", name: "Rizky Syahputra", role: "Mobile Developer di Software House", quote: "Kurikulumnya update mengikuti standar industri terbaru. Pendekatan problem solving-nya sangat terasa manfaatnya ketika terjun di project asli." }, { initials: "AL", name: "Amanda Lestari", role: "Product Manager", quote: "Sesi bimbingan karir dan tips menghadapi HRD benar-benar menjadi kunci keberhasilan saya menembus pekerjaan kurang dari satu bulan." }].map(n => `
         <div class="testimonial-browser-card">
             <div class="browser-header">
                 <div class="browser-dots"><span></span><span></span><span></span></div>
@@ -275,9 +275,9 @@
                 <div class="footer-grid">
                     <div class="footer-brand">
                         <a href="#" class="logo">TALENTA<span>ACADEMY</span></a>
-                        <p>Memberikan pendidikan vokasi premium untuk pemimpin digital generasi berikutnya.</p>
+                        <p>Memberikan pendidikan sertifikasi dan vokasi premium untuk mencetak ahli profesional di era digital secara berkelanjutan.</p>
                         <div class="footer-logo-watermark">
-                            <img src="https://talentaacademy.id/wp-content/uploads/2023/04/WhatsApp-Image-2023-04-02-at-09.53.42.jpeg" alt="Talenta Academy Watermark">
+                            <img src="https://talentaacademy.id/wp-content/uploads/2023/04/WhatsApp-Image-2023-04-02-at-09.53.42.jpeg" alt="Talenta Academy Watermark" loading="lazy">
                         </div>
                         <div class="social-icons">
                             <!-- Facebook -->
@@ -353,7 +353,7 @@
                     <div class="premium-grid">
                         <div class="premium-card reveal">
                             <div class="premium-img">
-                                <img src="${i.personality}" alt="Personality Development">
+                                <img src="${i.personality}" alt="Personality Development" loading="lazy">
                             </div>
                             <div class="premium-info">
                                 <h3>Personality Development</h3>
@@ -365,7 +365,7 @@
 
                         <div class="premium-card reveal">
                             <div class="premium-img">
-                                <img src="${i.secretary}" alt="Professional Secretary">
+                                <img src="${i.secretary}" alt="Professional Secretary" loading="lazy">
                             </div>
                             <div class="premium-info">
                                 <h3>Professional Secretary</h3>
@@ -377,7 +377,7 @@
 
                         <div class="premium-card reveal">
                             <div class="premium-img">
-                                <img src="${i.pemasaran}" alt="Manajemen Pemasaran">
+                                <img src="${i.pemasaran}" alt="Manajemen Pemasaran" loading="lazy">
                             </div>
                             <div class="premium-info">
                                 <h3>Manajemen Pemasaran</h3>
@@ -389,7 +389,7 @@
 
                         <div class="premium-card reveal">
                             <div class="premium-img">
-                                <img src="${i.penjualan}" alt="Manajemen Unit Penjualan">
+                                <img src="${i.penjualan}" alt="Manajemen Unit Penjualan" loading="lazy">
                             </div>
                             <div class="premium-info">
                                 <h3>Manajemen Unit Penjualan</h3>
@@ -417,7 +417,7 @@
                     <div class="premium-grid three-cols">
                         <div class="premium-card small reveal">
                             <div class="premium-img">
-                                <img src="${i.reguler}" alt="Reguler Class">
+                                <img src="${i.reguler}" alt="Reguler Class" loading="lazy">
                             </div>
                             <div class="premium-info">
                                 <h3>Reguler Class</h3>
@@ -429,7 +429,7 @@
 
                         <div class="premium-card small reveal">
                             <div class="premium-img">
-                                <img src="${i.public}" alt="Public Training">
+                                <img src="${i.public}" alt="Public Training" loading="lazy">
                             </div>
                             <div class="premium-info">
                                 <h3>Public Training</h3>
@@ -441,7 +441,7 @@
 
                         <div class="premium-card small reveal">
                             <div class="premium-img">
-                                <img src="${i.inhouse}" alt="In House Training">
+                                <img src="${i.inhouse}" alt="In House Training" loading="lazy">
                             </div>
                             <div class="premium-info">
                                 <h3>In House Training</h3>
@@ -454,4 +454,4 @@
                 </div>
             </div>
         `)
-} document.addEventListener("DOMContentLoaded", () => { l(), d(), c(), k(), A(), f(), b(), y(); const a = { threshold: .1, rootMargin: "0px 0px -50px 0px" }, e = new IntersectionObserver(i => { i.forEach(n => { n.isIntersecting && (n.target.classList.add("reveal-active"), e.unobserve(n.target)) }) }, a); document.querySelectorAll(".reveal").forEach(i => e.observe(i)) });
+} document.addEventListener("DOMContentLoaded", () => { l(), d(), c(), k(), A(), f(), b(), y(); const t = document.querySelector(".menu-toggle"), n = document.querySelector(".nav-links"); t && n && t.addEventListener("click", () => { t.classList.toggle("active"), n.classList.toggle("active") }), document.querySelectorAll('.nav-links a[href^="#"]').forEach(e => { e.addEventListener("click", () => { t.classList.remove("active"), n.classList.remove("active") }) }); const a = { threshold: .05, rootMargin: "0px 0px -50px 0px" }, e = new IntersectionObserver(i => { i.forEach(s => { s.isIntersecting && (s.target.classList.add("reveal-active"), e.unobserve(s.target)) }) }, a); document.querySelectorAll(".reveal").forEach(i => e.observe(i)) });
