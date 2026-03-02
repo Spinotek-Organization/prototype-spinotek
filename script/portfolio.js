@@ -70,17 +70,43 @@
       || v.startsWith('/') || v.startsWith('./');
   }
 
+  function fallbackInitials(name) {
+    if (typeof name !== 'string' || !name.trim()) return 'P';
+    const words = name.trim().split(/\s+/).slice(0, 2);
+    return words.map(w => w.charAt(0).toUpperCase()).join('');
+  }
+
+  function resolveIconMarkup(rawIcon, displayName) {
+    const fallback = fallbackInitials(displayName);
+    const aliases = {
+      rocket: '🚀',
+      education: '🎓',
+      school: '🏫',
+      wedding: '💍',
+      planner: '📋',
+    };
+
+    if (!rawIcon) return fallback;
+    if (isImageRef(rawIcon)) {
+      return `<img src="${rawIcon}" alt="Logo ${displayName}" class="proto-icon-img" loading="lazy"
+           onerror="this.remove(); this.parentElement.textContent='${fallback}';">`;
+    }
+
+    if (typeof rawIcon === 'string') {
+      const trimmed = rawIcon.trim();
+      if (!trimmed) return fallback;
+      return aliases[trimmed.toLowerCase()] || trimmed;
+    }
+
+    return fallback;
+  }
+
   /** Build one card HTML string */
   function buildCard(project) {
     const statusCls = STATUS_STYLES[project.status] || STATUS_DEFAULT;
     const techHtml = (project.tech || []).slice(0, 5).map(techIcon).join('');
     const displayName = project.name || project.slug || 'Prototype';
-    const fallbackIcon = '';
-    const rawIcon = project.icon || fallbackIcon;
-    const iconHtml = isImageRef(rawIcon)
-      ? `<img src="${rawIcon}" alt="" class="proto-icon-img" loading="lazy"
-           onerror="this.remove(); this.parentElement.textContent='${fallbackIcon}';">`
-      : rawIcon;
+    const iconHtml = resolveIconMarkup(project.icon, displayName);
 
     const demoBtn = project.demo_url
       ? `<a href="${project.demo_url}" target="_blank" rel="noopener"
@@ -112,14 +138,14 @@
           loading="lazy"
           onerror="this.onerror=null; this.parentElement.classList.add('proto-thumb-fallback'); this.style.display='none'; this.parentElement.querySelector('.proto-thumb-emoji').style.display='flex';"
         />
-        <div class="proto-thumb-emoji" style="display:none">${project.icon || '🚀'}</div>
+        <div class="proto-thumb-emoji" style="display:none">${fallbackInitials(displayName)}</div>
       </div>
 
       <!-- Body -->
       <div class="proto-card-body">
         <!-- Icon box + Status badge -->
         <div class="proto-card-header">
-          <div class="proto-icon-box"> </div> 
+          <div class="proto-icon-box">${iconHtml}</div>
           <span class="proto-badge ${statusCls}">${project.status}</span>
         </div>
 

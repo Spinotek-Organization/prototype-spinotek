@@ -1,7 +1,7 @@
 {
     "name": "Pandora Wedding Planner",
     "description": "Pandora Wedding Planner adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
-    "icon": "rocket",
+    "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReM2Jpgqb3HMEKbGWHSd38PIGGSw6dlRIMbg&s",
     "category": "Web App",
     "status": "COMPLETED",
     "tech": [

@@ -14,7 +14,7 @@ window.PROJECTS_DATA = [
       "javascript",
       "tailwindcss"
     ],
-    "icon": "rocket",
+    "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReM2Jpgqb3HMEKbGWHSd38PIGGSw6dlRIMbg&s",
     "demo_url": "https://demo.spinotek.com/pandora-wedding-planner/",
     "repo_url": null,
     "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/pandora-wedding-planner/card.png",
