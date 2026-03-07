@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Dharma Lautan Utama</title>
+    <!-- Favicon (match dlu.co.id) -->
+    <link rel="icon" href="https://dlu.co.id/wp-content/uploads/2025/04/logodluheight-150x150.png" sizes="32x32">
+    <link rel="icon" href="https://dlu.co.id/wp-content/uploads/2025/04/logodluheight.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="https://dlu.co.id/wp-content/uploads/2025/04/logodluheight.png">
+    <link rel="shortcut icon" href="https://dlu.co.id/wp-content/uploads/2025/04/logodlu-1.png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dlu: {
+                            blue: '#00478F', // DLU primary blue
+                            light: '#E6F0F9',
+                            yellow: '#FDB813' // DLU accent yellow
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for Alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jsPDF for direct PDF download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* Custom Styles for Input Validation and Interactions */
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            padding-right: 2.5rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            cursor: pointer;
+        }
+
+        .valid-check {
+            color: #10B981;
+            display: none;
+        }
+
+        .invalid-x {
+            color: #EF4444;
+            display: none;
+        }
+
+        .input-valid .valid-check {
+            display: inline-block;
+        }
+
+        .input-invalid .invalid-x {
+            display: inline-block;
+        }
+
+        .input-invalid input {
+            border-color: #EF4444;
+        }
+
+        .error-message {
+            color: #EF4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        /* Searchable Select Custom Styles */
+        .custom-select-container {
+            position: relative;
+        }
+
+        .custom-select-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.375rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 50;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-select-dropdown.active {
+            display: block;
+        }
+
+        .custom-select-option {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .custom-select-option:hover {
+            background-color: #F3F4F6;
+        }
+
+        /* Hide sections dynamically */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Progress Bar Styles */
+        .step-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-item::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #E5E7EB;
+            top: 14px;
+            left: 50%;
+            z-index: -1;
+        }
+
+        .step-item:last-child::after {
+            display: none;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            color: #6B7280;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .step-item.active .step-circle {
+            background: #00478F;
+            color: white;
+        }
+
+        .step-item.active~.step-item::after {
+            background: #E5E7EB;
+        }
+
+        .step-item.completed .step-circle {
+            background: #10B981;
+            color: white;
+        }
+
+        .step-item.completed::after {
+            background: #10B981;
+        }
+
+        /* Booking Step show/hide — uses JS hidden class (NOT active) */
+        .booking-step {
+            display: block;
+        }
+
+        .booking-step.hidden {
+            display: none !important;
+        }
+
+        /* Inline results fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.35s ease both;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-dlu-blue text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center cursor-pointer" onclick="app.navigate('home')">
+                    <img src="https://tiket.dlu.co.id/img/new-logo.png" alt="DLU Ferry Logo" class="h-12 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <div id="nav-public-links" class="flex space-x-8 items-center">
+                        <a href="https://dlu.co.id/" class="hover:text-dlu-yellow transition">Beranda</a>
+                        <a href="#" onclick="app.navigate('home')" class="hover:text-dlu-yellow transition">Jadwal
+                            Kapal</a>
+                    </div>
+
+                    <!-- Auth Button for Logged Out User -->
+                    <button id="nav-auth-btn" onclick="app.navigate('login')"
+                        class="bg-white text-dlu-blue px-4 py-2 rounded-md font-semibold hover:bg-dlu-light transition">
+                        Masuk DLU Ferry
+                    </button>
+
+                    <!-- User Menu for Logged In User -->
+                    <div id="nav-user-menu" class="hidden items-center space-x-2 bg-blue-800 px-4 py-2 rounded-md">
+                        <i class="fa-solid fa-user-circle text-xl text-dlu-yellow"></i>
+                        <span id="nav-user-name" class="font-semibold text-sm">User</span>
+                        <div class="h-4 w-px bg-blue-600 mx-2"></div>
+                        <button onclick="app.logout()"
+                            class="text-xs text-red-200 hover:text-white transition flex items-center gap-1"
+                            title="Keluar">
+                            <i class="fa-solid fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ======================= AUTH PAGES ======================= -->
+
+        <!-- Login Page -->
+        <section id="page-login" class="page-section">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-center text-dlu-blue mb-6">Selamat Datang Kembali</h2>
+                <form id="form-login" onsubmit="app.handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email <span
+                                class="text-xs text-gray-400 font-normal">(Gunakan <b>test@dlu.co.id</b>)</span></label>
+                        <div class="input-group" id="login-email-group">
+                            <input type="email" id="login-email"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition"
+                                required placeholder="Masukkan email Anda" value="test@dlu.co.id">
+                            <i class="fa-solid fa-check input-icon valid-check"></i>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password <span
+                                class="text-xs text-gray-400 font-normal">(Gunakan <b>password123</b>)</span></label>
+                        <div class="input-group">
+                            <input type="password" id="login-password"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition"
+                                required placeholder="••••••••" value="password123">
+                            <i class="fa-solid fa-eye input-icon"
+                                onclick="app.togglePassword('login-password', this)"></i>
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-dlu-blue text-white font-semibold py-2.5 rounded-lg hover:bg-blue-800 transition">Masuk</button>
+                </form>
+                <p class="text-center text-sm text-gray-500 mt-6">
+                    Belum punya akun? <a href="#" onclick="app.navigate('register')"
+                        class="text-dlu-blue font-semibold hover:underline">Registrasi Baru</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Register Page -->
+        <section id="page-register" class="page-section">
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-center text-dlu-blue mb-2">Registrasi Baru</h2>
+                <p class="text-center text-sm text-gray-500 mb-6">Daftar untuk menikmati kemudahan pemesanan tiket.</p>
+
+                <form id="form-register" onsubmit="app.handleRegister(event)">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                        <div class="input-group" id="reg-name-group">
+                            <input type="text" id="reg-name"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue outline-none transition"
+                                required>
+                            <i class="fa-solid fa-check input-icon valid-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email <span
+                                class="text-xs font-normal text-gray-400">(Coba ketik 'test@gmail.com' untuk test
+                                validasi)</span></label>
+                        <div class="input-group" id="reg-email-group">
+                            <input type="email" id="reg-email"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue outline-none transition"
+                                required>
+                            <i class="fa-solid fa-check input-icon valid-check"></i>
+                            <i class="fa-solid fa-times input-icon invalid-x"></i>
+                        </div>
+                        <p id="reg-email-error" class="error-message">Email ini sudah digunakan. Silakan gunakan email
+                            lain atau login.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">No. KTP / Identitas</label>
+                            <div class="input-group" id="reg-id-group">
+                                <input type="number" id="reg-id"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue outline-none transition"
+                                    required>
+                                <i class="fa-solid fa-check input-icon valid-check"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp</label>
+                            <div class="input-group" id="reg-phone-group">
+                                <input type="number" id="reg-phone"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue outline-none transition"
+                                    required>
+                                <i class="fa-solid fa-check input-icon valid-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="input-group" id="reg-password-group">
+                            <input type="password" id="reg-password"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue outline-none transition"
+                                required>
+                            <i class="fa-solid fa-eye input-icon" onclick="app.togglePassword('reg-password', this)"
+                                style="right: 2.5rem;"></i>
+                            <i class="fa-solid fa-check input-icon valid-check" style="right: 0.75rem;"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-register"
+                        class="w-full bg-dlu-blue text-white font-semibold py-2.5 rounded-lg hover:bg-blue-800 transition">Daftar
+                        Sekarang</button>
+                </form>
+                <p class="text-center text-sm text-gray-500 mt-6">
+                    Sudah punya akun? <a href="#" onclick="app.navigate('login')"
+                        class="text-dlu-blue font-semibold hover:underline">Masuk</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- ======================= BOOKING FLOW ======================= -->
+
+        <section id="page-booking" class="page-section">
+
+            <!-- Progress Bar -->
+            <div id="booking-progress-bar" class="max-w-3xl mx-auto mb-10 mt-4 hidden">
+                <div class="flex justify-between relative z-10">
+                    <div class="step-item active" id="stepIndicator1">
+                        <div class="step-circle mx-auto mb-2">1</div>
+                        <p class="text-xs font-medium">Cari</p>
+                    </div>
+                    <div class="step-item" id="stepIndicator2">
+                        <div class="step-circle mx-auto mb-2">2</div>
+                        <p class="text-xs font-medium">Pilih</p>
+                    </div>
+                    <div class="step-item" id="stepIndicator3">
+                        <div class="step-circle mx-auto mb-2">3</div>
+                        <p class="text-xs font-medium text-gray-400">Isi Data</p>
+                    </div>
+                    <div class="step-item" id="stepIndicator4">
+                        <div class="step-circle mx-auto mb-2">4</div>
+                        <p class="text-xs font-medium text-gray-400">Bayar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 1: Pencarian -->
+            <div id="step-1-cari" class="booking-step active">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-6xl mx-auto">
+
+                    <!-- Kiri: Banner Slider (Informasi / Promo) -->
+                    <div
+                        class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hidden md:block relative group select-none min-h-[550px]">
+
+                        <!-- Images -->
+                        <img src="https://dlu.co.id/wp-content/uploads/2025/03/Slider-HUT-DLU.jpg"
+                            class="w-full h-full object-contain absolute inset-0 transition-opacity duration-700 opacity-100 slider-img z-10 bg-dlu-blue"
+                            alt="Promo HUT">
+                        <img src="https://dlu.co.id/wp-content/uploads/2018/08/map-slider-2-compress.jpg"
+                            class="w-full h-full object-contain absolute inset-0 transition-opacity duration-700 opacity-0 slider-img z-0 bg-dlu-blue"
+                            alt="Info Peta">
+                        <img src="https://dlu.co.id/wp-content/uploads/2023/05/TP-slider.jpg"
+                            class="w-full h-full object-contain absolute inset-0 transition-opacity duration-700 opacity-0 slider-img z-0 bg-dlu-blue"
+                            alt="Promo Tarif">
+                        <img src="https://dlu.co.id/wp-content/uploads/2023/01/Mobile-App-Web.jpg"
+                            class="w-full h-full object-contain absolute inset-0 transition-opacity duration-700 opacity-0 slider-img z-0 bg-dlu-blue"
+                            alt="Promo Aplikasi">
+
+                        <!-- Dark Overlay for Readability -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent z-20 pointer-events-none">
+                        </div>
+
+                        <!-- Overlay Text -->
+                        <div class="absolute bottom-16 left-8 right-8 z-30 pointer-events-none text-white">
+                            <h2 class="text-4xl font-bold mb-3 tracking-tight">Pelayaran Aman & Nyaman</h2>
+                            <p class="text-base text-gray-200 w-4/5 leading-relaxed">Nikmati pengalaman berlayar tak
+                                terlupakan melintasi Nusantara bersama armada unggulan PT. Dharma Lautan Utama.</p>
+                        </div>
+
+                        <!-- Navigation Dots -->
+                        <div class="absolute bottom-6 left-0 right-0 flex justify-center space-x-3 z-30">
+                            <button class="w-3 h-3 rounded-full bg-dlu-yellow shadow-md slider-dot transition-all"
+                                onclick="if(window.app) app.setSlide(0)"></button>
+                            <button
+                                class="w-3 h-3 rounded-full bg-white/50 hover:bg-white shadow-md slider-dot transition-all"
+                                onclick="if(window.app) app.setSlide(1)"></button>
+                            <button
+                                class="w-3 h-3 rounded-full bg-white/50 hover:bg-white shadow-md slider-dot transition-all"
+                                onclick="if(window.app) app.setSlide(2)"></button>
+                            <button
+                                class="w-3 h-3 rounded-full bg-white/50 hover:bg-white shadow-md slider-dot transition-all"
+                                onclick="if(window.app) app.setSlide(3)"></button>
+                        </div>
+                    </div>
+
+                    <!-- Kanan: Form Pencarian & Tombol Download -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+
+                        <!-- Form Pencarian -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
+                            <h1 class="text-xl font-bold text-gray-800 border-b border-gray-100 pb-4 mb-5"><i
+                                    class="fa-solid fa-magnifying-glass text-dlu-blue mr-2"></i> Jadwal Kapal DLU</h1>
+
+                            <div class="flex flex-col gap-5 mb-6">
+                                <!-- Jenis Lintasan -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Lintasan</label>
+                                    <select
+                                        class="w-full text-sm border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition-shadow bg-white text-gray-700 cursor-pointer">
+                                        <option value="laut">Lintasan Laut</option>
+                                        <option value="penyeberangan">Lintasan Penyeberangan</option>
+                                    </select>
+                                </div>
+
+                                <!-- Jenis Tiket (Multi-select Toggles) -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-2">Jenis Tiket</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <!-- Penumpang Toggle -->
+                                        <button type="button" id="pub-toggle-pnp" onclick="app.pubToggleTicket('pnp')"
+                                            class="relative flex flex-col items-center gap-1.5 py-3.5 px-2 rounded-xl border-2 border-dlu-blue bg-dlu-light text-dlu-blue transition-all text-xs font-semibold overflow-hidden">
+                                            <i class="fa-solid fa-users text-lg"></i>
+                                            <span>Penumpang</span>
+                                        </button>
+                                        <!-- Kendaraan Toggle -->
+                                        <button type="button" id="pub-toggle-knd" onclick="app.pubToggleTicket('knd')"
+                                            class="relative flex flex-col items-center gap-1.5 py-3.5 px-2 rounded-xl border-2 border-gray-200 bg-white text-gray-400 hover:border-dlu-blue hover:text-dlu-blue transition-all text-xs font-semibold overflow-hidden">
+                                            <i class="fa-solid fa-car text-lg"></i>
+                                            <span>+ Kendaraan</span>
+                                        </button>
+                                    </div>
+                                    <!-- Conditional Kendaraan dropdown -->
+                                    <div id="pub-kendaraan-area" class="hidden mt-2">
+                                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-2.5">
+                                            <p class="text-[10px] font-semibold text-dlu-blue mb-1.5"><i
+                                                    class="fa-solid fa-car mr-1"></i>Golongan Kendaraan</p>
+                                            <select id="pub-golongan-knd"
+                                                class="w-full text-xs border border-blue-200 rounded-lg p-2 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none bg-white cursor-pointer">
+                                                <option value="">-- Pilih Golongan --</option>
+                                                <option value="2">Gol. II — Motor &lt; 500cc</option>
+                                                <option value="4a">Gol. IVA — Mobil Penumpang</option>
+                                                <option value="5">Gol. V — Bus / Truk Sedang</option>
+                                                <option value="6">Gol. VI — Truk Besar</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pelabuhan Asal -->
+                                <div class="custom-select-container">
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Pelabuhan
+                                        Asal</label>
+                                    <div class="relative group">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                            <i
+                                                class="fa-solid fa-map-marker-alt text-gray-400 group-focus-within:text-dlu-blue transition-colors"></i>
+                                        </div>
+                                        <input type="text" id="search-origin"
+                                            class="w-full text-sm border border-gray-300 rounded-lg pl-9 pr-4 py-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition-shadow cursor-pointer bg-white"
+                                            placeholder="-- Pilih Asal --" readonly
+                                            onclick="app.toggleDropdown('origin')">
+                                        <div
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Dropdown List -->
+                                    <div id="dropdown-origin"
+                                        class="custom-select-dropdown mt-1.5 shadow-lg rounded-lg border-gray-100 hidden">
+                                        <div class="p-2 border-b sticky top-0 bg-white">
+                                            <input type="text"
+                                                class="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-dlu-blue focus:ring-1 focus:ring-dlu-blue transition-shadow"
+                                                placeholder="Ketik pelabuhan..."
+                                                onkeyup="app.filterPorts('origin', this.value)">
+                                        </div>
+                                        <div id="list-origin" class="text-sm">
+                                            <div class="custom-select-option hover:bg-blue-50 transition-colors"
+                                                onclick="app.selectPort('origin', 'Surabaya (Tanjung Perak)')">Surabaya
+                                                (SUB)</div>
+                                            <div class="custom-select-option hover:bg-blue-50 transition-colors"
+                                                onclick="app.selectPort('origin', 'Banjarmasin (Trisakti)')">Banjarmasin
+                                                (BDJ)</div>
+                                            <div class="custom-select-option hover:bg-blue-50 transition-colors"
+                                                onclick="app.selectPort('origin', 'Makassar')">Makassar (MAK)</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Swap Button (UI Detail) -->
+                                <div class="flex justify-center -my-5 relative z-10 w-full pointer-events-none">
+                                    <button
+                                        class="bg-white text-dlu-blue border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center hover:bg-dlu-light hover:text-blue-800 transition shadow-sm pointer-events-auto">
+                                        <i class="fa-solid fa-arrows-up-down text-sm"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Pelabuhan Tujuan -->
+                                <div class="custom-select-container mt-1">
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Pelabuhan
+                                        Tujuan</label>
+                                    <div class="relative group">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                            <i
+                                                class="fa-solid fa-location-dot text-gray-400 group-focus-within:text-dlu-blue transition-colors"></i>
+                                        </div>
+                                        <input type="text" id="search-dest"
+                                            class="w-full text-sm border border-gray-300 rounded-lg pl-9 pr-4 py-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition-shadow cursor-pointer bg-white"
+                                            placeholder="-- Pilih Tujuan --" readonly
+                                            onclick="app.toggleDropdown('dest')">
+                                        <div
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Dropdown List -->
+                                    <div id="dropdown-dest"
+                                        class="custom-select-dropdown mt-1.5 shadow-lg rounded-lg border-gray-100 hidden">
+                                        <div class="p-2 border-b sticky top-0 bg-white">
+                                            <input type="text"
+                                                class="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-dlu-blue focus:ring-1 focus:ring-dlu-blue transition-shadow"
+                                                placeholder="Ketik pelabuhan..."
+                                                onkeyup="app.filterPorts('dest', this.value)">
+                                        </div>
+                                        <div id="list-dest" class="text-sm">
+                                            <div class="custom-select-option hover:bg-blue-50 transition-colors"
+                                                onclick="app.selectPort('dest', 'Surabaya (Tanjung Perak)')">Surabaya
+                                                (SUB)</div>
+                                            <div class="custom-select-option hover:bg-blue-50 transition-colors"
+                                                onclick="app.selectPort('dest', 'Banjarmasin (Trisakti)')">Banjarmasin
+                                                (BDJ)</div>
+                                            <div class="custom-select-option hover:bg-blue-50 transition-colors"
+                                                onclick="app.selectPort('dest', 'Makassar')">Makassar (MAK)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8">
+                                <button
+                                    class="bg-dlu-yellow text-blue-900 py-3 rounded-lg font-bold hover:bg-yellow-400 transition shadow-md w-full text-base flex justify-center items-center gap-2"
+                                    onclick="app.searchSchedule()">
+                                    Cari Jadwal Sekarang <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Perhatian Box -->
+                        <div class="bg-[#e6f0f9] rounded-xl p-5 border border-blue-100 shadow-sm">
+                            <h3 class="font-bold text-sm text-dlu-blue mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-info"></i> Informasi Penting
+                            </h3>
+                            <ul class="list-none text-xs text-gray-600 space-y-2">
+                                <li class="flex items-start gap-2"><i
+                                        class="fa-solid fa-check text-green-500 mt-0.5"></i> <span>Jadwal yang
+                                        ditampilkan adalah jadwal hari ini dan seterusnya.</span></li>
+                                <li class="flex items-start gap-2"><i
+                                        class="fa-solid fa-check text-green-500 mt-0.5"></i> <span>Tarif belum termasuk
+                                        biaya pass pelabuhan dan retribusi.</span></li>
+                                <li class="flex items-start gap-2"><i
+                                        class="fa-solid fa-check text-green-500 mt-0.5"></i> <span>Bagi penumpang dengan
+                                        kendaraan pribadi, diharapkan hadir <b>6(enam) jam</b> sebelum
+                                        keberangkatan.</span></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- === INLINE RESULTS SECTION (Public, No Login Required) === -->
+            <div id="inline-results-section" class="hidden max-w-6xl mx-auto mt-6 animate-fade-in">
+                <!-- Results Header -->
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">
+                            <i class="fa-solid fa-ship text-dlu-blue mr-2"></i>
+                            Jadwal Keberangkatan
+                        </h2>
+                        <p id="inline-results-subtitle" class="text-sm text-gray-500 mt-0.5"></p>
+                    </div>
+                    <button onclick="app.closeInlineResults()"
+                        class="text-sm text-gray-400 hover:text-gray-700 transition flex items-center gap-1.5 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50">
+                        <i class="fa-solid fa-xmark"></i> Tutup
+                    </button>
+                </div>
+
+                <!-- Results List -->
+                <div id="inline-results-list" class="flex flex-col gap-4">
+                    <!-- dynamically rendered schedule cards go here -->
+                </div>
+
+                <!-- Login CTA Banner -->
+                <div id="inline-login-cta"
+                    class="mt-6 bg-gradient-to-r from-dlu-blue to-blue-700 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg hidden">
+                    <div class="text-white">
+                        <p class="font-bold text-lg"><i class="fa-solid fa-lock mr-2"></i>Ingin memesan tiket?</p>
+                        <p class="text-blue-200 text-sm mt-0.5">Masuk atau daftar akun DLU Ferry untuk melanjutkan
+                            pemesanan.</p>
+                    </div>
+                    <button onclick="app.navigate('login')"
+                        class="bg-dlu-yellow text-blue-900 font-bold py-3 px-8 rounded-xl hover:bg-yellow-400 transition shadow-md whitespace-nowrap flex-shrink-0">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i> Masuk / Daftar
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Pilih Jadwal -->
+            <div id="step-2-pilih" class="booking-step hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold border-l-4 border-dlu-yellow pl-3">Jadwal Keberangkatan</h2>
+                    <button class="text-sm font-semibold text-dlu-blue hover:underline"
+                        onclick="app.setBookingStep(1)"><i class="fa-solid fa-arrow-left mr-1"></i> Ubah
+                        Pencarian</button>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
+                        <div class="font-semibold text-gray-700"><span id="schedule-route-origin">SUB</span> <i
+                                class="fa-solid fa-arrow-right mx-2 text-gray-400"></i> <span
+                                id="schedule-route-dest">BDJ</span></div>
+                        <div class="text-sm text-gray-500">Menampilkan <span id="schedule-count">0</span> jadwal
+                            tersedia</div>
+                    </div>
+                    <div id="schedule-results-list">
+                        <!-- schedule items rendered by app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Isi Data (Placeholder for now) -->
+            <div id="step-3-isidata" class="booking-step hidden">
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 max-w-4xl mx-auto text-center py-20">
+                    <i class="fa-solid fa-id-card text-5xl text-dlu-blue mb-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Isi Data Penumpang</h2>
+                    <p class="text-gray-500">Area ini akan menampilkan form panjang untuk rincian data seluruh penumpang
+                        secara intuitif.</p>
+                </div>
+            </div>
+
+            <!-- STEP 4: Bayar (Placeholder for now) -->
+            <div id="step-4-bayar" class="booking-step hidden">
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 max-w-4xl mx-auto text-center py-20">
+                    <i class="fa-solid fa-wallet text-5xl text-green-500 mb-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Metode Pembayaran</h2>
+                    <p class="text-gray-500">Area ini akan memuat komponen pembayaran Virtual Account, QRIS, dll.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ======================= LOGGED IN DASHBOARD ======================= -->
+        <section id="page-dashboard-user" class="page-section hidden">
+            <div class="max-w-7xl mx-auto">
+
+                <!-- Breadcrumbs -->
+                <div class="text-sm text-gray-500 mb-6 flex items-center gap-2">
+                    <a href="#" onclick="app.navigate('home')" class="hover:text-dlu-blue transition"><i
+                            class="fa-solid fa-house mr-1"></i> Beranda</a>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                    <span class="text-gray-800 font-semibold">Pencarian Jadwal</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+                    <!-- Sidebar Navigation -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sticky top-24">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-2">Menu Pengguna
+                            </h3>
+                            <nav class="flex flex-col gap-1">
+                                <a href="#" id="nav-tab-profile" onclick="app.switchDashboardTab(event, 'profile')"
+                                    class="flex justify-between items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-dlu-blue rounded-lg transition group">
+                                    <span class="font-medium">Profil saya</span>
+                                    <i class="fa-solid fa-user text-gray-400 group-hover:text-dlu-blue"></i>
+                                </a>
+                                <a href="#" id="nav-tab-search" onclick="app.switchDashboardTab(event, 'search')"
+                                    class="flex justify-between items-center px-4 py-3 bg-dlu-blue text-white rounded-lg shadow-sm transition">
+                                    <span class="font-medium">Pesan Tiket</span>
+                                    <i class="fa-solid fa-ticket"></i>
+                                </a>
+                                <a href="#" id="nav-tab-orders" onclick="app.switchDashboardTab(event, 'orders')"
+                                    class="flex justify-between items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-dlu-blue rounded-lg transition group">
+                                    <span class="font-medium">Pesanan Saya</span>
+                                    <i class="fa-solid fa-list text-gray-400 group-hover:text-dlu-blue"></i>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Main Dashboard Content -->
+                    <div class="lg:col-span-3">
+
+                        <!-- TAB: PENCARIAN JADWAL -->
+                        <div id="dashboard-tab-search"
+                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 block">
+                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
+                                    class="fa-regular fa-calendar-check text-dlu-blue mr-2"></i> Pencarian Jadwal Baru
+                            </h2>
+
+                            <form onsubmit="app.searchDashboardSchedule(event)">
+
+                                <!-- Top Row: Tiket / Asal / Tujuan -->
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
+
+                                    <!-- Jenis Tiket (Multi-select Checkbox Toggles) -->
+                                    <div class="md:col-span-12 mb-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-3">Jenis Tiket <span
+                                                class="text-gray-400 font-normal text-xs">/ Ticket Type</span></label>
+                                        <div class="flex flex-wrap gap-3">
+                                            <!-- Penumpang Card -->
+                                            <label id="dash-toggle-pnp" onclick="app.dashToggleTicket('pnp')"
+                                                class="relative flex items-center gap-4 cursor-pointer px-5 py-4 rounded-2xl border-2 border-dlu-blue bg-dlu-light transition-all shadow-sm min-w-[160px] select-none">
+                                                <input type="checkbox" id="dash-check-pnp" class="hidden" checked>
+                                                <!-- Checkmark badge -->
+                                                <span id="dash-badge-pnp"
+                                                    class="absolute top-2.5 right-2.5 w-[14px] h-[14px] bg-dlu-blue text-white rounded-full flex items-center justify-center text-[8px]">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </span>
+                                                <div id="dash-iconbg-pnp"
+                                                    class="w-10 h-10 rounded-xl bg-dlu-blue/10 flex items-center justify-center flex-shrink-0">
+                                                    <i id="dash-icon-pnp"
+                                                        class="fa-solid fa-users text-dlu-blue text-lg"></i>
+                                                </div>
+                                                <div>
+                                                    <p id="dash-title-pnp"
+                                                        class="font-bold text-dlu-blue text-sm leading-tight">Penumpang
+                                                    </p>
+                                                    <p id="dash-sub-pnp" class="text-xs text-blue-400 mt-0.5">Tiket
+                                                        orang</p>
+                                                </div>
+                                            </label>
+
+                                            <!-- Kendaraan Card -->
+                                            <label id="dash-toggle-knd" onclick="app.dashToggleTicket('knd')"
+                                                class="relative flex items-center gap-4 cursor-pointer px-5 py-4 rounded-2xl border-2 border-gray-200 bg-white transition-all shadow-sm min-w-[160px] select-none hover:border-dlu-blue group">
+                                                <input type="checkbox" id="dash-check-knd" class="hidden">
+                                                <!-- Checkmark badge (hidden when inactive) -->
+                                                <span id="dash-badge-knd"
+                                                    class="absolute top-2.5 right-2.5 w-[14px] h-[14px] bg-dlu-blue text-white rounded-full flex items-center justify-center text-[8px] hidden">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </span>
+                                                <div id="dash-iconbg-knd"
+                                                    class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0 transition">
+                                                    <i id="dash-icon-knd"
+                                                        class="fa-solid fa-car text-gray-400 text-lg transition"></i>
+                                                </div>
+                                                <div>
+                                                    <p id="dash-title-knd"
+                                                        class="font-bold text-gray-500 text-sm leading-tight transition">
+                                                        + Kendaraan</p>
+                                                    <p id="dash-sub-knd" class="text-xs text-gray-400 mt-0.5">Tiket
+                                                        kendaraan</p>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <!-- Kendaraan dropdown (conditional) -->
+                                        <div id="dash-kendaraan-area" class="hidden mt-4">
+                                            <div
+                                                class="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+                                                <i class="fa-solid fa-car text-dlu-blue text-sm flex-shrink-0"></i>
+                                                <label
+                                                    class="text-xs font-semibold text-dlu-blue whitespace-nowrap">Golongan
+                                                    Kendaraan:</label>
+                                                <select id="dash-golongan-knd"
+                                                    class="flex-1 text-sm border border-blue-200 rounded-lg p-2 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-white cursor-pointer">
+                                                    <option value="">-- Pilih Golongan --</option>
+                                                    <option value="2">Gol. II — Motor &lt; 500cc</option>
+                                                    <option value="4a">Gol. IVA — Mobil Penumpang</option>
+                                                    <option value="5">Gol. V — Bus / Truk Sedang</option>
+                                                    <option value="6">Gol. VI — Truk Besar</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Asal -->
+                                    <div class="md:col-span-4">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kota Asal <span
+                                                class="text-gray-400 font-normal text-xs">/ Origin</span></label>
+                                        <div class="relative">
+                                            <select id="dash-origin"
+                                                class="w-full text-sm border border-gray-300 rounded-lg p-3 pl-10 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-white cursor-pointer shadow-sm appearance-none">
+                                                <option value="">-- Pilih Asal --</option>
+                                                <option value="SUB">Surabaya (Pel.Tanjung Perak)</option>
+                                                <option value="BDJ">Banjarmasin (Pel.Trisakti)</option>
+                                                <option value="MAK">Makassar (Pel.Soekarno Hatta)</option>
+                                            </select>
+                                            <i
+                                                class="fa-solid fa-location-dot absolute left-4 top-3.5 text-gray-400"></i>
+                                            <i
+                                                class="fa-solid fa-chevron-down absolute right-4 top-4 text-gray-400 text-xs pointer-events-none"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Swap Icon -->
+                                    <div class="md:col-span-1 flex items-end justify-center pb-2 hidden md:flex">
+                                        <button type="button"
+                                            class="w-10 h-10 rounded-full bg-blue-50 text-dlu-blue hover:bg-dlu-blue hover:text-white transition flex items-center justify-center shadow-sm">
+                                            <i class="fa-solid fa-right-left"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Tujuan -->
+                                    <div class="md:col-span-4">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kota Tujuan <span
+                                                class="text-gray-400 font-normal text-xs">/ Dest</span></label>
+                                        <div class="relative">
+                                            <select id="dash-dest"
+                                                class="w-full text-sm border border-gray-300 rounded-lg p-3 pl-10 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-white cursor-pointer shadow-sm appearance-none">
+                                                <option value="">-- Pilih Tujuan --</option>
+                                                <option value="BDJ">Banjarmasin (Pel.Trisakti)</option>
+                                                <option value="MAK">Makassar (Pel.Soekarno Hatta)</option>
+                                            </select>
+                                            <i
+                                                class="fa-solid fa-location-dot absolute left-4 top-3.5 text-gray-400"></i>
+                                            <i
+                                                class="fa-solid fa-chevron-down absolute right-4 top-4 text-gray-400 text-xs pointer-events-none"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Middle Row: Dates & Round Trip -->
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 bg-gray-50 p-6 rounded-xl border border-gray-100">
+
+                                    <div class="md:col-span-12 flex items-center mb-2">
+                                        <input type="checkbox" id="roundtrip"
+                                            class="w-4 h-4 text-dlu-blue rounded focus:ring-dlu-blue cursor-pointer">
+                                        <label for="roundtrip"
+                                            class="ml-2 text-sm font-bold text-gray-700 cursor-pointer">Pulang Pergi
+                                            <span class="text-gray-400 font-normal text-xs ml-1">/ Round
+                                                Trip</span></label>
+                                    </div>
+
+                                    <!-- Departure Date -->
+                                    <div class="md:col-span-6">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2 mt-1">Tanggal
+                                            Berangkat <span class="text-gray-400 font-normal text-xs">/
+                                                Departure</span></label>
+                                        <div class="flex gap-2">
+                                            <select
+                                                class="w-1/3 text-sm border border-gray-300 rounded-lg p-2.5 bg-white shadow-sm cursor-pointer outline-none focus:border-dlu-blue">
+                                                <option>20</option>
+                                            </select>
+                                            <select
+                                                class="w-1/3 text-sm border border-gray-300 rounded-lg p-2.5 bg-white shadow-sm cursor-pointer outline-none focus:border-dlu-blue">
+                                                <option>Mar</option>
+                                            </select>
+                                            <select
+                                                class="w-1/3 text-sm border border-gray-300 rounded-lg p-2.5 bg-white shadow-sm cursor-pointer outline-none focus:border-dlu-blue">
+                                                <option>2026</option>
+                                            </select>
+                                        </div>
+                                        <p class="text-[10px] text-gray-500 mt-2"><i
+                                                class="fa-solid fa-circle-info mr-1 text-dlu-blue"></i> Menampilkan
+                                            jadwal berangkat 7 hari sebelum & sesudah tgl dipilih</p>
+                                    </div>
+
+                                    <!-- Return Date (Disabled by default) -->
+                                    <div class="md:col-span-6 opacity-50 pointer-events-none transition-opacity"
+                                        id="return-date-container">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2 mt-1">Tanggal
+                                            Pulang <span class="text-gray-400 font-normal text-xs">/
+                                                Return</span></label>
+                                        <div class="flex gap-2">
+                                            <select
+                                                class="w-1/3 text-sm border border-gray-300 rounded-lg p-2.5 bg-white shadow-sm cursor-pointer outline-none focus:border-dlu-blue">
+                                                <option>25</option>
+                                            </select>
+                                            <select
+                                                class="w-1/3 text-sm border border-gray-300 rounded-lg p-2.5 bg-white shadow-sm cursor-pointer outline-none focus:border-dlu-blue">
+                                                <option>Mar</option>
+                                            </select>
+                                            <select
+                                                class="w-1/3 text-sm border border-gray-300 rounded-lg p-2.5 bg-white shadow-sm cursor-pointer outline-none focus:border-dlu-blue">
+                                                <option>2026</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Bottom Row Classes -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kelas Penumpang
+                                            <span class="text-gray-400 font-normal text-xs">/ Class</span></label>
+                                        <select
+                                            class="w-full text-sm border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-white cursor-pointer shadow-sm">
+                                            <option>-- Semua Kelas --</option>
+                                            <option>VIP</option>
+                                            <option>Kelas I</option>
+                                            <option>Ekonomi</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kelas Kamar <span
+                                                class="text-gray-400 font-normal text-xs">/ Room</span></label>
+                                        <select
+                                            class="w-full text-sm border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-white cursor-pointer shadow-sm">
+                                            <option>-- Semua Kamar --</option>
+                                            <option>VIP Suites (2 Tempat Tidur)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="flex justify-end pt-4 border-t">
+                                    <button type="submit"
+                                        class="bg-dlu-blue text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-blue-800 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                                        <i class="fa-solid fa-magnifying-glass"></i> Cari Jadwal Sekarang
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <!-- TAB: PROFIL SAYA -->
+                        <div id="dashboard-tab-profile"
+                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 hidden">
+                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
+                                    class="fa-solid fa-user-circle text-dlu-blue mr-2"></i> Profil Pengguna
+                            </h2>
+                            <div class="flex flex-col md:flex-row gap-8">
+                                <!-- Profile Picture / Avatar -->
+                                <div class="flex flex-col items-center">
+                                    <div
+                                        class="w-32 h-32 rounded-full bg-blue-100 text-dlu-blue flex items-center justify-center text-5xl font-bold mb-4 shadow-sm border-4 border-white">
+                                        BS
+                                    </div>
+                                    <button
+                                        class="text-sm font-semibold text-dlu-blue hover:text-blue-800 transition">Ubah
+                                        Foto</button>
+                                </div>
+                                <!-- Profile Form -->
+                                <div class="flex-1 w-full">
+                                    <form
+                                        onsubmit="event.preventDefault(); Swal.fire({icon: 'success', title: 'Berhasil', text: 'Profil berhasil diperbarui.', timer: 1500, showConfirmButton: false});">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <div>
+                                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nama
+                                                    Lengkap</label>
+                                                <input type="text"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-gray-50"
+                                                    value="Budi Santoso">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor
+                                                    Identitas (KTP)</label>
+                                                <input type="text"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none bg-gray-100 text-gray-500 cursor-not-allowed"
+                                                    value="357xxxxxxxxxxxxx" disabled>
+                                                <p class="text-[10px] text-gray-400 mt-1">Harap hubungi CS untuk ubah
+                                                    identitas</p>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor
+                                                    Telepon / WhatsApp</label>
+                                                <input type="tel"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-gray-50"
+                                                    value="081234567890">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat
+                                                    Email</label>
+                                                <input type="email"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-gray-50"
+                                                    value="test@dlu.co.id">
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-end pt-4 border-t">
+                                            <button type="submit"
+                                                class="bg-dlu-yellow text-dlu-blue font-bold py-2.5 px-6 rounded-lg shadow hover:bg-yellow-400 transition">
+                                                Simpan Perubahan
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: PESANAN SAYA -->
+                        <div id="dashboard-tab-orders"
+                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 hidden">
+                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
+                                    class="fa-solid fa-list-check text-dlu-blue mr-2"></i> Riwayat Pesanan Saya
+                            </h2>
+
+                            <!-- Search / Filter Orders -->
+                            <div class="flex flex-col md:flex-row gap-4 mb-6 justify-between items-center">
+                                <div class="relative w-full md:w-64">
+                                    <input type="text" placeholder="Cari Kode Booking / Rute..."
+                                        class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none text-sm transition">
+                                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                                </div>
+                                <select
+                                    class="w-full md:w-auto text-sm border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition cursor-pointer">
+                                    <option>Semua Status</option>
+                                    <option>Lunas</option>
+                                    <option>Menunggu Pembayaran</option>
+                                    <option>Dibatalkan</option>
+                                </select>
+                            </div>
+
+                            <!-- List of Orders -->
+                            <div class="space-y-4">
+                                <!-- Order Item 1 -->
+                                <div
+                                    class="border border-gray-200 rounded-xl p-5 hover:border-dlu-blue hover:shadow-md transition">
+                                    <div
+                                        class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-gray-100 pb-4 mb-4">
+                                        <div>
+                                            <p class="text-xs text-gray-500 font-semibold mb-1">Tanggal Pemesanan: 05
+                                                Mar 2026</p>
+                                            <h3 class="text-lg font-bold text-gray-800">Kode Booking: <span
+                                                    class="text-dlu-blue">DLU-A1B2C3</span></h3>
+                                        </div>
+                                        <div class="text-left md:text-right">
+                                            <span
+                                                class="inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full"><i
+                                                    class="fa-solid fa-check-circle mr-1"></i> LUNAS</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                                        <div class="flex items-center gap-4">
+                                            <div class="bg-gray-50 p-3 rounded-lg flex items-center justify-center">
+                                                <i class="fa-solid fa-ship text-2xl text-gray-400"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-gray-800">Surabaya (SUB) <i
+                                                        class="fa-solid fa-arrow-right mx-2 text-gray-400 text-xs"></i>
+                                                    Makassar (MAK)</p>
+                                                <p class="text-sm text-gray-500">KM. Dharma Kencana VII • 2 Penumpang
+                                                </p>
+                                                <p class="text-xs text-gray-400 mt-1">Berangkat: 10 Mar 2026, 09:00 WIB
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="w-full md:w-auto">
+                                            <button
+                                                class="w-full md:w-auto border border-dlu-blue text-dlu-blue hover:bg-blue-50 font-semibold py-2 px-4 rounded-lg text-sm transition transition"
+                                                onclick="app.showOrderETicketPopup('DLU-A1B2C3')">
+                                                Lihat E-Tiket
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Item 2 -->
+                                <div
+                                    class="border border-gray-200 rounded-xl p-5 hover:border-dlu-blue hover:shadow-md transition opacity-75">
+                                    <div
+                                        class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-gray-100 pb-4 mb-4">
+                                        <div>
+                                            <p class="text-xs text-gray-500 font-semibold mb-1">Tanggal Pemesanan: 20
+                                                Feb 2026</p>
+                                            <h3 class="text-lg font-bold text-gray-800">Kode Booking: <span
+                                                    class="text-dlu-blue">DLU-X9Y8Z7</span></h3>
+                                        </div>
+                                        <div class="text-left md:text-right">
+                                            <span
+                                                class="inline-block bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full"><i
+                                                    class="fa-solid fa-clock mr-1"></i> MENUNGGU PEMBAYARAN</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                                        <div class="flex items-center gap-4">
+                                            <div class="bg-gray-50 p-3 rounded-lg flex items-center justify-center">
+                                                <i class="fa-solid fa-car text-2xl text-gray-400"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-gray-800">Balikpapan (BPN) <i
+                                                        class="fa-solid fa-arrow-right mx-2 text-gray-400 text-xs"></i>
+                                                    Surabaya (SUB)</p>
+                                                <p class="text-sm text-gray-500">KM. Dharma Ferry V • 1 Kendaraan (Gol
+                                                    II)</p>
+                                                <p class="text-xs text-gray-400 mt-1">Berangkat: 25 Feb 2026, 14:00 WITA
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="w-full md:w-auto flex flex-col sm:flex-row gap-2">
+                                            <button
+                                                class="w-full sm:w-auto bg-dlu-blue text-white hover:bg-blue-800 font-semibold py-2 px-4 rounded-lg text-sm transition">
+                                                Bayar Sekarang
+                                            </button>
+                                            <button
+                                                class="w-full sm:w-auto text-red-500 hover:text-red-700 hover:bg-red-50 font-semibold py-2 px-4 rounded-lg text-sm transition">
+                                                Batal
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= PESAN TIKET PAGE ======================= -->
+        <section id="page-pesan-tiket" class="page-section hidden">
+            <div class="max-w-4xl mx-auto">
+
+                <!-- Header Area (match Jadwal Keberangkatan style) -->
+                <div class="mb-6 mt-2">
+                    <!-- Progress Bar -->
+                    <div class="max-w-3xl mx-auto mb-8">
+                        <div class="flex justify-between relative z-10 w-full">
+                            <div class="step-item completed">
+                                <div class="step-circle mx-auto mb-2">1</div>
+                                <p class="text-xs font-medium">Cari</p>
+                            </div>
+                            <div class="step-item completed">
+                                <div class="step-circle mx-auto mb-2">2</div>
+                                <p class="text-xs font-medium">Pilih</p>
+                            </div>
+                            <div class="step-item active">
+                                <div class="step-circle mx-auto mb-2">3</div>
+                                <p class="text-xs font-medium">Isi Data</p>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-circle mx-auto mb-2">4</div>
+                                <p class="text-xs font-medium text-gray-400">Bayar</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-l-4 border-dlu-yellow pl-3">Pesan Tiket</h2>
+                        <button class="text-sm font-semibold text-dlu-blue hover:underline" onclick="app.backToPilih()">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Pilih
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Trip Info Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-4">
+                    <div class="flex items-start justify-between flex-wrap gap-3 mb-4 pb-4 border-b border-gray-100">
+                        <p class="text-lg font-bold text-gray-800" id="pt-ship-name">KM. Dharma Ferry 3 <span
+                                class="text-sm font-normal text-gray-400 ml-1" id="pt-ship-code">DFR3</span></p>
+                        <button onclick="app.navigate('home')"
+                            class="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 transition">
+                            <i class="fa-solid fa-sync-alt text-xs"></i> Ganti Jadwal
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <div class="flex-1 min-w-[110px]">
+                            <p class="font-bold text-gray-800" id="pt-origin-name">Batulicin</p>
+                            <p class="text-xs text-gray-500 mt-0.5" id="pt-origin-sub">Pel. Samudra</p>
+                            <p class="text-sm font-semibold text-dlu-blue mt-1" id="pt-depart-time">Senin, 09 Mar 2026
+                                &middot; 18:00 WITA</p>
+                        </div>
+                        <div class="text-dlu-blue text-xl px-2"><i class="fa-solid fa-long-arrow-alt-right"></i></div>
+                        <div class="flex-1 min-w-[110px] text-right">
+                            <p class="font-bold text-gray-800" id="pt-dest-name">Makassar</p>
+                            <p class="text-xs text-gray-500 mt-0.5" id="pt-dest-sub">Pel. Soekarno Hatta</p>
+                            <p class="text-sm font-semibold text-dlu-blue mt-1" id="pt-arrive-time">Selasa, 10 Mar 2026
+                                &middot; 17:13 WITA</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-6 mt-4 pt-4 border-t border-gray-100">
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Durasi</p>
+                            <p class="font-semibold text-gray-800 text-sm">&plusmn; 23 jam 13 menit</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Kelas</p>
+                            <p class="font-semibold text-gray-800 text-sm" id="pt-class">Ekonomi</p>
+                        </div>
+                        <div class="ml-auto text-right">
+                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total</p>
+                            <p class="text-xl font-bold text-dlu-blue" id="pt-total-display">Rp 1.989.400</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM -->
+                <form id="pt-form" onsubmit="app.ptSubmit(event)" novalidate>
+
+                    <!-- DATA PEMESAN -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-4 overflow-hidden">
+                        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-blue-100 text-dlu-blue flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <h2 class="font-bold text-gray-800">Data Pemesan</h2>
+                        </div>
+                        <div class="p-5">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+                                <div class="md:col-span-3">
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Titel <span
+                                            class="text-red-500">*</span></label>
+                                    <select id="pt-gender" name="pt_gender"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition cursor-pointer">
+                                        <option value="L">Tuan</option>
+                                        <option value="P">Nyonya</option>
+                                        <option value="F">Nona</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-9">
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nama Pemesan <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="text" id="pt-name" name="pt_name" placeholder="Nama lengkap sesuai KTP"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">KTP / SIM / Passport
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="number" id="pt-idnum" name="pt_idnum" placeholder="No. identitas"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Email <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="email" id="pt-email" name="pt_email" placeholder="email@domain.com"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">No. Telp / WhatsApp
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="pt-phone" name="pt_phone" placeholder="081234xxxxxx"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Kota / Kabupaten
+                                        Asal <span class="text-red-500">*</span></label>
+                                    <select id="pt-city" name="pt_city"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition cursor-pointer">
+                                        <option value="">-- Pilih kota/kabupaten --</option>
+                                        <option>Kota Jakarta</option>
+                                        <option>Kota Makassar</option>
+                                        <option>Kota Surabaya</option>
+                                        <option>Kota Balikpapan</option>
+                                        <option>Kota Banjarmasin</option>
+                                        <option>Kabupaten Tanah Bumbu (Batulicin)</option>
+                                        <option>Kota Samarinda</option>
+                                        <option>Kota Manado</option>
+                                        <option>Kota Denpasar</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-2">Kirim Notifikasi
+                                    Via</label>
+                                <div class="flex gap-5">
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio"
+                                            name="pt_notif" value="3" checked class="accent-dlu-blue w-4 h-4">
+                                        WhatsApp</label>
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio"
+                                            name="pt_notif" value="2" class="accent-dlu-blue w-4 h-4"> SMS</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DATA PENUMPANG -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-4 overflow-hidden"
+                        id="pt-pax-section">
+                        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-blue-100 text-dlu-blue flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <h2 class="font-bold text-gray-800">Data Penumpang</h2>
+                        </div>
+                        <div class="p-5 space-y-4">
+
+                            <!-- Penumpang 1 Dewasa -->
+                            <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                <div
+                                    class="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100 flex-wrap gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-blue-100 text-dlu-blue text-xs font-bold px-3 py-1 rounded-full">Penumpang
+                                            1</span>
+                                        <span class="font-semibold text-sm text-gray-700">Dewasa</span>
+                                        <span class="text-xs text-gray-400">(&#8805; 12 tahun)</span>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Tarif: <span
+                                            class="font-semibold text-gray-800">Rp 85.000</span></span>
+                                </div>
+                                <div class="p-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+                                        <div class="md:col-span-3">
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Titel <span
+                                                    class="text-red-500">*</span></label>
+                                            <select id="pax0-title" name="pax0_title"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option>Tuan</option>
+                                                <option>Nyonya</option>
+                                                <option>Nona</option>
+                                            </select>
+                                        </div>
+                                        <div class="md:col-span-9">
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nama Lengkap
+                                                <span class="text-red-500">*</span></label>
+                                            <input type="text" id="pax0-name" name="pax0_name"
+                                                placeholder="Sesuai KTP / Passport"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">No. KTP /
+                                                Passport <span class="text-red-500">*</span></label>
+                                            <input type="number" id="pax0-idnum" name="pax0_idnum"
+                                                placeholder="No. identitas"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-semibold text-gray-600 mb-1.5">Kewarganegaraan</label>
+                                            <select id="pax0-nationality" name="pax0_nationality"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option>WNI &ndash; Warga Negara Indonesia</option>
+                                                <option>WNA &ndash; Warga Negara Asing</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-4 text-sm">
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Tarif Penumpang
+                                                Dewasa</span><span>Rp 85.000</span></div>
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Pass
+                                                Penumpang</span><span>Rp 2.500</span></div>
+                                        <div
+                                            class="flex justify-between font-bold text-gray-800 border-t border-gray-200 pt-2 mt-1">
+                                            <span>Subtotal</span><span>Rp 87.500</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Penumpang 2 Anak -->
+                            <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                <div
+                                    class="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100 flex-wrap gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-blue-100 text-dlu-blue text-xs font-bold px-3 py-1 rounded-full">Penumpang
+                                            2</span>
+                                        <span class="font-semibold text-sm text-gray-700">Anak-Anak</span>
+                                        <span class="text-xs text-gray-400">(3 &ndash; 11 tahun)</span>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Tarif: <span
+                                            class="font-semibold text-gray-800">Rp 42.500</span></span>
+                                </div>
+                                <div class="p-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+                                        <div class="md:col-span-3">
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Titel <span
+                                                    class="text-red-500">*</span></label>
+                                            <select id="pax1-title" name="pax1_title"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option>Sdr.</option>
+                                                <option>Sdri.</option>
+                                            </select>
+                                        </div>
+                                        <div class="md:col-span-9">
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nama Lengkap
+                                                <span class="text-red-500">*</span></label>
+                                            <input type="text" id="pax1-name" name="pax1_name"
+                                                placeholder="Sesuai Akta Lahir / KTP"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Tanggal
+                                                Lahir <span class="text-red-500">*</span></label>
+                                            <input type="date" id="pax1-tgl" name="pax1_tgl"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-semibold text-gray-600 mb-1.5">Kewarganegaraan</label>
+                                            <select id="pax1-nationality" name="pax1_nationality"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option>WNI</option>
+                                                <option>WNA</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-4 text-sm">
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Tarif Penumpang
+                                                Anak</span><span>Rp 42.500</span></div>
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Pass
+                                                Penumpang</span><span>Rp 2.500</span></div>
+                                        <div
+                                            class="flex justify-between font-bold text-gray-800 border-t border-gray-200 pt-2 mt-1">
+                                            <span>Subtotal</span><span>Rp 45.000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- DATA KENDARAAN -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-4 overflow-hidden"
+                        id="pt-veh-section">
+                        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-blue-100 text-dlu-blue flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-motorcycle"></i>
+                            </div>
+                            <h2 class="font-bold text-gray-800">Data Kendaraan</h2>
+                        </div>
+                        <div class="p-5 space-y-4">
+
+                            <!-- Kendaraan 1 -->
+                            <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                <div
+                                    class="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100 flex-wrap gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-blue-100 text-dlu-blue text-xs font-bold px-3 py-1 rounded-full">Kendaraan
+                                            1</span>
+                                        <span class="font-semibold text-sm text-gray-700">Sepeda Motor 2.A</span>
+                                        <span class="text-xs text-gray-400">(s.d 249CC)</span>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Tarif: <span
+                                            class="font-semibold text-gray-800">Rp 640.000</span></span>
+                                </div>
+                                <div class="p-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nama Pemilik
+                                                (STNK) <span class="text-red-500">*</span></label>
+                                            <input type="text" id="knd0-name" name="knd0_name"
+                                                placeholder="Nama sesuai STNK"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">No. Polisi
+                                                <span class="text-red-500">*</span></label>
+                                            <input type="text" id="knd0-nopol" name="knd0_nopol"
+                                                placeholder="Contoh: L 1234 AB"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Kota / Kab.
+                                                <span class="text-red-500">*</span></label>
+                                            <select id="knd0-city" name="knd0_city"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option value="">-- Pilih --</option>
+                                                <option>Kota Jakarta</option>
+                                                <option>Kota Makassar</option>
+                                                <option>Kota Surabaya</option>
+                                                <option>Kota Balikpapan</option>
+                                                <option>Kabupaten Tanah Bumbu (Batulicin)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-semibold text-gray-600 mb-1.5">Muatan</label>
+                                            <select id="knd0-muatan" name="knd0_muatan"
+                                                onchange="app.ptToggleKet('knd0')"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option value="0">KOSONG</option>
+                                                <option value="1">ADA MUATAN</option>
+                                            </select>
+                                        </div>
+                                        <div id="knd0-ket-wrap" class="hidden">
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Keterangan
+                                                Muatan</label>
+                                            <input type="text" id="knd0-ket" placeholder="Keterangan muatan"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-4 text-sm">
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Tarif
+                                                Kendaraan</span><span>Rp 640.000</span></div>
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Pass
+                                                Kendaraan</span><span>Rp 32.200</span></div>
+                                        <div
+                                            class="flex justify-between font-bold text-gray-800 border-t border-gray-200 pt-2 mt-1">
+                                            <span>Subtotal</span><span>Rp 672.200</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kendaraan 2 -->
+                            <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                <div
+                                    class="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100 flex-wrap gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-blue-100 text-dlu-blue text-xs font-bold px-3 py-1 rounded-full">Kendaraan
+                                            2</span>
+                                        <span class="font-semibold text-sm text-gray-700">Sepeda Motor 2.B</span>
+                                        <span class="text-xs text-gray-400">(250CC &ndash; 1000CC / Roda 3)</span>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Tarif: <span
+                                            class="font-semibold text-gray-800">Rp 1.285.000</span></span>
+                                </div>
+                                <div class="p-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nama Pemilik
+                                                (STNK) <span class="text-red-500">*</span></label>
+                                            <input type="text" id="knd1-name" name="knd1_name"
+                                                placeholder="Nama sesuai STNK"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">No. Polisi
+                                                <span class="text-red-500">*</span></label>
+                                            <input type="text" id="knd1-nopol" name="knd1_nopol"
+                                                placeholder="Contoh: B 5678 CD"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Kota / Kab.
+                                                <span class="text-red-500">*</span></label>
+                                            <select id="knd1-city" name="knd1_city"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option value="">-- Pilih --</option>
+                                                <option>Kota Jakarta</option>
+                                                <option>Kota Makassar</option>
+                                                <option>Kota Surabaya</option>
+                                                <option>Kota Balikpapan</option>
+                                                <option>Kabupaten Tanah Bumbu (Batulicin)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-semibold text-gray-600 mb-1.5">Muatan</label>
+                                            <select id="knd1-muatan" name="knd1_muatan"
+                                                onchange="app.ptToggleKet('knd1')"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition cursor-pointer">
+                                                <option value="0">KOSONG</option>
+                                                <option value="1">ADA MUATAN</option>
+                                            </select>
+                                        </div>
+                                        <div id="knd1-ket-wrap" class="hidden">
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Keterangan
+                                                Muatan</label>
+                                            <input type="text" id="knd1-ket" placeholder="Keterangan muatan"
+                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-dlu-blue outline-none transition">
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-4 text-sm">
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Tarif
+                                                Kendaraan</span><span>Rp 1.285.000</span></div>
+                                        <div class="flex justify-between text-gray-500 py-1"><span>Pass
+                                                Kendaraan</span><span>Rp 32.200</span></div>
+                                        <div
+                                            class="flex justify-between font-bold text-gray-800 border-t border-gray-200 pt-2 mt-1">
+                                            <span>Subtotal</span><span>Rp 1.317.200</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Total Bar -->
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 px-5 py-4 flex items-center justify-between flex-wrap gap-3 mb-4">
+                        <p class="text-sm text-gray-500">Total Pembayaran (2 Penumpang + 2 Kendaraan)</p>
+                        <p class="text-2xl font-bold text-dlu-blue">Rp 2.122.400</p>
+                    </div>
+
+                    <!-- PEMBAYARAN -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-4 overflow-hidden">
+                        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-blue-100 text-dlu-blue flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </div>
+                            <h2 class="font-bold text-gray-800">Pilih Metode Pembayaran</h2>
+                        </div>
+                        <div class="p-5">
+                            <button type="button" id="pt-pay-header"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-100 transition mb-3"
+                                onclick="app.ptTogglePayAccordion()">
+                                Virtual Account
+                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs" id="pt-pay-chev"></i>
+                            </button>
+                            <div id="pt-pay-body" class="space-y-2">
+                                <label id="ptopt-bri"
+                                    class="flex items-center gap-4 p-3.5 border border-gray-200 rounded-xl cursor-pointer hover:border-dlu-blue hover:bg-blue-50 transition">
+                                    <input type="radio" name="pt_bank" value="14"
+                                        class="accent-dlu-blue w-4 h-4 flex-shrink-0"
+                                        onchange="app.ptSelectPay('ptopt-bri')">
+                                    <div
+                                        class="w-14 h-7 rounded bg-blue-100 flex items-center justify-center font-bold text-sm text-blue-900 flex-shrink-0">
+                                        BRI</div>
+                                    <div>
+                                        <p class="font-semibold text-sm text-gray-800">BRI Virtual Account</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">Admin Fee Rp 4.500 &middot; Dicek
+                                            otomatis</p>
+                                    </div>
+                                </label>
+                                <label id="ptopt-bni"
+                                    class="flex items-center gap-4 p-3.5 border border-gray-200 rounded-xl cursor-pointer hover:border-dlu-blue hover:bg-blue-50 transition">
+                                    <input type="radio" name="pt_bank" value="1"
+                                        class="accent-dlu-blue w-4 h-4 flex-shrink-0"
+                                        onchange="app.ptSelectPay('ptopt-bni')">
+                                    <div
+                                        class="w-14 h-7 rounded bg-yellow-100 flex items-center justify-center font-bold text-sm text-yellow-900 flex-shrink-0">
+                                        BNI</div>
+                                    <div>
+                                        <p class="font-semibold text-sm text-gray-800">BNI Virtual Account</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">Admin Fee Rp 4.500 &middot; Dicek
+                                            otomatis</p>
+                                    </div>
+                                </label>
+                                <label id="ptopt-mdr"
+                                    class="flex items-center gap-4 p-3.5 border border-gray-200 rounded-xl cursor-pointer hover:border-dlu-blue hover:bg-blue-50 transition">
+                                    <input type="radio" name="pt_bank" value="4"
+                                        class="accent-dlu-blue w-4 h-4 flex-shrink-0"
+                                        onchange="app.ptSelectPay('ptopt-mdr')">
+                                    <div
+                                        class="w-14 h-7 rounded bg-green-100 flex items-center justify-center font-bold text-sm text-green-900 flex-shrink-0">
+                                        MDR</div>
+                                    <div>
+                                        <p class="font-semibold text-sm text-gray-800">Mandiri Virtual Account</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">Admin Fee Rp 4.500 &middot; Dicek
+                                            otomatis</p>
+                                    </div>
+                                </label>
+                                <label
+                                    class="flex items-center gap-4 p-3.5 border border-gray-200 rounded-xl opacity-50 cursor-not-allowed">
+                                    <input type="radio" name="pt_bank" value="5" class="w-4 h-4" disabled>
+                                    <div
+                                        class="w-14 h-7 rounded bg-gray-100 flex items-center justify-center font-bold text-sm text-gray-400 flex-shrink-0">
+                                        BSI</div>
+                                    <div>
+                                        <p class="font-semibold text-sm text-gray-500">BSI Virtual Account <span
+                                                class="text-xs font-normal">(tidak tersedia)</span></p>
+                                        <p class="text-xs text-gray-400 mt-0.5">Admin Fee Rp 4.500</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="flex justify-end mt-6 pb-8">
+                        <button type="submit" id="pt-submit-btn"
+                            class="flex items-center gap-2 bg-dlu-yellow text-dlu-blue font-bold py-3 px-8 rounded-xl shadow hover:bg-yellow-400 transition">
+                            Lanjut ke Pembayaran <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dlu-blue text-white mt-16 pt-12 pb-6">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-blue-800 pb-8">
+
+            <!-- Company Info -->
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center">
+                    <img src="https://tiket.dlu.co.id/img/new-logo.png" alt="DLU Ferry Logo"
+                        class="h-12 w-auto brightness-0 invert">
+                </div>
+                <p class="text-sm text-blue-100">Kami melayani negeri dengan memberikan pelayanan terbaik bagi para pelanggan sebagai tamu kami yang terhormat.</p>
+            </div>
+
+            <!-- Helpful Links -->
+            <div>
+                <h4 class="font-bold text-dlu-yellow mb-4">Layanan Cepat</h4>
+                <ul class="space-y-2 text-sm text-blue-100">
+                    <li><a href="#" class="hover:text-white transition"><i
+                                class="fa-solid fa-angle-right mr-2 text-dlu-yellow text-xs"></i>Cek Jadwal</a></li>
+                    <li><a href="#" class="hover:text-white transition"><i
+                                class="fa-solid fa-angle-right mr-2 text-dlu-yellow text-xs"></i>Panduan Pemesanan</a>
+                    </li>
+                    <li><a href="#" class="hover:text-white transition"><i
+                                class="fa-solid fa-angle-right mr-2 text-dlu-yellow text-xs"></i>Syarat & Ketentuan</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- App Downloads -->
+            <div>
+                <h4 class="font-bold text-dlu-yellow mb-4">Aplikasi Mobile KAMI</h4>
+                <p class="text-sm text-blue-100 mb-4">Nikmati kemudahan pesan tiket langsung dari genggaman Anda!</p>
+                <div class="flex gap-3 items-center">
+                    <a href="https://play.google.com/store/apps/details?id=com.ibcs.dlu" target="_blank"
+                        class="hover:opacity-80 transition transform hover:-translate-y-1 duration-300">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                            alt="Google Play" class="h-10 w-auto bg-black border border-gray-800 rounded-md">
+                    </a>
+                    <a href="https://apps.apple.com/us/app/dlu-ferry/id1527376752" target="_blank"
+                        class="hover:opacity-80 transition transform hover:-translate-y-1 duration-300">
+                        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                            alt="App Store" class="h-10 w-auto">
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 text-center text-xs text-blue-300">
+            &copy; 2026 PT. Dharma Lautan Utama. Hak Cipta Dilindungi Undang-Undang. Redesign oleh Spinotek.
+        </div>
+    </footer>
+
+    <!-- App Logic -->
+    <script src="app.js"></script>
+</body>
+
+</html>

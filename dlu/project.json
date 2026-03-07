@@ -1,0 +1,15 @@
+{
+    "name": "DLU",
+    "description": "",
+    "icon": "https://dlu.co.id/wp-content/uploads/2025/04/logodluheight-150x150.png",
+    "category": "Web App",
+    "status": "COMPLETED",
+    "tech": [
+        "html",
+        "javascript",
+        "tailwindcss"
+    ],
+    "demo_url": "https://demo.spinotek.com/dlu",
+    "repo_url": null,
+    "added_at": "2026-03-08"
+}
