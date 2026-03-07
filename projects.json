@@ -1,5 +1,22 @@
 [
   {
+    "slug": "dlu",
+    "name": "DLU",
+    "description": "",
+    "category": "Web App",
+    "status": "COMPLETED",
+    "tech": [
+      "html",
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "https://dlu.co.id/wp-content/uploads/2025/04/logodluheight-150x150.png",
+    "demo_url": "https://demo.spinotek.com/dlu",
+    "repo_url": null,
+    "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/dlu/card.png",
+    "added_at": "2026-03-08"
+  },
+  {
     "slug": "lpk-talenta",
     "name": "LPK Talenta",
     "description": "LPK Talenta adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
