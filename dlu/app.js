@@ -64,6 +64,59 @@ window.app = {
         this.slideInterval = setInterval(() => this.nextSlide(), 5000);
     },
 
+    toggleMobileNav(forceOpen = null) {
+        const panel = document.getElementById('nav-mobile-panel');
+        const toggleBtn = document.getElementById('nav-mobile-toggle');
+        const toggleIcon = document.getElementById('nav-mobile-toggle-icon');
+        if (!panel || !toggleBtn || !toggleIcon) return;
+
+        const willOpen = typeof forceOpen === 'boolean' ? forceOpen : panel.classList.contains('hidden');
+        panel.classList.toggle('hidden', !willOpen);
+        toggleBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        toggleIcon.className = willOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    },
+
+    syncNavbarAuthState() {
+        const desktopGuest = document.getElementById('nav-desktop-guest');
+        const desktopAuthBtn = document.getElementById('nav-auth-btn');
+        const desktopPublicLinks = document.getElementById('nav-public-links');
+        const toggleBtn = document.getElementById('nav-mobile-toggle');
+        const panel = document.getElementById('nav-mobile-panel');
+
+        const mobilePublicLinks = document.getElementById('nav-mobile-public-links');
+        const mobileAuthBtn = document.getElementById('nav-mobile-auth-btn');
+        const mobileDashboardLinks = document.getElementById('nav-mobile-dashboard-links');
+        const mobileUserMenu = document.getElementById('nav-mobile-user-menu');
+        const mobileUserName = document.getElementById('nav-mobile-user-name');
+
+        const isAuth = !!this.isLoggedIn;
+        const name = this.currentUser?.name || 'User';
+
+        if (desktopGuest) {
+            desktopGuest.className = isAuth
+                ? 'hidden md:hidden items-center gap-2 sm:gap-4'
+                : 'hidden md:flex items-center gap-2 sm:gap-4';
+        }
+
+        if (desktopPublicLinks) {
+            desktopPublicLinks.className = isAuth ? 'hidden' : 'hidden lg:flex space-x-8 items-center';
+        }
+
+        if (desktopAuthBtn) desktopAuthBtn.classList.toggle('hidden', isAuth);
+        if (mobilePublicLinks) mobilePublicLinks.classList.toggle('hidden', isAuth);
+        if (mobileAuthBtn) mobileAuthBtn.classList.toggle('hidden', isAuth);
+        if (mobileDashboardLinks) mobileDashboardLinks.classList.toggle('hidden', !isAuth);
+
+        if (mobileUserMenu) {
+            mobileUserMenu.classList.toggle('hidden', !isAuth);
+        }
+
+        if (mobileUserName) mobileUserName.innerText = name;
+
+        if (toggleBtn) toggleBtn.classList.toggle('md:hidden', !isAuth);
+        if (panel) panel.classList.toggle('md:hidden', !isAuth);
+    },
+
     // === Navigation Flow ===
     navigate(pageId) {
         // Hide all pages
@@ -90,8 +143,16 @@ window.app = {
             }
         }
         window.scrollTo(0, 0);
+        this.toggleMobileNav(false);
         // Always close inline results when navigating away
         this.closeInlineResults();
+    },
+
+    openDashboardTab(tabId, event) {
+        if (event) event.preventDefault();
+        this.navigate('home');
+        this.switchDashboardTab(null, tabId);
+        this.toggleMobileNav(false);
     },
 
     switchDashboardTab(event, tabId) {
@@ -105,17 +166,17 @@ window.app = {
 
         // 2. Remove active styling from all sidebar links
         const navIds = ['nav-tab-profile', 'nav-tab-search', 'nav-tab-orders'];
+        const baseClass = 'flex items-center justify-between gap-2 px-3 py-2.5 text-gray-100 hover:bg-blue-800 rounded-lg transition group';
+        const activeClass = 'flex items-center justify-between gap-2 px-3 py-2.5 bg-dlu-blue text-white rounded-lg shadow-sm transition';
         navIds.forEach(id => {
             const navEl = document.getElementById(id);
             if (navEl) {
                 // reset to inactive style
-                navEl.className = "flex justify-between items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-dlu-blue rounded-lg transition group";
+                navEl.className = baseClass;
                 // ensure icon has default gray instead of inheriting white
                 const icon = navEl.querySelector('i');
                 if (icon) {
-                    if (!icon.className.includes('text-gray-400')) {
-                        icon.className += ' text-gray-400 group-hover:text-dlu-blue';
-                    }
+                    icon.classList.add('text-blue-200', 'group-hover:text-white');
                 }
             }
         });
@@ -130,10 +191,10 @@ window.app = {
         // 4. Add active styling to the clicked sidebar link
         const activeNav = document.getElementById('nav-tab-' + tabId);
         if (activeNav) {
-            activeNav.className = "flex justify-between items-center px-4 py-3 bg-dlu-blue text-white rounded-lg shadow-sm transition";
+            activeNav.className = activeClass;
             const icon = activeNav.querySelector('i');
             if (icon) {
-                icon.className = icon.className.replace('text-gray-400', '').replace('group-hover:text-dlu-blue', '').trim();
+                icon.classList.remove('text-blue-200', 'group-hover:text-white');
             }
         }
     },
@@ -644,16 +705,10 @@ window.app = {
                 timer: 1500,
                 showConfirmButton: false
             }).then(() => {
-                document.getElementById('nav-auth-btn').classList.add('hidden');
-                document.getElementById('nav-public-links').classList.add('hidden');
-                const userMenu = document.getElementById('nav-user-menu');
-                userMenu.classList.replace('hidden', 'flex');
-                document.getElementById('nav-user-name').innerText = this.currentUser.name;
-
-                document.getElementById('nav-user-name').innerText = this.currentUser.name;
-
+                this.syncNavbarAuthState();
                 // Return to appropriate view
                 this.navigate('home');
+                this.switchDashboardTab(null, 'search');
             });
         } else {
             Swal.fire({
@@ -685,11 +740,12 @@ window.app = {
             text: 'Akun Anda telah dibuat. Silakan lanjut ke beranda.',
             confirmButtonColor: '#00478F'
         }).then(() => {
-            document.getElementById('nav-auth-btn').classList.add('hidden');
-            document.getElementById('nav-public-links').classList.add('hidden');
-            document.getElementById('nav-user-menu').classList.replace('hidden', 'flex');
-
+            const regName = document.getElementById('reg-name')?.value?.trim() || 'Pengguna Baru';
+            this.isLoggedIn = true;
+            this.currentUser = { name: regName };
+            this.syncNavbarAuthState();
             this.navigate('home');
+            this.switchDashboardTab(null, 'search');
         });
     },
 
@@ -704,10 +760,8 @@ window.app = {
             timer: 1000,
             showConfirmButton: false
         }).then(() => {
-            document.getElementById('nav-auth-btn').classList.remove('hidden');
-            document.getElementById('nav-public-links').classList.remove('hidden');
-            document.getElementById('nav-user-menu').classList.replace('flex', 'hidden');
-
+            this.syncNavbarAuthState();
+            this.toggleMobileNav(false);
             // If on a step > 1, reset to step 1
             this.setBookingStep(1);
             this.navigate('login');
@@ -1215,6 +1269,8 @@ window.app = {
 document.addEventListener('DOMContentLoaded', () => {
     // Initial UI state setup based on static class attributes
     app.navigate('home');
+    app.syncNavbarAuthState();
+    app.toggleMobileNav(false);
 
     // Initialize Slider
     app.initSlider();
@@ -1240,6 +1296,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.custom-select-dropdown').forEach(el => {
                 el.classList.remove('active');
             });
+        }
+        const panel = document.getElementById('nav-mobile-panel');
+        const toggleBtn = document.getElementById('nav-mobile-toggle');
+        if (panel && toggleBtn && !panel.classList.contains('hidden')) {
+            const clickedInsidePanel = panel.contains(e.target);
+            const clickedToggleBtn = toggleBtn.contains(e.target);
+            if (!clickedInsidePanel && !clickedToggleBtn) {
+                app.toggleMobileNav(false);
+            }
         }
     });
 });

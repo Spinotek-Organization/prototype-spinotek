@@ -219,8 +219,8 @@
                 <div class="flex items-center cursor-pointer" onclick="app.navigate('home')">
                     <img src="https://tiket.dlu.co.id/img/new-logo.png" alt="DLU Ferry Logo" class="h-12 w-auto">
                 </div>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <div id="nav-public-links" class="flex space-x-8 items-center">
+                <div id="nav-desktop-guest" class="hidden md:flex items-center gap-2 sm:gap-4">
+                    <div id="nav-public-links" class="hidden lg:flex space-x-8 items-center">
                         <a href="https://dlu.co.id/" class="hover:text-dlu-yellow transition">Beranda</a>
                         <a href="#" onclick="app.navigate('home')" class="hover:text-dlu-yellow transition">Jadwal
                             Kapal</a>
@@ -228,15 +228,53 @@
 
                     <!-- Auth Button for Logged Out User -->
                     <button id="nav-auth-btn" onclick="app.navigate('login')"
-                        class="bg-white text-dlu-blue px-4 py-2 rounded-md font-semibold hover:bg-dlu-light transition">
+                        class="bg-white text-dlu-blue px-3 sm:px-4 py-2 rounded-md font-semibold text-xs sm:text-sm hover:bg-dlu-light transition whitespace-nowrap">
                         Masuk DLU Ferry
                     </button>
+                </div>
+                <button id="nav-mobile-toggle" type="button" aria-expanded="false"
+                    class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-blue-500/60 text-white hover:bg-blue-800 transition"
+                    onclick="app.toggleMobileNav()">
+                    <i id="nav-mobile-toggle-icon" class="fa-solid fa-bars"></i>
+                </button>
+            </div>
 
-                    <!-- User Menu for Logged In User -->
-                    <div id="nav-user-menu" class="hidden items-center space-x-2 bg-blue-800 px-4 py-2 rounded-md">
-                        <i class="fa-solid fa-user-circle text-xl text-dlu-yellow"></i>
-                        <span id="nav-user-name" class="font-semibold text-sm">User</span>
-                        <div class="h-4 w-px bg-blue-600 mx-2"></div>
+            <div id="nav-mobile-panel" class="md:hidden hidden border-t border-blue-700 py-3 space-y-3">
+                <div id="nav-mobile-public-links" class="space-y-1">
+                    <a href="https://dlu.co.id/"
+                        class="block px-2 py-2 rounded-md text-sm font-medium hover:bg-blue-800 transition">Beranda</a>
+                    <a href="#" onclick="app.navigate('home'); app.toggleMobileNav(false)"
+                        class="block px-2 py-2 rounded-md text-sm font-medium hover:bg-blue-800 transition">Jadwal
+                        Kapal</a>
+                </div>
+                <button id="nav-mobile-auth-btn" onclick="app.navigate('login'); app.toggleMobileNav(false)"
+                    class="w-full bg-white text-dlu-blue px-4 py-2 rounded-md font-semibold text-sm hover:bg-dlu-light transition">
+                    Masuk DLU Ferry
+                </button>
+                <div id="nav-mobile-dashboard-links" class="hidden space-y-1 border-t border-blue-700 pt-3">
+                    <p class="text-[11px] uppercase tracking-wide text-blue-200 px-2 font-semibold">Menu Pengguna</p>
+                    <a href="#" id="nav-tab-search" onclick="app.openDashboardTab('search', event)"
+                        class="flex items-center justify-between gap-2 px-3 py-2.5 bg-dlu-blue text-white rounded-lg shadow-sm transition">
+                        <span class="font-medium">Pesan Tiket</span>
+                        <i class="fa-solid fa-ticket"></i>
+                    </a>
+                    <a href="#" id="nav-tab-profile" onclick="app.openDashboardTab('profile', event)"
+                        class="flex items-center justify-between gap-2 px-3 py-2.5 text-gray-100 hover:bg-blue-800 rounded-lg transition group">
+                        <span class="font-medium">Profil Saya</span>
+                        <i class="fa-solid fa-user text-blue-200 group-hover:text-white"></i>
+                    </a>
+                    <a href="#" id="nav-tab-orders" onclick="app.openDashboardTab('orders', event)"
+                        class="flex items-center justify-between gap-2 px-3 py-2.5 text-gray-100 hover:bg-blue-800 rounded-lg transition group">
+                        <span class="font-medium">Pesanan Saya</span>
+                        <i class="fa-solid fa-list text-blue-200 group-hover:text-white"></i>
+                    </a>
+                </div>
+                <div id="nav-mobile-user-menu" class="hidden bg-blue-800 px-3 py-3 rounded-md">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <i class="fa-solid fa-user-circle text-lg text-dlu-yellow"></i>
+                            <span id="nav-mobile-user-name" class="font-semibold text-sm truncate">User</span>
+                        </div>
                         <button onclick="app.logout()"
                             class="text-xs text-red-200 hover:text-white transition flex items-center gap-1"
                             title="Keluar">
@@ -713,40 +751,15 @@
                     <span class="text-gray-800 font-semibold">Pencarian Jadwal</span>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-                    <!-- Sidebar Navigation -->
-                    <div class="lg:col-span-1">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-4 lg:sticky lg:top-24">
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-2">Menu Pengguna
-                            </h3>
-                            <nav class="flex lg:flex-col gap-2 lg:gap-1 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0">
-                                <a href="#" id="nav-tab-profile" onclick="app.switchDashboardTab(event, 'profile')"
-                                    class="flex items-center justify-between lg:justify-between gap-2 px-3 lg:px-4 py-2.5 lg:py-3 text-gray-600 hover:bg-blue-50 hover:text-dlu-blue rounded-lg transition group whitespace-nowrap">
-                                    <span class="font-medium">Profil saya</span>
-                                    <i class="fa-solid fa-user text-gray-400 group-hover:text-dlu-blue"></i>
-                                </a>
-                                <a href="#" id="nav-tab-search" onclick="app.switchDashboardTab(event, 'search')"
-                                    class="flex items-center justify-between lg:justify-between gap-2 px-3 lg:px-4 py-2.5 lg:py-3 bg-dlu-blue text-white rounded-lg shadow-sm transition whitespace-nowrap">
-                                    <span class="font-medium">Pesan Tiket</span>
-                                    <i class="fa-solid fa-ticket"></i>
-                                </a>
-                                <a href="#" id="nav-tab-orders" onclick="app.switchDashboardTab(event, 'orders')"
-                                    class="flex items-center justify-between lg:justify-between gap-2 px-3 lg:px-4 py-2.5 lg:py-3 text-gray-600 hover:bg-blue-50 hover:text-dlu-blue rounded-lg transition group whitespace-nowrap">
-                                    <span class="font-medium">Pesanan Saya</span>
-                                    <i class="fa-solid fa-list text-gray-400 group-hover:text-dlu-blue"></i>
-                                </a>
-                            </nav>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-1 gap-5 md:gap-8">
 
                     <!-- Main Dashboard Content -->
-                    <div class="lg:col-span-3">
+                    <div class="lg:col-span-4">
 
                         <!-- TAB: PENCARIAN JADWAL -->
                         <div id="dashboard-tab-search"
-                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 block">
-                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
+                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 md:p-8 block">
+                            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
                                     class="fa-regular fa-calendar-check text-dlu-blue mr-2"></i> Pencarian Jadwal Baru
                             </h2>
 
@@ -759,10 +772,10 @@
                                     <div class="md:col-span-12 mb-2">
                                         <label class="block text-sm font-semibold text-gray-700 mb-3">Jenis Tiket <span
                                                 class="text-gray-400 font-normal text-xs">/ Ticket Type</span></label>
-                                        <div class="flex flex-wrap gap-3">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             <!-- Penumpang Card -->
                                             <label id="dash-toggle-pnp" onclick="app.dashToggleTicket('pnp')"
-                                                class="relative flex items-center gap-3 sm:gap-4 cursor-pointer px-4 sm:px-5 py-4 rounded-2xl border-2 border-dlu-blue bg-dlu-light transition-all shadow-sm min-w-0 sm:min-w-[160px] flex-1 sm:flex-none select-none">
+                                                class="relative flex items-center gap-3 sm:gap-4 cursor-pointer px-4 sm:px-5 py-4 rounded-2xl border-2 border-dlu-blue bg-dlu-light transition-all shadow-sm w-full select-none">
                                                 <input type="checkbox" id="dash-check-pnp" class="hidden" checked>
                                                 <!-- Checkmark badge -->
                                                 <span id="dash-badge-pnp"
@@ -774,9 +787,9 @@
                                                     <i id="dash-icon-pnp"
                                                         class="fa-solid fa-users text-dlu-blue text-lg"></i>
                                                 </div>
-                                                <div>
+                                                <div class="min-w-0">
                                                     <p id="dash-title-pnp"
-                                                        class="font-bold text-dlu-blue text-sm leading-tight">Penumpang
+                                                        class="font-bold text-dlu-blue text-sm leading-tight break-words">Penumpang
                                                     </p>
                                                     <p id="dash-sub-pnp" class="text-xs text-blue-400 mt-0.5">Tiket
                                                         orang</p>
@@ -785,7 +798,7 @@
 
                                             <!-- Kendaraan Card -->
                                             <label id="dash-toggle-knd" onclick="app.dashToggleTicket('knd')"
-                                                class="relative flex items-center gap-3 sm:gap-4 cursor-pointer px-4 sm:px-5 py-4 rounded-2xl border-2 border-gray-200 bg-white transition-all shadow-sm min-w-0 sm:min-w-[160px] flex-1 sm:flex-none select-none hover:border-dlu-blue group">
+                                                class="relative flex items-center gap-3 sm:gap-4 cursor-pointer px-4 sm:px-5 py-4 rounded-2xl border-2 border-gray-200 bg-white transition-all shadow-sm w-full select-none hover:border-dlu-blue group">
                                                 <input type="checkbox" id="dash-check-knd" class="hidden">
                                                 <!-- Checkmark badge (hidden when inactive) -->
                                                 <span id="dash-badge-knd"
@@ -797,9 +810,9 @@
                                                     <i id="dash-icon-knd"
                                                         class="fa-solid fa-car text-gray-400 text-lg transition"></i>
                                                 </div>
-                                                <div>
+                                                <div class="min-w-0">
                                                     <p id="dash-title-knd"
-                                                        class="font-bold text-gray-500 text-sm leading-tight transition">
+                                                        class="font-bold text-gray-500 text-sm leading-tight break-words transition">
                                                         + Kendaraan</p>
                                                     <p id="dash-sub-knd" class="text-xs text-gray-400 mt-0.5">Tiket
                                                         kendaraan</p>
@@ -972,8 +985,8 @@
 
                         <!-- TAB: PROFIL SAYA -->
                         <div id="dashboard-tab-profile"
-                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 hidden">
-                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
+                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 md:p-8 hidden">
+                            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
                                     class="fa-solid fa-user-circle text-dlu-blue mr-2"></i> Profil Pengguna
                             </h2>
                             <div class="flex flex-col md:flex-row gap-8">
@@ -1036,8 +1049,8 @@
 
                         <!-- TAB: PESANAN SAYA -->
                         <div id="dashboard-tab-orders"
-                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 hidden">
-                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
+                            class="dashboard-tab bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 md:p-8 hidden">
+                            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 border-b pb-4 mb-6"><i
                                     class="fa-solid fa-list-check text-dlu-blue mr-2"></i> Riwayat Pesanan Saya
                             </h2>
 
