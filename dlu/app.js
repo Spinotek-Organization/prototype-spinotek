@@ -69,6 +69,7 @@ window.app = {
         // Native SELECT elements for Dashboard Tab
         const dashOrigin = document.getElementById('dash-origin');
         const dashDest = document.getElementById('dash-dest');
+        const dashListOrigin = document.getElementById('dash-list-origin');
 
         // Custom DOM List elements for Public Page Dropdown
         const listOrigin = document.getElementById('list-origin');
@@ -94,6 +95,15 @@ window.app = {
             }
         }
 
+        if (dashListOrigin) {
+            dashListOrigin.innerHTML = '';
+            for (const [id, name] of Object.entries(ports)) {
+                if (this.dluData.destinationsByOrigin[id] && this.dluData.destinationsByOrigin[id].length > 0) {
+                    dashListOrigin.innerHTML += `<div class="custom-select-option hover:bg-blue-50 transition-colors" onclick="app.dashSelectPort('origin', '${name.replace(/'/g, "\\'")}')">${name}</div>`;
+                }
+            }
+        }
+
         if (listOrigin) {
             listOrigin.innerHTML = '';
             for (const [id, name] of Object.entries(ports)) {
@@ -111,6 +121,7 @@ window.app = {
         if (dashOrigin) {
             dashOrigin.addEventListener('change', (e) => this.filterDestinationsByOriginCode(e.target.value));
         }
+        this.renderDashDestinationOptionsByOriginCode(dashOrigin?.value || '');
     },
 
     renderPublicDestinationOptionsByOriginCode(originCode = '') {
@@ -150,6 +161,42 @@ window.app = {
                 destInput.value = '';
                 const destGroup = destInput.parentElement?.parentElement;
                 if (destGroup) destGroup.classList.remove('input-valid', 'input-invalid');
+            }
+        }
+    },
+
+    renderDashDestinationOptionsByOriginCode(originCode = '') {
+        const listDest = document.getElementById('dash-list-dest');
+        if (!listDest) return;
+
+        const ports = this.dluData?.ports || {};
+        let originId = null;
+        if (originCode) {
+            for (const [id, name] of Object.entries(ports)) {
+                const code = this.toRouteCode(name, id);
+                if (String(code).toUpperCase() === String(originCode).toUpperCase() || String(id) === String(originCode)) {
+                    originId = id;
+                    break;
+                }
+            }
+        }
+
+        const allowedDestIds = originId ? (this.dluData.destinationsByOrigin[originId] || []) : Object.keys(ports);
+        listDest.innerHTML = '';
+        allowedDestIds.forEach((destId) => {
+            const name = ports[String(destId)];
+            if (!name) return;
+            listDest.innerHTML += `<div class="custom-select-option hover:bg-blue-50 transition-colors" onclick="app.dashSelectPort('dest', '${name.replace(/'/g, "\\'")}')">${name}</div>`;
+        });
+
+        const destInput = document.getElementById('dash-dest-input');
+        const destSelect = document.getElementById('dash-dest');
+        if (destInput?.value && destSelect) {
+            const selectedDestCode = this.toRouteCode(destInput.value, '');
+            const allowedCodes = new Set(allowedDestIds.map((id) => this.toRouteCode(ports[String(id)], String(id))));
+            if (!allowedCodes.has(selectedDestCode)) {
+                destInput.value = '';
+                destSelect.value = '';
             }
         }
     },
@@ -493,8 +540,10 @@ window.app = {
 
         const originEl = document.getElementById('dash-origin');
         const destEl = document.getElementById('dash-dest');
-        const origin = originEl ? originEl.value.trim() : '';
-        const dest = destEl ? destEl.value.trim() : '';
+        const originInput = document.getElementById('dash-origin-input');
+        const destInput = document.getElementById('dash-dest-input');
+        const origin = originEl ? (originEl.value.trim() || this.toRouteCode(originInput?.value || '', '')) : '';
+        const dest = destEl ? (destEl.value.trim() || this.toRouteCode(destInput?.value || '', '')) : '';
 
         if (!origin || !dest) {
             Swal.fire({
@@ -1310,6 +1359,7 @@ window.app = {
     // === Searchable Custom Dropdown ===
     toggleDropdown(type) {
         const dropdown = document.getElementById('dropdown-' + type);
+        if (!dropdown) return;
         const isActive = dropdown.classList.contains('active');
 
         // Close all dropdowns first
@@ -1323,6 +1373,7 @@ window.app = {
 
     filterPorts(type, query) {
         const list = document.getElementById('list-' + type);
+        if (!list) return;
         const options = list.querySelectorAll('.custom-select-option');
         const lowerQuery = query.toLowerCase();
 
@@ -1344,6 +1395,45 @@ window.app = {
         if (type === 'origin') {
             const originCode = this.toRouteCode(portText, '');
             this.renderPublicDestinationOptionsByOriginCode(originCode);
+        }
+    },
+
+    dashToggleDropdown(type) {
+        const dropdown = document.getElementById('dash-dropdown-' + type);
+        if (!dropdown) return;
+        const isActive = dropdown.classList.contains('active');
+        document.querySelectorAll('.custom-select-dropdown').forEach((el) => el.classList.remove('active'));
+        if (!isActive) {
+            dropdown.classList.add('active');
+            dropdown.querySelector('input')?.focus();
+        }
+    },
+
+    dashFilterPorts(type, query) {
+        const list = document.getElementById('dash-list-' + type);
+        if (!list) return;
+        const options = list.querySelectorAll('.custom-select-option');
+        const lowerQuery = String(query || '').toLowerCase();
+        options.forEach((opt) => {
+            const text = opt.innerText.toLowerCase();
+            opt.style.display = text.includes(lowerQuery) ? 'block' : 'none';
+        });
+    },
+
+    dashSelectPort(type, portText) {
+        const input = document.getElementById(`dash-${type}-input`);
+        const dropdown = document.getElementById(`dash-dropdown-${type}`);
+        const hiddenSelect = document.getElementById(`dash-${type}`);
+        if (!input || !dropdown || !hiddenSelect) return;
+
+        input.value = portText;
+        hiddenSelect.value = this.toRouteCode(portText, '');
+        dropdown.classList.remove('active');
+
+        if (type === 'origin') {
+            const originCode = hiddenSelect.value;
+            this.filterDestinationsByOriginCode(originCode);
+            this.renderDashDestinationOptionsByOriginCode(originCode);
         }
     },
 
