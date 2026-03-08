@@ -545,7 +545,7 @@
                                         </div>
                                         <input type="text" id="search-origin"
                                             class="w-full text-sm border border-gray-300 rounded-lg pl-9 pr-4 py-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition-shadow cursor-pointer bg-white"
-                                            placeholder="-- Pilih Asal --" readonly
+                                            placeholder="-- Pilih Pelabuhan Asal --" readonly
                                             onclick="app.toggleDropdown('origin')">
                                         <div
                                             class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -594,7 +594,7 @@
                                         </div>
                                         <input type="text" id="search-dest"
                                             class="w-full text-sm border border-gray-300 rounded-lg pl-9 pr-4 py-2.5 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition-shadow cursor-pointer bg-white"
-                                            placeholder="-- Pilih Tujuan --" readonly
+                                            placeholder="-- Pilih Pelabuhan Tujuan --" readonly
                                             onclick="app.toggleDropdown('dest')">
                                         <div
                                             class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -846,20 +846,37 @@
 
                                     <!-- Asal -->
                                     <div class="md:col-span-4">
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kota Asal <span
-                                                class="text-gray-400 font-normal text-xs">/ Origin</span></label>
-                                        <div class="relative">
-                                            <select id="dash-origin"
-                                                class="w-full text-sm border border-gray-300 rounded-lg p-3 pl-10 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-white cursor-pointer shadow-sm appearance-none">
-                                                <option value="">-- Pilih Asal --</option>
-                                                <option value="SUB">Surabaya (Pel.Tanjung Perak)</option>
-                                                <option value="BDJ">Banjarmasin (Pel.Trisakti)</option>
-                                                <option value="MAK">Makassar (Pel.Soekarno Hatta)</option>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Pelabuhan Asal <span
+                                                class="text-gray-400 font-normal text-xs">/ Origin Port</span></label>
+                                        <div class="custom-select-container">
+                                            <div class="relative group">
+                                                <div
+                                                    class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                                    <i
+                                                        class="fa-solid fa-location-dot text-gray-400 group-focus-within:text-dlu-blue transition-colors"></i>
+                                                </div>
+                                                <input type="text" id="dash-origin-input"
+                                                    class="w-full text-sm border border-gray-300 rounded-lg pl-9 pr-4 py-3 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition-shadow cursor-pointer bg-white"
+                                                    placeholder="-- Pilih Pelabuhan Asal --" readonly
+                                                    onclick="app.dashToggleDropdown('origin')">
+                                                <div
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                    <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                                                </div>
+                                            </div>
+                                            <select id="dash-origin" class="hidden" tabindex="-1" aria-hidden="true">
+                                                <option value="">-- Pilih Pelabuhan Asal --</option>
                                             </select>
-                                            <i
-                                                class="fa-solid fa-location-dot absolute left-4 top-3.5 text-gray-400"></i>
-                                            <i
-                                                class="fa-solid fa-chevron-down absolute right-4 top-4 text-gray-400 text-xs pointer-events-none"></i>
+                                            <div id="dash-dropdown-origin"
+                                                class="custom-select-dropdown mt-1.5 shadow-lg rounded-lg border-gray-100 hidden">
+                                                <div class="p-2 border-b sticky top-0 bg-white">
+                                                    <input type="text"
+                                                        class="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-dlu-blue focus:ring-1 focus:ring-dlu-blue transition-shadow"
+                                                        placeholder="Cari pelabuhan asal..."
+                                                        onkeyup="app.dashFilterPorts('origin', this.value)">
+                                                </div>
+                                                <div id="dash-list-origin" class="max-h-48 overflow-y-auto"></div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -873,19 +890,37 @@
 
                                     <!-- Tujuan -->
                                     <div class="md:col-span-4">
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kota Tujuan <span
-                                                class="text-gray-400 font-normal text-xs">/ Dest</span></label>
-                                        <div class="relative">
-                                            <select id="dash-dest"
-                                                class="w-full text-sm border border-gray-300 rounded-lg p-3 pl-10 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition bg-white cursor-pointer shadow-sm appearance-none">
-                                                <option value="">-- Pilih Tujuan --</option>
-                                                <option value="BDJ">Banjarmasin (Pel.Trisakti)</option>
-                                                <option value="MAK">Makassar (Pel.Soekarno Hatta)</option>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Pelabuhan Tujuan <span
+                                                class="text-gray-400 font-normal text-xs">/ Destination Port</span></label>
+                                        <div class="custom-select-container">
+                                            <div class="relative group">
+                                                <div
+                                                    class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                                    <i
+                                                        class="fa-solid fa-location-dot text-gray-400 group-focus-within:text-dlu-blue transition-colors"></i>
+                                                </div>
+                                                <input type="text" id="dash-dest-input"
+                                                    class="w-full text-sm border border-gray-300 rounded-lg pl-9 pr-4 py-3 focus:ring-2 focus:ring-dlu-blue focus:border-dlu-blue outline-none transition-shadow cursor-pointer bg-white"
+                                                    placeholder="-- Pilih Pelabuhan Tujuan --" readonly
+                                                    onclick="app.dashToggleDropdown('dest')">
+                                                <div
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                    <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                                                </div>
+                                            </div>
+                                            <select id="dash-dest" class="hidden" tabindex="-1" aria-hidden="true">
+                                                <option value="">-- Pilih Pelabuhan Tujuan --</option>
                                             </select>
-                                            <i
-                                                class="fa-solid fa-location-dot absolute left-4 top-3.5 text-gray-400"></i>
-                                            <i
-                                                class="fa-solid fa-chevron-down absolute right-4 top-4 text-gray-400 text-xs pointer-events-none"></i>
+                                            <div id="dash-dropdown-dest"
+                                                class="custom-select-dropdown mt-1.5 shadow-lg rounded-lg border-gray-100 hidden">
+                                                <div class="p-2 border-b sticky top-0 bg-white">
+                                                    <input type="text"
+                                                        class="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-dlu-blue focus:ring-1 focus:ring-dlu-blue transition-shadow"
+                                                        placeholder="Cari pelabuhan tujuan..."
+                                                        onkeyup="app.dashFilterPorts('dest', this.value)">
+                                                </div>
+                                                <div id="dash-list-dest" class="max-h-48 overflow-y-auto"></div>
+                                            </div>
                                         </div>
                                     </div>
 
