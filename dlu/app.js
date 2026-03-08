@@ -988,17 +988,16 @@ window.app = {
         const defaultFareViewFilter = this.getDefaultFareViewFilter(context);
 
         listEl.innerHTML = `
-            <p class="md:hidden px-4 pt-3 text-[11px] text-gray-500">Geser tabel ke samping untuk lihat kolom lengkap.</p>
-            <div class="overflow-x-auto pb-1">
-                <table class="w-full min-w-[760px] md:min-w-[980px] text-xs sm:text-sm">
+            <div class="pb-1">
+                <table class="w-full md:table-auto text-xs sm:text-sm">
                     <thead class="bg-gray-50 text-gray-600 border-b">
                         <tr>
-                            <th class="text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Kapal</th>
-                            <th class="text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Berangkat</th>
+                            <th class="hidden sm:table-cell text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Kapal</th>
+                            <th class="w-[52%] sm:w-auto text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Berangkat</th>
                             <th class="hidden lg:table-cell text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Tiba</th>
                             <th class="hidden sm:table-cell text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Durasi</th>
-                            <th class="text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Mulai dari</th>
-                            <th class="text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Aksi</th>
+                            <th class="w-[24%] sm:w-auto text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Mulai dari</th>
+                            <th class="w-[24%] sm:w-auto text-left font-semibold px-3 md:px-4 py-2.5 md:py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -1016,10 +1015,11 @@ window.app = {
 
             return `
                                 <tr class="hover:bg-gray-50 transition align-top">
-                                    <td class="px-3 md:px-4 py-3">
+                                    <td class="hidden sm:table-cell px-3 md:px-4 py-3">
                                         <p class="font-semibold text-gray-900">${s.ship}</p>
                                     </td>
                                     <td class="px-3 md:px-4 py-3">
+                                        <p class="font-semibold text-gray-900 sm:hidden mb-1">${s.ship}</p>
                                         <p class="font-semibold text-gray-900">${s.departTime}</p>
                                         <p class="text-xs text-gray-500 mt-0.5">${s.departLabel}</p>
                                         <p class="text-[11px] text-gray-500 mt-1 lg:hidden">Tiba ${s.arriveTime}</p>
@@ -1032,18 +1032,20 @@ window.app = {
                                     <td class="px-3 md:px-4 py-3">
                                         <p class="font-bold text-dlu-blue text-sm md:text-base">${basePriceText}</p>
                                     </td>
-                                    <td class="px-3 md:px-4 py-3">
+                                    <td class="px-3 md:px-4 py-3 align-middle">
                                         <button
-                                            class="bg-white border-2 border-dlu-blue text-dlu-blue font-semibold text-xs md:text-sm px-3 md:px-4 py-1.5 md:py-2 rounded-lg hover:bg-dlu-light transition whitespace-nowrap"
+                                            class="w-full sm:w-auto bg-white border-2 border-dlu-blue text-dlu-blue font-semibold text-[11px] md:text-sm px-2 md:px-4 py-1.5 md:py-2 rounded-lg hover:bg-dlu-light transition md:whitespace-nowrap"
                                             onclick="app.toggleDetail('detail-${id}', this)"
                                             data-detail-toggle="detail-${id}"
                                             aria-expanded="false">
-                                            Pilih Kelas <i data-detail-icon class="fa-solid fa-chevron-down ml-2 text-xs transition-transform duration-200"></i>
+                                            <span class="md:hidden">Pilih</span>
+                                            <span class="hidden md:inline">Pilih Kelas</span>
+                                            <i data-detail-icon class="fa-solid fa-chevron-down ml-2 text-xs transition-transform duration-200"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 <tr id="detail-${id}" class="hidden bg-slate-50/60">
-                                    <td colspan="6" class="px-2 sm:px-4 py-3 md:py-4">
+                                    <td colspan="99" class="px-2 sm:px-4 py-3 md:py-4">
                                         <div class="bg-white p-3 sm:p-4 md:p-5 rounded-xl border border-gray-200 shadow-sm">
                                             <div class="flex flex-wrap items-start justify-between gap-2 pb-3 mb-4 border-b border-gray-100">
                                                 <h4 id="detail-title-${id}" class="font-bold text-gray-700">${detailTitle}</h4>
