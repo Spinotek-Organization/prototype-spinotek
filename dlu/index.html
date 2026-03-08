@@ -120,6 +120,11 @@
             background-color: #F3F4F6;
         }
 
+        /* Brand blue closer to dlu.co.id for nav/footer surfaces */
+        .dlu-brand-surface {
+            background-color: #062B72;
+        }
+
         /* Hide sections dynamically */
         .page-section {
             display: none;
@@ -213,11 +218,11 @@
 <body class="bg-gray-50 text-gray-800">
 
     <!-- Navbar -->
-    <nav class="bg-dlu-blue text-white shadow-md sticky top-0 z-50">
+    <nav class="dlu-brand-surface text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center cursor-pointer" onclick="app.navigate('home')">
-                    <img src="https://tiket.dlu.co.id/img/new-logo.png" alt="DLU Ferry Logo" class="h-12 w-auto">
+                    <img src="https://tiket.dlu.co.id/img/new-logo.png" alt="DLU Ferry Logo" class="h-8 sm:h-8 md:h-10 w-auto">
                 </div>
                 <div id="nav-desktop-guest" class="hidden md:flex items-center gap-2 sm:gap-4">
                     <div id="nav-public-links" class="hidden lg:flex space-x-8 items-center">
@@ -1696,7 +1701,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dlu-blue text-white mt-16 pt-12 pb-6">
+    <footer class="dlu-brand-surface text-white mt-16 pt-12 pb-6">
         <div
             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-blue-800 pb-8">
 
@@ -1704,7 +1709,7 @@
             <div class="flex flex-col gap-4">
                 <div class="flex items-center">
                     <img src="https://tiket.dlu.co.id/img/new-logo.png" alt="DLU Ferry Logo"
-                        class="h-12 w-auto brightness-0 invert">
+                        class="h-10 sm:h-11 w-auto brightness-0 invert">
                 </div>
                 <p class="text-sm text-blue-100">Kami melayani negeri dengan memberikan pelayanan terbaik bagi para pelanggan sebagai tamu kami yang terhormat.</p>
             </div>
