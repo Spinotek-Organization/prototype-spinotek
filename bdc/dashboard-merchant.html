@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Merchant Dashboard | Bali DC</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -13,35 +15,41 @@
             --dark: #0a0a0a;
             --grid-color: rgba(255, 255, 255, 0.05);
         }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
             background-color: var(--dark);
             color: #ffffff;
-            background-image: 
+            background-image:
                 linear-gradient(var(--grid-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 40px 40px;
         }
+
         .glass {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
+
         .btn-lime {
             background-color: var(--lime);
             color: #000000;
             font-weight: 700;
         }
+
         .card-gradient {
             background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
+
 <body class="min-h-screen pb-20 overflow-x-hidden">
 
     <!-- Header -->
-    <header class="p-6 flex justify-between items-center border-b border-white/5 bg-black/60 sticky top-0 z-50 backdrop-blur-xl">
+    <header
+        class="p-6 flex justify-between items-center border-b border-white/5 bg-black/60 sticky top-0 z-50 backdrop-blur-xl">
         <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <div class="bg-lime-400 p-1.5 rounded-md">
                 <i data-lucide="palm-tree" class="text-black w-4 h-4"></i>
@@ -49,62 +57,86 @@
             <span class="text-xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
         </a>
         <div class="flex items-center space-x-4">
-            <span class="text-xs font-bold text-gray-500 hidden md:inline tracking-widest uppercase">Merchant Terminal</span>
+            <span class="text-xs font-bold text-gray-500 hidden md:inline tracking-widest uppercase">Merchant
+                Terminal</span>
             <div class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400">
                 <i data-lucide="store" class="w-5 h-5"></i>
             </div>
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-6 py-10 space-y-10">
+    <main class="max-w-md mx-auto px-6 py-6" id="dashboard-main">
         
-        <!-- Welcome -->
-        <div class="space-y-1">
-            <h1 class="text-4xl font-bold italic tracking-tighter">Breeze Café</h1>
-            <p class="text-gray-500 uppercase text-xs font-bold tracking-widest">Seminyak Partner</p>
-        </div>
+        <!-- Terminal Tab -->
+        <div id="tab-terminal" class="tab-content space-y-10">
+            <!-- Welcome -->
+            <div class="space-y-1">
+                <h1 class="text-4xl font-bold italic tracking-tighter">Breeze Café</h1>
+                <p class="text-gray-500 uppercase text-xs font-bold tracking-widest">Seminyak Partner</p>
+            </div>
 
         <!-- Scanner View -->
         <div class="space-y-6">
             <h2 class="text-xl font-bold uppercase tracking-tighter">Member Scanner</h2>
-            <div class="relative aspect-square glass rounded-[48px] overflow-hidden group border-2 border-white/5 flex flex-col items-center justify-center text-center p-8 active:scale-95 transition-transform cursor-pointer" id="scanner-area" onclick="simulateScan()">
+            <div class="relative aspect-square glass rounded-[48px] overflow-hidden group border-2 border-white/5 flex flex-col items-center justify-center text-center p-8 active:scale-95 transition-transform cursor-pointer"
+                id="scanner-area" onclick="simulateScan()">
                 <!-- Floating corner frames -->
-                <div class="absolute top-8 left-8 border-t-4 border-l-4 border-[#d4ff33] w-10 h-10 rounded-tl-2xl"></div>
-                <div class="absolute top-8 right-8 border-t-4 border-r-4 border-[#d4ff33] w-10 h-10 rounded-tr-2xl"></div>
-                <div class="absolute bottom-8 left-8 border-b-4 border-l-4 border-[#d4ff33] w-10 h-10 rounded-bl-2xl"></div>
-                <div class="absolute bottom-8 right-8 border-b-4 border-r-4 border-[#d4ff33] w-10 h-10 rounded-br-2xl"></div>
-                
+                <div class="absolute top-8 left-8 border-t-4 border-l-4 border-[#d4ff33] w-10 h-10 rounded-tl-2xl">
+                </div>
+                <div class="absolute top-8 right-8 border-t-4 border-r-4 border-[#d4ff33] w-10 h-10 rounded-tr-2xl">
+                </div>
+                <div class="absolute bottom-8 left-8 border-b-4 border-l-4 border-[#d4ff33] w-10 h-10 rounded-bl-2xl">
+                </div>
+                <div class="absolute bottom-8 right-8 border-b-4 border-r-4 border-[#d4ff33] w-10 h-10 rounded-br-2xl">
+                </div>
+
                 <div id="initial-scan-ui" class="space-y-4">
-                    <div class="w-20 h-20 bg-[#d4ff33]/10 text-[#d4ff33] rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+                    <div
+                        class="w-20 h-20 bg-[#d4ff33]/10 text-[#d4ff33] rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
                         <i data-lucide="scan" class="w-10 h-10"></i>
                     </div>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-bold">Waiting for Digital Card</p>
-                    <button class="py-3 px-8 btn-lime rounded-2xl text-xs uppercase tracking-widest">Tap to Scan</button>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-bold">Waiting for Digital Card
+                    </p>
+                    <button class="py-3 px-8 btn-lime rounded-2xl text-xs uppercase tracking-widest">Tap to
+                        Scan</button>
                 </div>
 
                 <!-- Success Overlay -->
-                <div id="success-overlay" class="absolute inset-0 bg-[#d4ff33] flex flex-col items-center justify-center text-black opacity-0 pointer-events-none transition-opacity duration-300">
-                    <i data-lucide="check-circle" class="w-20 h-20 mb-4 animate-bounce"></i>
-                    <h3 class="text-2xl font-bold tracking-tighter italic">MEMBER VALID</h3>
-                    <p class="text-sm font-bold uppercase tracking-widest opacity-60">BDCM · 8293 · 1120</p>
+                <div id="success-overlay"
+                    class="absolute inset-0 bg-[#d4ff33] flex flex-col items-center justify-center text-black opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+                    <i data-lucide="check-circle" class="w-16 h-16 mb-4 animate-bounce"></i>
+                    <h3 class="text-2xl font-bold tracking-tighter italic mb-1">MEMBER VALID</h3>
+                    <p class="text-lg font-bold tracking-tight mb-2 px-6 py-1 bg-black/10 rounded-full">John Doe</p>
+                    <p class="text-xs font-bold uppercase tracking-widest opacity-60">BDCM · 8293 · 1120</p>
                 </div>
             </div>
         </div>
 
         <!-- Mandatory Transaction Form -->
-        <div id="transaction-card" class="glass p-10 rounded-[40px] space-y-8 opacity-20 pointer-events-none transition duration-500 scale-95 origin-top border-white/5">
-            <div class="space-y-1">
-                <h3 class="text-2xl font-bold uppercase tracking-tighter">Apply Discount</h3>
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">Transaction details are mandatory</p>
+        <div id="transaction-card"
+            class="glass p-10 rounded-[40px] space-y-8 opacity-20 pointer-events-none transition duration-500 scale-95 origin-top border-white/5">
+            <div class="space-y-2">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-2xl font-bold uppercase tracking-tighter">Apply Discount</h3>
+                </div>
+                <!-- Member details wrapper -->
+                <div class="inline-flex items-center space-x-2 bg-[#d4ff33]/10 px-3 py-1.5 rounded-full border border-[#d4ff33]/20">
+                    <i data-lucide="user-check" class="w-4 h-4 text-[#d4ff33]"></i>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest"><span class="text-white">John Doe</span> • BDCM 8293</p>
+                </div>
             </div>
 
             <div class="space-y-6">
                 <!-- Nominal Input -->
                 <div class="space-y-2">
-                    <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest pl-1">Total Bill (USD)</label>
+                    <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest pl-1">Total Bill
+                        (IDR)</label>
                     <div class="relative">
-                        <span class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-white/20">$</span>
-                        <input type="number" id="bill-amount" placeholder="0.00" class="w-full glass py-6 px-12 rounded-3xl text-3xl font-black text-[#d4ff33] focus:outline-none focus:border-[#d4ff33] transition-colors bg-white/5 border-white/10" oninput="calculateDiscount()">
+                        <span
+                            class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-white/20">Rp</span>
+                        <input type="text" inputmode="numeric" id="bill-amount" placeholder="0" data-raw="0"
+                            class="w-full glass py-6 px-[76px] rounded-3xl text-3xl font-black text-[#d4ff33] focus:outline-none focus:border-[#d4ff33] transition-colors bg-white/5 border-white/10"
+                            oninput="calculateDiscount(this)">
                     </div>
                 </div>
 
@@ -116,15 +148,17 @@
                     </div>
                     <div class="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
                         <span class="text-gray-500">Amount Saved</span>
-                        <span id="savings-amount" class="text-white">$0.00</span>
+                        <span id="savings-amount" class="text-white">Rp 0</span>
                     </div>
                     <div class="flex justify-between items-center pt-4 border-t border-white/5">
                         <span class="text-sm font-bold uppercase tracking-tighter">Final Total</span>
-                        <span id="final-amount" class="text-3xl font-black italic tracking-tighter text-[#d4ff33]">$0.00</span>
+                        <span id="final-amount"
+                            class="text-3xl font-black italic tracking-tighter text-[#d4ff33]">Rp 0</span>
                     </div>
                 </div>
 
-                <button onclick="confirmTransaction()" class="w-full py-5 btn-lime rounded-3xl text-lg flex items-center justify-center uppercase shadow-2xl">
+                <button onclick="confirmTransaction()"
+                    class="w-full py-5 btn-lime rounded-3xl text-lg flex items-center justify-center uppercase shadow-2xl transition hover:opacity-90">
                     Confirm Visit &rarr;
                 </button>
             </div>
@@ -141,38 +175,185 @@
                         </div>
                         <div>
                             <div class="font-bold">John Doe</div>
-                            <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">2:14 PM • $45.00 bill</div>
+                            <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">2:14 PM • Rp 450.000
+                                bill</div>
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="text-[#d4ff33] font-bold">-$4.50</div>
+                        <div class="text-[#d4ff33] font-bold">-Rp 45.000</div>
                         <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Savings</div>
                     </div>
                 </div>
             </div>
         </div>
 
+        </div> <!-- End Terminal Tab -->
+
+        <!-- Reports Tab -->
+        <div id="tab-reports" class="tab-content space-y-6 hidden">
+            <div class="flex justify-between items-center">
+                <h2 class="text-3xl font-bold italic tracking-tighter">Reports</h2>
+                <button class="glass px-3 py-1.5 rounded-full text-[10px] uppercase font-bold text-gray-500 hover:text-white transition focus:outline-none flex items-center space-x-1">
+                    <span>This Month</span>
+                    <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-5 rounded-3xl space-y-2 border-white/5 relative overflow-hidden group hover:border-[#d4ff33]/50 transition">
+                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-150 transition duration-500">
+                        <i data-lucide="users" class="w-20 h-20 text-[#d4ff33]"></i>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-[#d4ff33]/10 text-[#d4ff33] flex items-center justify-center relative">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <div class="text-white text-3xl font-black italic relative z-10">142</div>
+                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest relative z-10">Total Visits</div>
+                </div>
+                <div class="glass p-5 rounded-3xl space-y-2 border-white/5 relative overflow-hidden group hover:border-[#d4ff33]/50 transition">
+                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-150 transition duration-500">
+                        <i data-lucide="wallet" class="w-20 h-20 text-[#d4ff33]"></i>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-[#d4ff33]/10 text-[#d4ff33] flex items-center justify-center relative">
+                        <i data-lucide="wallet" class="w-5 h-5"></i>
+                    </div>
+                    <div class="text-white text-2xl font-black italic mt-1 relative z-10">Rp 12.4M</div>
+                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest relative z-10">Revenue</div>
+                </div>
+            </div>
+            
+            <div class="glass p-6 rounded-[32px] mt-4 space-y-6 border border-white/5">
+                <h3 class="text-sm font-bold uppercase tracking-widest border-b border-white/10 pb-4">Recent Settlements</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center group">
+                        <div class="flex space-x-4 items-center">
+                            <div class="w-8 h-8 rounded-full bg-white/5 flex justify-center items-center">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold">Today</div>
+                                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Bank Transfer</div>
+                            </div>
+                        </div>
+                        <div class="text-[#d4ff33] font-bold">Rp 4.500.000</div>
+                    </div>
+                    <div class="flex justify-between items-center group">
+                        <div class="flex space-x-4 items-center">
+                            <div class="w-8 h-8 rounded-full bg-white/5 flex justify-center items-center">
+                                <i data-lucide="check" class="w-4 h-4 text-gray-500"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-400">Yesterday</div>
+                                <div class="text-[10px] text-gray-600 uppercase font-bold tracking-widest">Settled</div>
+                            </div>
+                        </div>
+                        <div class="text-gray-500 font-bold opacity-70">Rp 3.250.000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="tab-settings" class="tab-content space-y-6 hidden">
+            <h2 class="text-3xl font-bold italic tracking-tighter">Settings</h2>
+            <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">Manage Merchant App</p>
+            
+            <div class="glass rounded-[32px] overflow-hidden mt-6 divide-y divide-white/5 border border-white/5">
+                <div class="p-5 flex justify-between items-center hover:bg-white/5 transition cursor-pointer group">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-white transition group-hover:scale-110">
+                            <i data-lucide="store" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold group-hover:text-[#d4ff33] transition">Store Profile</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-600 group-hover:text-white transition"></i>
+                </div>
+                <div class="p-5 flex justify-between items-center hover:bg-white/5 transition cursor-pointer group">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-white transition group-hover:scale-110">
+                            <i data-lucide="lock" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold group-hover:text-[#d4ff33] transition">Security & PIN</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-600 group-hover:text-white transition"></i>
+                </div>
+                <div class="p-5 flex justify-between items-center hover:bg-white/5 transition cursor-pointer group">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-white transition group-hover:scale-110">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold group-hover:text-[#d4ff33] transition">Notifications</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-600 group-hover:text-white transition"></i>
+                </div>
+                <div class="p-5 flex justify-between items-center hover:bg-white/5 transition cursor-pointer group">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-white transition group-hover:scale-110">
+                            <i data-lucide="help-circle" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold group-hover:text-[#d4ff33] transition">Help Center</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-600 group-hover:text-white transition"></i>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <p class="text-[10px] text-gray-600 uppercase font-bold tracking-widest">Bali Discount Club Merchant <br> v1.0.1 (Build 239)</p>
+            </div>
+        </div>
+
     </main>
 
     <!-- Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 glass h-20 flex justify-around items-center z-50 bg-black/80 px-4 md:max-w-md md:mx-auto md:rounded-t-[32px] border-x border-white/5">
-        <button class="flex flex-col items-center space-y-1 text-[#d4ff33]">
+    <nav
+        class="fixed bottom-0 left-0 right-0 glass h-20 flex justify-around items-center z-50 bg-black/80 px-4 md:max-w-md md:mx-auto md:rounded-t-[32px] border-x border-white/5">
+        <button onclick="switchTab('tab-terminal', this)" class="nav-btn flex flex-col items-center space-y-1 text-[#d4ff33]">
             <i data-lucide="layout-grid" class="w-6 h-6"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest">Terminal</span>
         </button>
-        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+        <button onclick="switchTab('tab-reports', this)" class="nav-btn flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
             <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest">Reports</span>
         </button>
-        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+        <button onclick="switchTab('tab-settings', this)" class="nav-btn flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
             <i data-lucide="settings" class="w-6 h-6"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest">Settings</span>
         </button>
-        <a href="index.html" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+        <a href="index.html" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-red-500 focus:outline-none transition group">
             <i data-lucide="log-out" class="w-6 h-6"></i>
-            <span class="text-[10px] font-bold uppercase tracking-widest">Log Out</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest group-hover:text-red-500">Log Out</span>
         </a>
     </nav>
+
+    <!-- Transaction Success Modal -->
+    <div id="tx-success-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-2xl"></div>
+        <div
+            class="relative glass p-10 rounded-[48px] max-w-sm w-full text-center border-[#d4ff33]/50 animate-in fade-in zoom-in duration-300">
+            
+            <div class="w-24 h-24 bg-[#d4ff33]/10 text-[#d4ff33] rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="check-square" class="w-10 h-10 animate-bounce"></i>
+            </div>
+            
+            <h2 class="text-3xl font-black italic tracking-tighter mb-2">Claim <span class="text-[#d4ff33]">Success</span></h2>
+            <p class="text-xs text-gray-500 uppercase tracking-widest mb-8 font-bold">Discount applied to total bill.</p>
+            
+            <div class="space-y-4 glass p-6 rounded-3xl mb-8 border-white/5">
+                <div class="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
+                    <span class="text-gray-500">Customer</span>
+                    <span class="text-white">John Doe</span>
+                </div>
+                <div class="flex justify-between items-center text-xs font-bold uppercase tracking-widest pt-2 border-t border-white/5">
+                    <span class="text-gray-500">Saved</span>
+                    <span class="text-[#d4ff33]" id="modal-savings">Rp 0</span>
+                </div>
+            </div>
+
+            <button onclick="window.scrollTo(0, 0); location.reload();" class="w-full py-4 btn-lime rounded-2xl text-sm font-bold uppercase tracking-widest shadow-xl hover:opacity-90 transition">
+                Done &rarr;
+            </button>
+        </div>
+    </div>
 
     <script>
         lucide.createIcons();
@@ -180,34 +361,89 @@
         function simulateScan() {
             const scanner = document.getElementById('success-overlay');
             const card = document.getElementById('transaction-card');
-            
+
             scanner.style.opacity = '1';
-            
+
             setTimeout(() => {
                 scanner.style.opacity = '0';
                 card.style.opacity = '1';
                 card.style.scale = '1';
                 card.style.pointerEvents = 'auto';
-            }, 1500);
+
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 50);
+            }, 600);
         }
 
-        function calculateDiscount() {
-            const input = document.getElementById('bill-amount');
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        }
+
+        function calculateDiscount(input) {
+            // Remove non-digit characters to keep raw numbers
+            let rawValue = input.value.replace(/\D/g, '');
+            
+            // Format to IDR styling (e.g. 100.000)
+            if (rawValue !== '') {
+                // Formatting thousands
+                let formattedValue = new Intl.NumberFormat('id-ID').format(rawValue);
+                input.value = formattedValue;
+            } else {
+                input.value = '';
+            }
+
             const savings = document.getElementById('savings-amount');
             const final = document.getElementById('final-amount');
-            
-            const value = parseFloat(input.value) || 0;
+
+            const value = parseFloat(rawValue) || 0;
             const discount = value * 0.1;
             const total = value - discount;
+
+            savings.innerText = formatRupiah(discount);
+            final.innerText = formatRupiah(total);
             
-            savings.innerText = '$' + discount.toFixed(2);
-            final.innerText = '$' + total.toFixed(2);
+            // Store raw value as a data attribute so confirmTransaction can use it
+            input.setAttribute('data-raw', value);
         }
 
         function confirmTransaction() {
-            alert('Transaction Confirmed for John Doe!\nTotal Saved: ' + document.getElementById('savings-amount').innerText);
-            location.reload();
+            const input = document.getElementById('bill-amount');
+            const billValue = parseFloat(input.getAttribute('data-raw')) || 0;
+            
+            if (!billValue || billValue <= 0) {
+                alert('Silakan isi total bill dengan valid.');
+                return;
+            }
+            
+            const discount = billValue * 0.1;
+            document.getElementById('modal-savings').innerText = formatRupiah(discount);
+            document.getElementById('tx-success-modal').classList.remove('hidden');
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId, btnElement) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            // Show target tab
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Reset all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-[#d4ff33]');
+                btn.classList.add('text-gray-600');
+            });
+
+            // Highlight active button
+            btnElement.classList.remove('text-gray-600');
+            btnElement.classList.add('text-[#d4ff33]');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
+
 </html>
