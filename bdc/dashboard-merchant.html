@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Dashboard | Bali DC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --lime: #d4ff33;
+            --dark: #0a0a0a;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark);
+            color: #ffffff;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .btn-lime {
+            background-color: var(--lime);
+            color: #000000;
+            font-weight: 700;
+        }
+        .card-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="p-6 flex justify-between items-center border-b border-white/5 bg-black/60 sticky top-0 z-50 backdrop-blur-xl">
+        <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div class="bg-lime-400 p-1.5 rounded-md">
+                <i data-lucide="palm-tree" class="text-black w-4 h-4"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+        </a>
+        <div class="flex items-center space-x-4">
+            <span class="text-xs font-bold text-gray-500 hidden md:inline tracking-widest uppercase">Merchant Terminal</span>
+            <div class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400">
+                <i data-lucide="store" class="w-5 h-5"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-6 py-10 space-y-10">
+        
+        <!-- Welcome -->
+        <div class="space-y-1">
+            <h1 class="text-4xl font-bold italic tracking-tighter">Breeze Café</h1>
+            <p class="text-gray-500 uppercase text-xs font-bold tracking-widest">Seminyak Partner</p>
+        </div>
+
+        <!-- Scanner View -->
+        <div class="space-y-6">
+            <h2 class="text-xl font-bold uppercase tracking-tighter">Member Scanner</h2>
+            <div class="relative aspect-square glass rounded-[48px] overflow-hidden group border-2 border-white/5 flex flex-col items-center justify-center text-center p-8 active:scale-95 transition-transform cursor-pointer" id="scanner-area" onclick="simulateScan()">
+                <!-- Floating corner frames -->
+                <div class="absolute top-8 left-8 border-t-4 border-l-4 border-[#d4ff33] w-10 h-10 rounded-tl-2xl"></div>
+                <div class="absolute top-8 right-8 border-t-4 border-r-4 border-[#d4ff33] w-10 h-10 rounded-tr-2xl"></div>
+                <div class="absolute bottom-8 left-8 border-b-4 border-l-4 border-[#d4ff33] w-10 h-10 rounded-bl-2xl"></div>
+                <div class="absolute bottom-8 right-8 border-b-4 border-r-4 border-[#d4ff33] w-10 h-10 rounded-br-2xl"></div>
+                
+                <div id="initial-scan-ui" class="space-y-4">
+                    <div class="w-20 h-20 bg-[#d4ff33]/10 text-[#d4ff33] rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+                        <i data-lucide="scan" class="w-10 h-10"></i>
+                    </div>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-bold">Waiting for Digital Card</p>
+                    <button class="py-3 px-8 btn-lime rounded-2xl text-xs uppercase tracking-widest">Tap to Scan</button>
+                </div>
+
+                <!-- Success Overlay -->
+                <div id="success-overlay" class="absolute inset-0 bg-[#d4ff33] flex flex-col items-center justify-center text-black opacity-0 pointer-events-none transition-opacity duration-300">
+                    <i data-lucide="check-circle" class="w-20 h-20 mb-4 animate-bounce"></i>
+                    <h3 class="text-2xl font-bold tracking-tighter italic">MEMBER VALID</h3>
+                    <p class="text-sm font-bold uppercase tracking-widest opacity-60">BDCM · 8293 · 1120</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mandatory Transaction Form -->
+        <div id="transaction-card" class="glass p-10 rounded-[40px] space-y-8 opacity-20 pointer-events-none transition duration-500 scale-95 origin-top border-white/5">
+            <div class="space-y-1">
+                <h3 class="text-2xl font-bold uppercase tracking-tighter">Apply Discount</h3>
+                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">Transaction details are mandatory</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Nominal Input -->
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest pl-1">Total Bill (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-white/20">$</span>
+                        <input type="number" id="bill-amount" placeholder="0.00" class="w-full glass py-6 px-12 rounded-3xl text-3xl font-black text-[#d4ff33] focus:outline-none focus:border-[#d4ff33] transition-colors bg-white/5 border-white/10" oninput="calculateDiscount()">
+                    </div>
+                </div>
+
+                <!-- Calculation Display -->
+                <div class="space-y-4 p-6 glass rounded-3xl bg-black/20">
+                    <div class="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
+                        <span class="text-gray-500">Perk Value</span>
+                        <span class="text-[#d4ff33]">-10.0%</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
+                        <span class="text-gray-500">Amount Saved</span>
+                        <span id="savings-amount" class="text-white">$0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-4 border-t border-white/5">
+                        <span class="text-sm font-bold uppercase tracking-tighter">Final Total</span>
+                        <span id="final-amount" class="text-3xl font-black italic tracking-tighter text-[#d4ff33]">$0.00</span>
+                    </div>
+                </div>
+
+                <button onclick="confirmTransaction()" class="w-full py-5 btn-lime rounded-3xl text-lg flex items-center justify-center uppercase shadow-2xl">
+                    Confirm Visit &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Logs -->
+        <div class="space-y-6">
+            <h3 class="text-xl font-bold uppercase tracking-tighter">Recent Activities</h3>
+            <div class="space-y-4">
+                <div class="glass p-5 rounded-[28px] flex items-center justify-between group">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-full glass flex items-center justify-center text-gray-500">
+                            <i data-lucide="history" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">John Doe</div>
+                            <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">2:14 PM • $45.00 bill</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[#d4ff33] font-bold">-$4.50</div>
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Savings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 glass h-20 flex justify-around items-center z-50 bg-black/80 px-4 md:max-w-md md:mx-auto md:rounded-t-[32px] border-x border-white/5">
+        <button class="flex flex-col items-center space-y-1 text-[#d4ff33]">
+            <i data-lucide="layout-grid" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Terminal</span>
+        </button>
+        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+            <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Reports</span>
+        </button>
+        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+            <i data-lucide="settings" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Settings</span>
+        </button>
+        <a href="index.html" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+            <i data-lucide="log-out" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Log Out</span>
+        </a>
+    </nav>
+
+    <script>
+        lucide.createIcons();
+
+        function simulateScan() {
+            const scanner = document.getElementById('success-overlay');
+            const card = document.getElementById('transaction-card');
+            
+            scanner.style.opacity = '1';
+            
+            setTimeout(() => {
+                scanner.style.opacity = '0';
+                card.style.opacity = '1';
+                card.style.scale = '1';
+                card.style.pointerEvents = 'auto';
+            }, 1500);
+        }
+
+        function calculateDiscount() {
+            const input = document.getElementById('bill-amount');
+            const savings = document.getElementById('savings-amount');
+            const final = document.getElementById('final-amount');
+            
+            const value = parseFloat(input.value) || 0;
+            const discount = value * 0.1;
+            const total = value - discount;
+            
+            savings.innerText = '$' + discount.toFixed(2);
+            final.innerText = '$' + total.toFixed(2);
+        }
+
+        function confirmTransaction() {
+            alert('Transaction Confirmed for John Doe!\nTotal Saved: ' + document.getElementById('savings-amount').innerText);
+            location.reload();
+        }
+    </script>
+</body>
+</html>

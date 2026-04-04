@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | Bali DC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --lime: #d4ff33;
+            --dark: #0a0a0a;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark);
+            color: #ffffff;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-lime {
+            background-color: var(--lime);
+            color: #000000;
+            font-weight: 700;
+        }
+
+        .card-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen pb-32">
+
+    <!-- Header -->
+    <header
+        class="p-6 flex justify-between items-center border-b border-white/5 bg-black/60 sticky top-0 z-50 backdrop-blur-xl">
+        <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div class="bg-lime-400 p-1.5 rounded-md">
+                <i data-lucide="palm-tree" class="text-black w-4 h-4"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+        </a>
+        <div class="flex items-center space-x-4">
+            <span class="text-xs font-bold text-gray-500 hidden md:inline">CUSTOMER ACCESS</span>
+            <div class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400">
+                <i data-lucide="user" class="w-5 h-5"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-6 py-10 space-y-10">
+
+        <!-- Welcome -->
+        <div class="space-y-1">
+            <h1 class="text-4xl font-bold">Hi, John!</h1>
+            <p class="text-gray-500">Your membership is active and ready.</p>
+        </div>
+
+        <!-- Digital Card -->
+        <div class="relative group">
+            <div class="absolute -inset-10 bg-[#d4ff33]/5 blur-[60px] rounded-full"></div>
+            <!-- Adjusted Aspect Ratio to 1.5/1 for more vertical space -->
+            <div
+                class="relative card-gradient p-6 rounded-[40px] aspect-[1.5/1] flex flex-col justify-between shadow-2xl overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-[#d4ff33]/10 blur-[80px]"></div>
+
+                <!-- Card Header -->
+                <div class="flex justify-between items-start z-10">
+                    <span class="text-2xl font-black italic tracking-tighter">Bali <span
+                            class="text-[#d4ff33]">DC</span></span>
+                    <div class="glass px-4 py-1.5 rounded-full flex items-center space-x-2">
+                        <span class="w-2 h-2 bg-[#d4ff33] rounded-full animate-pulse"></span>
+                        <span class="text-[10px] font-bold tracking-widest uppercase">Member Since 2024</span>
+                    </div>
+                </div>
+
+                <!-- Main Card Content (QR + Info) -->
+                <div class="flex items-center space-x-8 z-10 py-4   ">
+                    <!-- QR Code Block (Left Side) -->
+                    <div onclick="toggleQRModal(true)"
+                        class="bg-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform duration-300 cursor-pointer shrink-0">
+                        <!-- Mock QR Code (More Realistic) -->
+                        <div class="w-16 h-16 bg-white grid grid-cols-8 grid-rows-8 gap-0.5 p-0.5 relative">
+                            <script>
+                                for (let i = 0; i < 64; i++) {
+                                    const row = Math.floor(i / 8);
+                                    const col = i % 8;
+                                    // QR Positioning Squares (Top-Left, Top-Right, Bottom-Left)
+                                    const isPosSquare = (row < 3 && col < 3) || (row < 3 && col > 4) || (row > 4 && col < 3);
+                                    if (isPosSquare) {
+                                        const isOuter = (row === 0 || row === 2 || col === 0 || col === 2 || row === 7 || col === 7 || (row === 0 && col > 4) || (row === 2 && col > 4) || (col === 5 && row < 3) || (col === 7 && row < 3));
+                                        // Simple logic for the squares
+                                        document.write(`<div class="bg-black rounded-[0.5px]"></div>`);
+                                    } else {
+                                        document.write(`<div class="${Math.random() > 0.4 ? 'bg-black' : 'bg-transparent'} rounded-[0.5px]"></div>`);
+                                    }
+                                }
+                            </script>
+                        </div>
+                        <div
+                            class="text-[8px] text-black font-bold text-center mt-1 uppercase tracking-tighter opacity-40">
+                            Tap to expand</div>
+                    </div>
+
+                    <!-- Card Info (Middle/Right) -->
+                    <div class="space-y-1">
+                        <div class="text-[10px] uppercase font-bold text-gray-400 tracking-widest pl-0.5">Card Holder
+                        </div>
+                        <div class="text-xl font-bold tracking-tight">John Doe</div>
+                        <div class="text-[11px] font-mono text-[#d4ff33] uppercase tracking-tighter">BDCM-8293-1120
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer (Expires Only) -->
+                <div class="z-10 border-t border-white/5 pt-5 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">Verified Digital
+                        Membership</span>
+                    <div class="text-right">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-widest block">Expires</span>
+                        <span class="text-sm font-bold text-[#d4ff33]">12/26</span>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center text-xs text-gray-600 mt-6 font-bold tracking-widest uppercase">Show this to the
+                merchant for scanning</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="glass p-6 rounded-[32px] border-[#d4ff33]/10">
+                <div class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Total Saved</div>
+                <div class="text-3xl font-bold text-[#d4ff33]">$1,240.50</div>
+                <div class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-tighter">Island-wide savings
+                </div>
+            </div>
+            <div class="glass p-6 rounded-[32px]">
+                <div class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Active Perks</div>
+                <div class="text-3xl font-bold">242</div>
+                <div class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-tighter">Partner Merchants</div>
+            </div>
+        </div>
+
+        <!-- Quick Discover -->
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold uppercase tracking-tighter">Hot Offers Near You</h3>
+                <a href="#" class="text-[#d4ff33] text-xs font-bold uppercase tracking-widest">View All</a>
+            </div>
+
+            <div class="space-y-4">
+                <div
+                    class="glass p-5 rounded-[28px] flex items-center space-x-5 group hover:border-[#d4ff33]/50 transition">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-white/5 group-hover:scale-110 transition flex items-center justify-center text-[#d4ff33]">
+                        <i data-lucide="coffee"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold text-lg">Breeze Café</div>
+                        <div class="text-xs text-gray-500 font-bold uppercase tracking-widest">Seminyak • 15% OFF</div>
+                    </div>
+                    <button
+                        class="bg-[#d4ff33]/10 p-2.5 rounded-full text-[#d4ff33] group-hover:bg-[#d4ff33] group-hover:text-black transition">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <div
+                    class="glass p-5 rounded-[28px] flex items-center space-x-5 group hover:border-[#d4ff33]/50 transition">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-white/5 group-hover:scale-110 transition flex items-center justify-center text-[#d4ff33]">
+                        <i data-lucide="flower"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold text-lg">Bali Oasis Spa</div>
+                        <div class="text-xs text-gray-500 font-bold uppercase tracking-widest">Canggu • 20% OFF</div>
+                    </div>
+                    <button
+                        class="bg-[#d4ff33]/10 p-2.5 rounded-full text-[#d4ff33] group-hover:bg-[#d4ff33] group-hover:text-black transition">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav
+        class="fixed bottom-0 left-0 right-0 glass h-20 flex justify-around items-center z-50 bg-black/80 px-4 md:max-w-md md:mx-auto md:rounded-t-[32px] border-x border-white/5">
+        <button class="flex flex-col items-center space-y-1 text-[#d4ff33]">
+            <i data-lucide="home" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Home</span>
+        </button>
+        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+            <i data-lucide="search" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Explore</span>
+        </button>
+        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+            <i data-lucide="map-pin" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Map</span>
+        </button>
+        <a href="index.html" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+            <i data-lucide="log-out" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Exit</span>
+        </a>
+    </nav>
+
+    <!-- QR Full Screen Modal -->
+    <div id="qr-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-2xl" onclick="toggleQRModal(false)"></div>
+        <div
+            class="relative glass p-10 rounded-[48px] max-w-sm w-full text-center border-white/10 animate-in fade-in zoom-in duration-300">
+            <button onclick="toggleQRModal(false)"
+                class="absolute top-6 right-6 text-gray-500 hover:text-white transition">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <h2 class="text-3xl font-bold tracking-tighter mb-2 italic">John Doe</h2>
+            <p class="text-xs text-gray-500 uppercase tracking-widest mb-10 font-bold">BDCM · 8293 · 1120</p>
+
+            <div class="bg-white p-6 rounded-[32px] inline-block shadow-2xl mb-10 mx-auto">
+                <!-- High-Res Mock QR Code (Realistic) -->
+                <div class="w-56 h-56 bg-white grid grid-cols-12 grid-rows-12 gap-1 p-0.5 relative">
+                    <script>
+                        for (let i = 0; i < 144; i++) {
+                            const row = Math.floor(i / 12);
+                            const col = i % 12;
+                            // Positioning Squares logic (top-left, top-right, bottom-left)
+                            const isSquare1 = (row < 4 && col < 4);
+                            const isSquare2 = (row < 4 && col > 7);
+                            const isSquare3 = (row > 7 && col < 4);
+
+                            if (isSquare1 || isSquare2 || isSquare3) {
+                                // Simple positioning square block
+                                const qRow = isSquare3 ? row - 8 : row;
+                                const qCol = isSquare2 ? col - 8 : col;
+                                const isBorder = (qRow === 0 || qRow === 3 || qCol === 0 || qCol === 3);
+                                const isInnerCenter = (qRow === 1.5 || qCol === 1.5); // skip
+                                if (isBorder || (qRow === 1.5)) {
+                                    document.write(`<div class="bg-black rounded-[1px]"></div>`);
+                                } else {
+                                    // Make center squares solid
+                                    const isCenter = (qRow >= 1 && qRow <= 2 && qCol >= 1 && qCol <= 2);
+                                    document.write(`<div class="${isCenter ? 'bg-black' : 'bg-transparent'} rounded-[10px]"></div>`);
+                                }
+                            } else {
+                                document.write(`<div class="${Math.random() > 0.4 ? 'bg-black' : 'bg-transparent'} rounded-[1px]"></div>`);
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-[0.2em] leading-relaxed">
+                Present this code to the merchant <br> to apply your 10% discount.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleQRModal(show) {
+            const modal = document.getElementById('qr-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>

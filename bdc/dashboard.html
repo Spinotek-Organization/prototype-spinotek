@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDC Dashboard | Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-green {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            background-clip: text; /* Fixed compatibility */
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .tab-active {
+            background-color: #10b981;
+            color: #000000;
+        }
+        /* Custom QR Animation */
+        .qr-card {
+            background: linear-gradient(135deg, #10b981 0%, #05fb90 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <!-- Top Header -->
+    <header class="p-6 flex justify-between items-center border-b border-white/5 bg-black/40 sticky top-0 z-30">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center glow-green">
+                <i data-lucide="palm-tree" class="text-black w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-bold">BDC Dashboard</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">JD</div>
+        </div>
+    </header>
+
+    <!-- Role Switcher (For Prototype Demo) -->
+    <div class="px-6 py-4 border-b border-white/5 bg-[#0a0a0a] flex items-center overflow-x-auto no-scrollbar space-x-4">
+        <span class="text-[10px] uppercase font-bold text-gray-600 shrink-0">Switch Role:</span>
+        <div class="flex bg-black p-1 rounded-xl">
+            <button onclick="switchRole('customer')" id="btn-customer" class="role-btn px-4 py-1.5 rounded-lg text-xs font-bold transition tab-active">Customer</button>
+            <button onclick="switchRole('merchant')" id="btn-merchant" class="role-btn px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-500">Merchant</button>
+            <button onclick="switchRole('admin')" id="btn-admin" class="role-btn px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-500">Admin</button>
+        </div>
+    </div>
+
+    <main class="max-w-md mx-auto px-6 py-8">
+
+        <!-- ===== CUSTOMER VIEW ===== -->
+        <div id="view-customer" class="space-y-8 block">
+            <!-- Digital Member Card -->
+            <div class="qr-card p-8 rounded-[40px] shadow-2xl relative overflow-hidden group">
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-10">
+                        <div>
+                            <span class="text-black/50 text-xs font-bold uppercase tracking-widest block mb-1">Membership Status</span>
+                            <span class="px-3 py-1 rounded-full bg-black/10 border border-black/10 text-black text-xs font-bold">ACTIVE</span>
+                        </div>
+                        <i data-lucide="shield-check" class="text-black/30 w-8 h-8"></i>
+                    </div>
+                    <div class="text-black text-3xl font-bold mb-6">John Doe</div>
+                    <div class="bg-white p-4 rounded-3xl inline-block shadow-lg mb-8 mx-auto lg:mx-0">
+                        <!-- Mock QR Code -->
+                        <div class="w-40 h-40 bg-white grid grid-cols-5 grid-rows-5 gap-1 p-1">
+                            <script>
+                                for(let i=0; i<25; i++) {
+                                    document.write(`<div class="${Math.random() > 0.4 ? 'bg-black' : 'bg-transparent'} rounded-[1px]"></div>`);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-end border-t border-black/10 pt-6">
+                        <div>
+                            <span class="text-black/50 text-[10px] uppercase font-bold block">Member ID</span>
+                            <span class="text-black font-mono font-bold">BDC-8293-1120</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-black/50 text-[10px] uppercase font-bold block">Expires</span>
+                            <span class="text-black font-bold">Dec 2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings Status -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-6 rounded-3xl border-emerald-500/20">
+                    <span class="text-gray-500 text-xs uppercase block mb-2">Total Saved</span>
+                    <span class="text-3xl font-bold text-emerald-500">$245.80</span>
+                </div>
+                <div class="glass p-6 rounded-3xl">
+                    <span class="text-gray-500 text-xs uppercase block mb-2">Visits</span>
+                    <span class="text-3xl font-bold text-white">12</span>
+                </div>
+            </div>
+
+            <!-- Merchant Discovery -->
+            <div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Partner Spots</h3>
+                    <a href="#" class="text-emerald-500 text-xs font-bold uppercase tracking-wider">Map View</a>
+                </div>
+                <div class="space-y-4">
+                    <!-- Spot 1 -->
+                    <div class="glass p-4 rounded-3xl flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gray-800 overflow-hidden shrink-0">
+                            <div class="w-full h-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                                <i data-lucide="coffee"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold">Breeze Cafe</h4>
+                            <p class="text-gray-500 text-xs">Canggu • 10% Discount</p>
+                        </div>
+                        <i data-lucide="chevron-right" class="text-gray-700 w-5 h-5"></i>
+                    </div>
+                    <!-- Spot 2 -->
+                    <div class="glass p-4 rounded-3xl flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gray-800 overflow-hidden shrink-0">
+                            <div class="w-full h-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                                <i data-lucide="flower-2"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold">Bali Oasis Spa</h4>
+                            <p class="text-gray-500 text-xs">Seminyak • 15% Discount</p>
+                        </div>
+                        <i data-lucide="chevron-right" class="text-gray-700 w-5 h-5"></i>
+                    </div>
+                    <!-- Spot 3 -->
+                    <div class="glass p-4 rounded-3xl flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gray-800 overflow-hidden shrink-0">
+                            <div class="w-full h-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                                <i data-lucide="waves"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold">The Deck Club</h4>
+                            <p class="text-gray-500 text-xs">Uluwatu • 10% Discount</p>
+                        </div>
+                        <i data-lucide="chevron-right" class="text-gray-700 w-5 h-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MERCHANT VIEW ===== -->
+        <div id="view-merchant" class="space-y-8 hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold mb-2">Merchant Scanner</h2>
+                <p class="text-gray-400">Scan Customer's BDC Membership</p>
+            </div>
+
+            <!-- Mock Scanner View -->
+            <div class="relative aspect-square max-w-[280px] mx-auto rounded-[40px] overflow-hidden border-4 border-gray-800 bg-gray-900 flex items-center justify-center group" id="scanner-box">
+                <div class="absolute inset-0 bg-gradient-to-t from-emerald-500/10 to-transparent"></div>
+                <div class="absolute top-4 left-4 border-t-4 border-l-4 border-emerald-500 w-8 h-8 rounded-tl-xl animate-pulse"></div>
+                <div class="absolute top-4 right-4 border-t-4 border-r-4 border-emerald-500 w-8 h-8 rounded-tr-xl animate-pulse"></div>
+                <div class="absolute bottom-4 left-4 border-b-4 border-l-4 border-emerald-500 w-8 h-8 rounded-bl-xl animate-pulse"></div>
+                <div class="absolute bottom-4 right-4 border-b-4 border-r-4 border-emerald-500 w-8 h-8 rounded-br-xl animate-pulse"></div>
+                
+                <div id="scanner-content" class="text-center p-8 z-10 transition duration-500">
+                    <i data-lucide="camera" class="w-12 h-12 text-emerald-500/50 mx-auto mb-4"></i>
+                    <button onclick="simulateScan()" class="px-6 py-2 bg-emerald-500 text-black font-bold rounded-xl active:scale-95 transition">TAP TO SCAN</button>
+                    <p class="text-[10px] text-gray-500 mt-4 uppercase tracking-widest">Waiting for QR Code</p>
+                </div>
+
+                <!-- Scan Progress Layer -->
+                <div id="scan-progress" class="absolute inset-0 bg-emerald-500 flex flex-col items-center justify-center transform translate-y-full transition-transform duration-500 z-20">
+                    <i data-lucide="check-circle" class="text-black w-20 h-20 mb-4 animate-bounce"></i>
+                    <span class="text-black font-bold text-2xl">MEMBER VALID</span>
+                    <span class="text-black/60 text-sm mt-1">John Doe</span>
+                </div>
+            </div>
+
+            <!-- Transaction Form (STRICT MANDATORY) -->
+            <div id="transaction-form" class="glass p-8 rounded-[40px] border-emerald-500/30 opacity-20 transition duration-500 pointer-events-none">
+                <h3 class="text-xl font-bold mb-2">Finalize Visit</h3>
+                <p class="text-gray-500 text-xs mb-6">Total transaction value is mandatory to record savings.</p>
+                
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Total Bill before Discount (USD)</label>
+                        <input type="number" id="bill-amount" placeholder="e.g. 50.00" class="w-full bg-black/50 border-2 border-emerald-500/20 rounded-2xl py-5 px-6 text-3xl font-bold text-emerald-500 focus:outline-none focus:border-emerald-500 transition" required>
+                    </div>
+                    
+                    <div class="flex justify-between items-center py-4 border-y border-white/5">
+                        <span class="text-gray-400">Merchant Perk</span>
+                        <span class="text-emerald-500 font-bold">10% OFF</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pb-4">
+                        <span class="text-white font-bold">Final Amount</span>
+                        <span id="discounted-amount" class="text-2xl font-bold text-gradient">$0.00</span>
+                    </div>
+
+                    <button onclick="confirmTransaction()" class="w-full py-4 btn-primary rounded-2xl text-black font-bold hover:opacity-90 transition">CONFIRM TRANSACTION</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ADMIN VIEW ===== -->
+        <div id="view-admin" class="space-y-8 hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Analytics Room</h2>
+                <div class="text-[10px] font-bold bg-white/5 px-3 py-1 rounded-full text-gray-400 uppercase tracking-widest">Real Time</div>
+            </div>
+
+            <!-- Big Metrics -->
+            <div class="grid grid-cols-1 gap-4">
+                <div class="glass p-8 rounded-[40px] border-emerald-500/20 relative overflow-hidden">
+                    <div class="absolute right-0 bottom-0 w-32 h-32 bg-emerald-500/5 rounded-tl-full"></div>
+                    <span class="text-gray-500 text-xs uppercase block mb-4">Gross Revenue (ARR)</span>
+                    <span class="text-5xl font-bold text-gradient">$82,450</span>
+                    <div class="mt-4 flex items-center space-x-2">
+                        <span class="text-emerald-500 text-xs font-bold">+12%</span>
+                        <span class="text-gray-600 text-xs">from last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-6 rounded-3xl">
+                    <span class="text-gray-500 text-xs uppercase block mb-2">Active Users</span>
+                    <span class="text-2xl font-bold">1,402</span>
+                </div>
+                <div class="glass p-6 rounded-3xl">
+                    <span class="text-gray-500 text-xs uppercase block mb-2">Retention</span>
+                    <span class="text-2xl font-bold">88.4%</span>
+                </div>
+            </div>
+
+            <!-- Top Merchant Analytics -->
+            <div class="glass p-8 rounded-[40px]">
+                <h3 class="text-lg font-bold mb-6">Top Categories</h3>
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase">
+                            <span class="text-gray-400">Food & Beverage</span>
+                            <span class="text-emerald-500">65%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-900 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[65%]"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase">
+                            <span class="text-gray-400">Spa & Wellness</span>
+                            <span class="text-emerald-500">22%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-900 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[22%]"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase">
+                            <span class="text-gray-400">Lifestyle & Events</span>
+                            <span class="text-emerald-500">13%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-900 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[13%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 glass h-16 flex justify-around items-center z-40 bg-black/80 px-4 md:max-w-md md:mx-auto md:rounded-t-3xl border-x border-white/5">
+        <button class="flex flex-col items-center space-y-1 text-emerald-500">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span class="text-[10px] font-bold">Home</span>
+        </button>
+        <button class="flex flex-col items-center space-y-1 text-gray-500">
+            <i data-lucide="search" class="w-5 h-5"></i>
+            <span class="text-[10px] font-bold">Explore</span>
+        </button>
+        <button class="flex flex-col items-center space-y-1 text-gray-500">
+            <i data-lucide="credit-card" class="w-5 h-5"></i>
+            <span class="text-[10px] font-bold">Wallet</span>
+        </button>
+        <button class="flex flex-col items-center space-y-1 text-gray-500">
+            <i data-lucide="user" class="w-5 h-5"></i>
+            <span class="text-[10px] font-bold">Profile</span>
+        </button>
+    </nav>
+
+    <script>
+        lucide.createIcons();
+
+        // Simple Role Switcher Logic
+        function switchRole(role) {
+            // Hide all views
+            document.getElementById('view-customer').classList.add('hidden');
+            document.getElementById('view-customer').classList.remove('block');
+            document.getElementById('view-merchant').classList.add('hidden');
+            document.getElementById('view-merchant').classList.remove('block');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('view-admin').classList.remove('block');
+
+            // Show selected
+            document.getElementById('view-' + role).classList.remove('hidden');
+            document.getElementById('view-' + role).classList.add('block');
+
+            // Toggle button styles
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById('btn-' + role).classList.add('tab-active');
+            document.getElementById('btn-' + role).classList.remove('text-gray-500');
+        }
+
+        // Merchant Scanner Logic (Simulated)
+        function simulateScan() {
+            const progress = document.getElementById('scan-progress');
+            progress.classList.remove('translate-y-full');
+            
+            setTimeout(() => {
+                // Activate transaction form
+                const form = document.getElementById('transaction-form');
+                form.classList.remove('opacity-20', 'pointer-events-none');
+                form.classList.add('opacity-100');
+                
+                // Keep the success state for 2 seconds then reset view inside box
+                setTimeout(() => {
+                    progress.classList.add('translate-y-full');
+                    document.getElementById('scanner-content').innerHTML = `
+                        <div class="text-center animate-pulse">
+                            <span class="text-emerald-500 text-xs font-bold uppercase">Ready for Transaction</span>
+                            <div class="mt-2 text-2xl font-bold">John Doe</div>
+                        </div>
+                    `;
+                }, 2000);
+            }, 1000);
+        }
+
+        // Transaction Logic
+        const billInput = document.getElementById('bill-amount');
+        const finalAmount = document.getElementById('discounted-amount');
+
+        billInput.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            const discounted = val * 0.9;
+            finalAmount.innerText = '$' + discounted.toFixed(2);
+        });
+
+        function confirmTransaction() {
+            alert('Transaction Confirmed! \nAmount: ' + finalAmount.innerText + '\nMerchant: Breeze Cafe');
+            location.reload(); // Simple reset for prototype
+        }
+    </script>
+</body>
+</html>

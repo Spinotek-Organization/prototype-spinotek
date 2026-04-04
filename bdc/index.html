@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bali Discount Club | Upgrade Your Bali Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --lime: #d4ff33;
+            --dark: #0a0a0a;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark);
+            color: #ffffff;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .heading-xl {
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            text-transform: capitalize;
+            font-size: clamp(3rem, 8vw, 6rem);
+            /* Simulating the wide font effect */
+            transform: scaleX(1.1);
+            transform-origin: left;
+        }
+
+        .lime-glow {
+            box-shadow: 0 0 30px rgba(212, 255, 51, 0.2);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-lime {
+            background-color: var(--lime);
+            color: #000000;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .btn-lime:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(212, 255, 51, 0.4);
+        }
+
+        .card-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav
+        class="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex justify-between items-center bg-black/20 backdrop-blur-md">
+        <div class="flex items-center space-x-2">
+            <div class="bg-lime-400 p-1.5 rounded-md">
+                <i data-lucide="palm-tree" class="text-black w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+        </div>
+        <div class="hidden lg:flex space-x-10 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+            <a href="index.html" class="text-[#d4ff33] transition">Home</a>
+            <a href="#how-it-works" class="hover:text-white transition">How it Works</a>
+            <a href="#partners" class="hover:text-white transition">Partners</a>
+            <a href="#pricing" class="hover:text-white transition">Pricing</a>
+            <a href="#faq" class="hover:text-white transition">FAQ</a>
+        </div>
+        <a href="login.html"
+            class="btn-lime px-8 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest shadow-[0_10px_20px_#d4ff3333] hover:scale-105 transition-transform active:scale-95">
+            Get Your Card &rarr;
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 px-6 min-h-screen flex flex-col justify-center">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+
+            <div class="space-y-10">
+                <div
+                    class="inline-flex items-center space-x-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                    <span class="flex h-2 w-2 rounded-full bg-[#d4ff33] animate-pulse"></span>
+                    <span class="text-[10px] uppercase font-bold tracking-[0.2em] text-[#d4ff33]">Limited Time
+                        Offer</span>
+                    <span class="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-400">Save up to 40% across
+                        Bali</span>
+                </div>
+
+                <h1 class="heading-xl">
+                    Unlock <br>
+                    Exclusive <br>
+                    <span class="text-[#d4ff33]">Discounts</span> <br>
+                    Across Bali
+                </h1>
+
+                <p class="text-xl text-gray-400 max-w-lg leading-relaxed">
+                    One digital card. Hundreds of deals. Spas, cafés, restaurants, activities — all at members-only
+                    prices.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <button
+                        class="w-full sm:w-auto btn-lime px-10 py-5 rounded-2xl text-lg flex items-center justify-center">
+                        Get Your Digital Card &rarr;
+                    </button>
+                    <button
+                        class="w-full sm:w-auto px-10 py-5 rounded-2xl border-2 border-white/10 font-bold hover:bg-white/5 transition flex items-center justify-center">
+                        Browse Merchants
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card Showcase -->
+            <div class="relative group">
+                <!-- Glowing effect -->
+                <div
+                    class="absolute -inset-20 bg-[#d4ff33]/10 blur-[100px] rounded-full group-hover:bg-[#d4ff33]/20 transition duration-1000">
+                </div>
+
+                <div
+                    class="relative card-gradient p-10 rounded-[40px] aspect-[1.6/1] w-full max-w-xl mx-auto flex flex-col justify-between shadow-2xl scale-110 rotate-3 group-hover:rotate-0 transition-transform duration-700">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-3xl font-black italic tracking-tighter">Bali <span
+                                    class="text-[#d4ff33]">DC</span></span>
+                        </div>
+                        <div class="glass px-4 py-1.5 rounded-full flex items-center space-x-2">
+                            <span class="w-2 h-2 bg-[#d4ff33] rounded-full"></span>
+                            <span class="text-[10px] font-bold tracking-widest uppercase">Active</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div
+                            class="w-16 h-10 bg-gradient-to-br from-yellow-300 to-yellow-600 rounded-lg opacity-80 border border-white/20">
+                        </div>
+                        <div class="text-3xl font-mono tracking-[0.3em] text-gray-300">BDCM ·· 4821 ·· 9034</div>
+                    </div>
+
+                    <div class="flex justify-between items-end border-t border-white/5 pt-8">
+                        <div>
+                            <div class="text-[10px] uppercase font-bold text-gray-500 mb-1 tracking-widest">Member</div>
+                            <div class="text-xl font-bold tracking-tight">Your Name Here</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] uppercase font-bold text-gray-500 mb-1 tracking-widest">Expires
+                            </div>
+                            <div class="text-xl font-bold tracking-tight">12/2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating UI Element -->
+    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
+        <button class="btn-lime px-8 py-4 rounded-full flex items-center space-x-3 shadow-2xl text-lg">
+            <span class="w-3 h-3 bg-black rounded-full animate-ping"></span>
+            <span>Get Discount Card — from $9</span>
+        </button>
+    </div>
+
+    <!-- How it Works -->
+    <section id="how-it-works" class="py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
+                <div class="space-y-4">
+                    <h2 class="heading-xl text-3xl md:text-5xl">How it <span class="text-[#d4ff33]">Works</span></h2>
+                    <p class="text-gray-500 max-w-sm">Getting your Bali DC membership is faster than ordering a Bintang.
+                    </p>
+                </div>
+                <div class="h-px bg-white/5 flex-1 hidden md:block mb-6"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="space-y-6 group">
+                    <div
+                        class="w-16 h-16 glass rounded-2xl flex items-center justify-center text-[#d4ff33] text-2xl font-black group-hover:bg-[#d4ff33] group-hover:text-black transition-all">
+                        01</div>
+                    <h3 class="text-2xl font-bold italic tracking-tighter">Choose Plan</h3>
+                    <p class="text-gray-500 leading-relaxed">Select a membership tier that fits your stay in Bali. From
+                        1 month to a full year of savings.</p>
+                </div>
+                <div class="space-y-6 group">
+                    <div
+                        class="w-16 h-16 glass rounded-2xl flex items-center justify-center text-[#d4ff33] text-2xl font-black group-hover:bg-[#d4ff33] group-hover:text-black transition-all">
+                        02</div>
+                    <h3 class="text-2xl font-bold italic tracking-tighter">Get Digital Card</h3>
+                    <p class="text-gray-500 leading-relaxed">Instantly access your unique digital membership card with a
+                        secure QR code on your dashboard.</p>
+                </div>
+                <div class="space-y-6 group">
+                    <div
+                        class="w-16 h-16 glass rounded-2xl flex items-center justify-center text-[#d4ff33] text-2xl font-black group-hover:bg-[#d4ff33] group-hover:text-black transition-all">
+                        03</div>
+                    <h3 class="text-2xl font-bold italic tracking-tighter">Scan & Save</h3>
+                    <p class="text-gray-500 leading-relaxed">Show your card to our 200+ partner merchants to enjoy
+                        immediate discounts on your total bill.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partner Directory -->
+    <section id="partners" class="py-32 px-6 bg-black/50">
+        <div class="max-w-6xl mx-auto space-y-16">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div class="space-y-4">
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tighter italic uppercase">Our <span
+                            class="text-[#d4ff33]">Curated</span> Partners</h2>
+                    <p class="text-gray-500 font-bold uppercase tracking-widest text-xs">Only the best spots on the
+                        island</p>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="filterCategory('all', this)"
+                        class="filter-btn px-6 py-3 rounded-full bg-[#d4ff33] text-black text-xs font-bold uppercase tracking-widest transition">All</button>
+                    <button onclick="filterCategory('restaurant', this)"
+                        class="filter-btn px-6 py-3 rounded-full glass border-white/5 hover:border-[#d4ff33]/30 text-xs font-bold uppercase tracking-widest transition">🍴
+                        Restaurants</button>
+                    <button onclick="filterCategory('cafe', this)"
+                        class="filter-btn px-6 py-3 rounded-full glass border-white/5 hover:border-[#d4ff33]/30 text-xs font-bold uppercase tracking-widest transition">☕
+                        Cafés</button>
+                    <button onclick="filterCategory('spa', this)"
+                        class="filter-btn px-6 py-3 rounded-full glass border-white/5 hover:border-[#d4ff33]/30 text-xs font-bold uppercase tracking-widest transition">💆
+                        Spas</button>
+                    <button onclick="filterCategory('fitness', this)"
+                        class="filter-btn px-6 py-3 rounded-full glass border-white/5 hover:border-[#d4ff33]/30 text-xs font-bold uppercase tracking-widest transition">🏋
+                        Fitness</button>
+                    <button onclick="filterCategory('activity', this)"
+                        class="filter-btn px-6 py-3 rounded-full glass border-white/5 hover:border-[#d4ff33]/30 text-xs font-bold uppercase tracking-widest transition">🏄
+                        Activities</button>
+                </div>
+            </div>
+
+            <!-- Outlet Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 🍽 RESTAURANTS -->
+                <div data-category="restaurant"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="utensils"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-10%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Uluwatu</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">The Deck Club</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Exquisite seafood and cliffside views
+                            area.</p>
+                        <button
+                            onclick="showOutletDetails('The Deck Club', 'utensils', 'Premier cliffside dining in Uluwatu with breathtaking views.', 'Jl. Labuansait, Uluwatu')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Merchant 2 -->
+                <div data-category="restaurant"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="utensils"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-15%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Canggu</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Mason Bali</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Modern wood-fired kitchen excellence.</p>
+                        <button
+                            onclick="showOutletDetails('Mason Bali', 'utensils', 'Contemporary dining in the heart of Canggu focusing on local ingredients.', 'Jl. Batu Bolong, Canggu')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ☕ CAFÉS -->
+                <div data-category="cafe"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="coffee"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-15%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Canggu</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Breeze Café</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Artisan coffee and healthy brunch
+                            overlooking rice fields.</p>
+                        <button
+                            onclick="showOutletDetails('Breeze Café', 'coffee', 'Specialty brews and organic menu in a tropical setting.', 'Jl. Pantai Batu Mejan')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Merchant 4 -->
+                <div data-category="cafe"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="coffee"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-10%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Seminyak</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Revolver</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Bali's iconic boutique coffee experience.
+                        </p>
+                        <button
+                            onclick="showOutletDetails('Revolver', 'coffee', 'The OG specialty coffee spot in Seminyak hideaway.', 'Jl. Kayua Aya, Seminyak')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 💆 SPAS -->
+                <div data-category="spa"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="flower"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-20%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Seminyak</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Bali Oasis Spa</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Relaxing traditional therapy and high-end
+                            spa.</p>
+                        <button
+                            onclick="showOutletDetails('Bali Oasis Spa', 'flower', 'Luxury spa treatments and Balinese healing arts.', 'Jl. Petitenget')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Merchant 6 -->
+                <div data-category="spa"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="flower"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-15%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Canggu</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Amo Spa</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Modern recovery & complete wellness
+                            center.</p>
+                        <button
+                            onclick="showOutletDetails('Amo Spa', 'flower', 'Top rated spa in Canggu featuring sauna and cold plunge.', 'Jl. Batu Bolong')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 🏋 FITNESS -->
+                <div data-category="fitness"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="zap"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-10%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Berawa</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Iron Gym</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Best weights and pro training facility in
+                            Bali.</p>
+                        <button
+                            onclick="showOutletDetails('Iron Gym', 'zap', 'Professional bodybuilding and weights facility.', 'Berawa Area')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Merchant 8 -->
+                <div data-category="fitness"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="zap"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-15%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Canggu</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Body Factory</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Premium wellness and fitness sanctuary.
+                        </p>
+                        <button
+                            onclick="showOutletDetails('Body Factory', 'zap', 'High-end fitness center focusing on aesthetic wellness.', 'Jl. Nelayan, Canggu')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 🏄 ACTIVITIES -->
+                <div data-category="activity"
+                    class="merchant-card glass rounded-[48px] overflow-hidden border-white/5 hover:border-[#d4ff33]/20 transition group">
+                    <div
+                        class="aspect-[16/11] bg-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <i data-lucide="wind"
+                            class="w-20 h-20 text-[#d4ff33] opacity-20 group-hover:scale-110 transition duration-500"></i>
+                        <span
+                            class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">-20%
+                            OFF</span>
+                        <div class="absolute bottom-8 left-8">
+                            <div class="text-xs font-black text-[#d4ff33] uppercase tracking-widest mb-1">Kuta</div>
+                            <h4 class="text-3xl font-black italic tracking-tighter text-white">Bali Surf School</h4>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-500 text-sm mb-8 leading-relaxed">Learn to surf from Bali's most experienced
+                            pros.</p>
+                        <button
+                            onclick="showOutletDetails('Bali Surf School', 'wind', 'Professional surf lessons for all experience levels.', 'Kuta Beach')"
+                            class="text-[#d4ff33] text-xs font-black uppercase tracking-widest hover:underline flex items-center group">
+                            View Details <i data-lucide="arrow-right"
+                                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pt-10">
+                <button
+                    class="py-5 px-10 glass border-white/5 rounded-full text-xs font-black uppercase tracking-[0.2em] hover:bg-white hover:text-black transition">Explore
+                    197+ More Partners &darr;</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Outlet Detail Modal -->
+    <div id="outlet-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-6 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-2xl" onclick="closeOutletModal()"></div>
+        <div
+            class="relative glass max-w-2xl w-full p-0 rounded-[64px] border-white/10 overflow-hidden animate-in fade-in zoom-in duration-300">
+            <button onclick="closeOutletModal()"
+                class="absolute top-8 right-8 z-20 text-gray-400 hover:text-white transition bg-black/40 backdrop-blur p-2 rounded-full">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+
+            <div class="grid md:grid-cols-2">
+                <div class="aspect-square md:aspect-auto bg-white/5 p-12 flex items-center justify-center relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#d4ff33]/20 to-transparent"></div>
+                    <i id="modal-icon" data-lucide="store"
+                        class="w-40 h-40 text-[#d4ff33] opacity-20 relative z-10"></i>
+                    <div class="absolute bottom-10 left-10 z-10">
+                        <span
+                            class="bg-[#d4ff33] text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter">Verified
+                            Partner</span>
+                    </div>
+                </div>
+                <div class="p-12 space-y-8 text-left">
+                    <div class="space-y-4">
+                        <h3 id="modal-title" class="text-4xl font-black italic tracking-tighter text-white">Outlet Name
+                        </h3>
+                        <div class="h-1 w-12 bg-[#d4ff33]"></div>
+                    </div>
+                    <p id="modal-desc" class="text-gray-400 leading-relaxed text-sm">Description goes here.</p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-white/5 p-3 rounded-2xl text-[#d4ff33]">
+                                <i data-lucide="map-pin" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <div class="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-1">Location
+                                </div>
+                                <div id="modal-loc" class="text-sm font-bold tracking-tight">Address</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a id="modal-gmaps" href="https://maps.google.com" target="_blank"
+                        class="block w-full py-5 btn-lime rounded-3xl text-center text-xs font-black uppercase tracking-widest shadow-[0_15px_30px_#d4ff3344] hover:translate-y-[-2px] transition">
+                        Open in Google Maps &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Expat Testimonials -->
+    <section class="py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold mb-20 tracking-tighter italic text-center">Island <span
+                    class="text-[#d4ff33]">Vibes</span> only</h2>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass p-10 rounded-[48px] space-y-6 border-white/5 hover:border-[#d4ff33]/20 transition">
+                    <div class="flex space-x-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                    </div>
+                    <p class="text-gray-400 italic leading-relaxed">"Honestly, it paid for itself in just 3 days. We go
+                        to cafes every morning in Canggu, and saving 10-15% every time adds up fast."</p>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-white/5">
+                        <div
+                            class="w-12 h-12 rounded-full bg-white/5 border border-[#d4ff33]/30 flex items-center justify-center font-bold text-[#d4ff33]">
+                            SM</div>
+                        <div>
+                            <div class="font-bold">Sarah Miller</div>
+                            <div class="text-[10px] uppercase font-bold text-gray-600 tracking-widest">Digital Nomad, UK
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-10 rounded-[48px] space-y-6 border-white/5 hover:border-[#d4ff33]/20 transition">
+                    <div class="flex space-x-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                    </div>
+                    <p class="text-gray-400 italic leading-relaxed">"Perfect for long-term stay. The digital card is so
+                        convenient—I never forget it since it's just on my phone. Best investment in Bali."</p>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-white/5">
+                        <div
+                            class="w-12 h-12 rounded-full bg-white/5 border border-[#d4ff33]/30 flex items-center justify-center font-bold text-[#d4ff33]">
+                            JL</div>
+                        <div>
+                            <div class="font-bold">Julian Leveau</div>
+                            <div class="text-[10px] uppercase font-bold text-gray-600 tracking-widest">Expat, France
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-10 rounded-[48px] space-y-6 border-white/5 hover:border-[#d4ff33]/20 transition">
+                    <div class="flex space-x-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-[#d4ff33] text-[#d4ff33]"></i>
+                    </div>
+                    <p class="text-gray-400 italic leading-relaxed">"Finally a membership that actually has the places I
+                        like. The spa discounts are insane. Highly recommend Bali DC to everyone."</p>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-white/5">
+                        <div
+                            class="w-12 h-12 rounded-full bg-white/5 border border-[#d4ff33]/30 flex items-center justify-center font-bold text-[#d4ff33]">
+                            AK</div>
+                        <div>
+                            <div class="font-bold">Alex Kravets</div>
+                            <div class="text-[10px] uppercase font-bold text-gray-600 tracking-widest">Surfer, Russia
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-32 px-6 relative">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20 space-y-4">
+                <h2 class="text-5xl font-bold tracking-tighter italic uppercase underline decoration-[#d4ff33]/30">
+                    Choose your <span class="text-[#d4ff33]">Savings</span></h2>
+                <p class="text-gray-500 font-bold uppercase tracking-widest text-xs">Unlock 200+ partner discounts
+                    instantly</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 1 Month -->
+                <div
+                    class="glass p-12 rounded-[48px] border-white/5 hover:border-[#d4ff33]/30 transition group flex flex-col justify-between">
+                    <div class="space-y-6">
+                        <div class="text-xs font-bold uppercase tracking-[0.3em] text-gray-500">Nomad Lite</div>
+                        <div class="text-6xl font-black italic tracking-tighter">$9 <span
+                                class="text-sm font-bold text-gray-600 not-italic uppercase">/ Month</span></div>
+                        <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Full Access to 200+ Outlets</span></li>
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Digital Membership Card</span></li>
+                            <li class="flex items-center space-x-3 tracking-tighter text-gray-600 italic">Expires in 30
+                                days</li>
+                        </ul>
+                    </div>
+                    <a href="login.html"
+                        class="w-full py-5 rounded-3xl border border-white/10 mt-10 font-bold uppercase text-xs tracking-widest group-hover:bg-[#d4ff33] group-hover:text-black transition text-center">Choose
+                        Lite</a>
+                </div>
+
+                <!-- 3 Months -->
+                <div
+                    class="glass p-12 rounded-[48px] border-[#d4ff33]/40 bg-[#d4ff33]/5 relative group flex flex-col justify-between overflow-hidden scale-105 shadow-2xl">
+                    <div
+                        class="absolute top-8 right-8 bg-[#d4ff33] text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">
+                        Most Popular</div>
+                    <div class="space-y-6">
+                        <div class="text-xs font-bold uppercase tracking-[0.3em] text-[#d4ff33]">Island Pro</div>
+                        <div class="text-6xl font-black italic tracking-tighter">$19 <span
+                                class="text-sm font-bold text-gray-400 not-italic uppercase">/ Qtr</span></div>
+                        <ul class="space-y-4 text-sm text-white font-medium">
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Full Access to 200+ Outlets</span></li>
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Priority Support</span></li>
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Exclusive Partner Events</span></li>
+                        </ul>
+                    </div>
+                    <a href="login.html"
+                        class="w-full py-5 rounded-3xl bg-[#d4ff33] text-black mt-10 font-bold uppercase text-xs tracking-widest shadow-[0_0_20px_#d4ff3355] text-center">Get
+                        Pro Access</a>
+                </div>
+
+                <!-- 12 Months -->
+                <div
+                    class="glass p-12 rounded-[48px] border-white/5 hover:border-[#d4ff33]/30 transition group flex flex-col justify-between">
+                    <div class="space-y-6">
+                        <div class="text-xs font-bold uppercase tracking-[0.3em] text-gray-500">Bali Resident</div>
+                        <div class="text-6xl font-black italic tracking-tighter">$49 <span
+                                class="text-sm font-bold text-gray-600 not-italic uppercase">/ Year</span></div>
+                        <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Best Value ($4/mo)</span></li>
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Lifetime Card Access</span></li>
+                            <li class="flex items-center space-x-3"><i data-lucide="check"
+                                    class="w-4 h-4 text-[#d4ff33]"></i> <span>Premium Member Concierge</span></li>
+                        </ul>
+                    </div>
+                    <a href="login.html"
+                        class="w-full py-5 rounded-3xl border border-white/10 mt-10 font-bold uppercase text-xs tracking-widest group-hover:bg-[#d4ff33] group-hover:text-black transition text-center">Choose
+                        Annual</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-32 px-6 bg-black/40">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-16 tracking-tighter italic text-center underline decoration-[#d4ff33]/30">
+                Common Questions</h2>
+
+            <div class="space-y-6">
+                <div class="glass p-8 rounded-3xl border-white/5 hover:border-white/10 transition cursor-pointer group">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-bold">Do I need to install an app?</h4>
+                        <i data-lucide="plus" class="text-[#d4ff33] group-hover:rotate-90 transition"></i>
+                    </div>
+                    <p class="hidden group-hover:block mt-6 text-gray-500 leading-relaxed">No installation needed! Bali
+                        DC is a Progressive Web App (PWA). You can simply save the dashboard to your home screen for
+                        native-like access.</p>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border-white/5 hover:border-white/10 transition cursor-pointer group">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-bold">Where can I use the discount?</h4>
+                        <i data-lucide="plus" class="text-[#d4ff33] group-hover:rotate-90 transition"></i>
+                    </div>
+                    <p class="hidden group-hover:block mt-6 text-gray-500 leading-relaxed">We have 200+ partners across
+                        the most popular areas: Canggu, Seminyak, Uluwatu, and Ubud. Check the explore section in your
+                        dashboard for the full list.</p>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border-white/5 hover:border-white/10 transition cursor-pointer group">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-bold">Can I share my QR code with friends?</h4>
+                        <i data-lucide="plus" class="text-[#d4ff33] group-hover:rotate-90 transition"></i>
+                    </div>
+                    <p class="hidden group-hover:block mt-6 text-gray-500 leading-relaxed">Memberships are personal. The
+                        QR code displays your name and is validated by merchants against our live database to prevent
+                        fraud.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 border-t border-white/5 bg-black/60 relative">
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-12">
+            <div class="space-y-6 col-span-2">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-lime-400 p-1.5 rounded-md">
+                        <i data-lucide="palm-tree" class="text-black w-5 h-5"></i>
+                    </div>
+                    <span class="text-2xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+                </div>
+                <p class="text-gray-500 max-w-xs">Bali Discount Club is the island's premier digital membership for the
+                    global digital nomad community.</p>
+            </div>
+            <div class="space-y-6">
+                <h5 class="text-xs font-bold uppercase tracking-widest text-[#d4ff33]">Platform</h5>
+                <ul class="space-y-4 text-sm text-gray-500 font-bold uppercase tracking-widest">
+                    <li><a href="#how-it-works" class="hover:text-white transition">How it Works</a></li>
+                    <li><a href="#" class="hover:text-white transition">Merchants</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="space-y-6">
+                <h5 class="text-xs font-bold uppercase tracking-widest text-[#d4ff33]">Social</h5>
+                <div class="flex space-x-4">
+                    <a href="#"
+                        class="w-10 h-10 glass rounded-xl flex items-center justify-center text-gray-400 hover:text-[#d4ff33] transition"><i
+                            data-lucide="instagram"></i></a>
+                    <a href="#"
+                        class="w-10 h-10 glass rounded-xl flex items-center justify-center text-gray-400 hover:text-[#d4ff33] transition"><i
+                            data-lucide="facebook"></i></a>
+                </div>
+            </div>
+        </div>
+        <div
+            class="max-w-6xl mx-auto px-6 mt-20 pt-10 border-t border-white/5 text-center text-gray-600 text-xs font-bold uppercase tracking-[0.2em]">
+            <p>&copy; 2026 Bali Discount Club. Designed by Spinotek.</p>
+        </div>
+    </footer>
+    <!-- Login Modal (Testing Shortcut) -->
+    <div id="login-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"
+            onclick="document.getElementById('login-modal').classList.add('hidden')"></div>
+        <div class="relative glass max-w-lg w-full p-12 rounded-[40px] text-center border-white/10">
+            <h2 class="text-4xl font-bold mb-4">Choose Testing Role</h2>
+            <p class="text-gray-400 mb-10 leading-relaxed">Select a role to instantly test the platform dashboard for
+                each user type.</p>
+
+            <div class="grid gap-4">
+                <a href="dashboard-customer.html"
+                    class="glass p-6 rounded-3xl flex items-center justify-between group hover:border-[#d4ff33] transition">
+                    <div class="text-left">
+                        <div class="font-bold text-xl group-hover:text-[#d4ff33]">Customer View</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest">QR Card, Discounts, Savings</div>
+                    </div>
+                    <i data-lucide="user" class="w-8 h-8 text-gray-700 group-hover:text-[#d4ff33]"></i>
+                </a>
+
+                <a href="dashboard-merchant.html"
+                    class="glass p-6 rounded-3xl flex items-center justify-between group hover:border-[#d4ff33] transition">
+                    <div class="text-left">
+                        <div class="font-bold text-xl group-hover:text-[#d4ff33]">Merchant View</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest">Scanner, Validation, Reports</div>
+                    </div>
+                    <i data-lucide="store" class="w-8 h-8 text-gray-700 group-hover:text-[#d4ff33]"></i>
+                </a>
+
+                <a href="dashboard-admin.html"
+                    class="glass p-6 rounded-3xl flex items-center justify-between group hover:border-[#d4ff33] transition">
+                    <div class="text-left">
+                        <div class="font-bold text-xl group-hover:text-[#d4ff33]">Admin View</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest">Analytics, User Management</div>
+                    </div>
+                    <i data-lucide="layout-dashboard" class="w-8 h-8 text-gray-700 group-hover:text-[#d4ff33]"></i>
+                </a>
+            </div>
+
+            <button onclick="document.getElementById('login-modal').classList.add('hidden')"
+                class="mt-8 text-gray-500 hover:text-white transition uppercase text-xs font-bold tracking-widest">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function showOutletDetails(title, icon, desc, loc) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-loc').innerText = loc;
+            document.getElementById('modal-gmaps').href = `https://www.google.com/maps/search/${encodeURIComponent(title + ' ' + loc)}`;
+
+            // Re-render icon
+            const iconElem = document.getElementById('modal-icon');
+            iconElem.setAttribute('data-lucide', icon);
+            lucide.createIcons();
+
+            document.getElementById('outlet-modal').classList.remove('hidden');
+        }
+
+        function closeOutletModal() {
+            document.getElementById('outlet-modal').classList.add('hidden');
+        }
+
+        function filterCategory(category, btn) {
+            // Update buttons
+            document.querySelectorAll('.filter-btn').forEach(el => {
+                el.classList.remove('bg-[#d4ff33]', 'text-black');
+                el.classList.add('glass', 'text-white');
+            });
+            btn.classList.add('bg-[#d4ff33]', 'text-black');
+            btn.classList.remove('glass', 'text-white');
+
+            // Filter cards
+            document.querySelectorAll('.merchant-card').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
