@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Intel | Bali DC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --lime: #d4ff33;
+            --dark: #0a0a0a;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark);
+            color: #ffffff;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .btn-lime {
+            background-color: var(--lime);
+            color: #000000;
+            font-weight: 700;
+        }
+        .card-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 overflow-x-hidden lg:pl-64">
+
+    <!-- Sidebar (Desktop focus) -->
+    <aside class="fixed left-0 top-0 bottom-0 w-64 glass hidden lg:flex flex-col p-8 space-y-12">
+        <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div class="bg-lime-400 p-1.5 rounded-md">
+                <i data-lucide="palm-tree" class="text-black w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+        </a>
+
+        <nav class="flex-1 space-y-4">
+            <a href="dashboard-admin.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Dashboard</span>
+            </a>
+            <a href="dashboard-admin-customers.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Customers</span>
+            </a>
+            <a href="dashboard-admin-merchants.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl bg-[#d4ff33] text-black font-bold transition">
+                <i data-lucide="store" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Merchants</span>
+            </a>
+            <a href="dashboard-admin-transactions.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Transactions</span>
+            </a>
+            <a href="dashboard-admin-settings.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Settings</span>
+            </a>
+        </nav>
+
+        <a href="index.html" class="flex items-center space-x-4 p-4 rounded-2xl text-gray-500 hover:text-red-500 transition font-bold uppercase text-xs tracking-widest">
+            <i data-lucide="log-out" class="w-6 h-6"></i>
+            <span>Log Out</span>
+        </a>
+    </aside>
+
+    <!-- Header (Mobile focus) -->
+    <header class="p-6 flex justify-between items-center border-b border-white/5 bg-black/60 sticky top-0 z-50 backdrop-blur-xl lg:hidden">
+        <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div class="bg-lime-400 p-1.5 rounded-md">
+                <i data-lucide="palm-tree" class="text-black w-4 h-4"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+        </a>
+        <div class="flex items-center space-x-4">
+            <span class="text-[10px] font-bold text-[#d4ff33] tracking-[0.2em] uppercase">Super Admin</span>
+            <div class="w-10 h-10 rounded-full glass border-[#d4ff33]/30 flex items-center justify-center text-[#d4ff33]">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-10 space-y-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between space-y-4">
+            <div class="space-y-1">
+                <h1 class="text-4xl font-bold italic tracking-tighter">Merchants Hub</h1>
+                <p class="text-gray-500 uppercase text-xs font-bold tracking-[0.3em]">Partner Directory & Performance</p>
+            </div>
+            <div class="flex space-x-3">
+                <div class="glass px-4 py-3 rounded-full flex items-center space-x-3 border-white/10 focus-within:border-[#d4ff33]/50 transition bg-black/40 min-w-[300px]">
+                    <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                    <input type="text" id="searchMerchant" oninput="applyMerchantFilters()" placeholder="Search partners..." class="bg-transparent border-none outline-none text-sm w-full font-bold placeholder:text-gray-500 text-white">
+                </div>
+                <button class="bg-[#d4ff33] text-black px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap hidden sm:flex items-center space-x-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Partner</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide pt-2">
+            <button onclick="setCategory(this, 'all')" class="cat-btn bg-[#d4ff33] text-black px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0">All Categories</button>
+            <button onclick="setCategory(this, 'f&b')" class="cat-btn glass text-gray-400 hover:text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Food & Beverage</button>
+            <button onclick="setCategory(this, 'wellness')" class="cat-btn glass text-gray-400 hover:text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Wellness</button>
+            <button onclick="setCategory(this, 'fitness')" class="cat-btn glass text-gray-400 hover:text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Fitness</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+            <!-- Merchant Card 1 -->
+            <div class="merchant-card glass p-6 rounded-[32px] space-y-6 hover:border-[#d4ff33]/50 transition group cursor-pointer border border-white/5 relative overflow-hidden" data-category="f&b" data-search="breeze café petitenget food & beverage">
+                <div class="flex items-start justify-between">
+                    <div class="w-16 h-16 rounded-2xl bg-gray-800 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&q=80')"></div>
+                    <span class="bg-[#d4ff33]/10 text-[#d4ff33] px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest border border-[#d4ff33]/20">10% OFF</span>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold tracking-tighter">Breeze Café</h3>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mt-1">Petitenget • Food & Beverage</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-6 border-t border-white/5 pt-6">
+                    <div>
+                        <div class="text-xl font-black italic">2,102</div>
+                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Visits</div>
+                    </div>
+                    <div>
+                        <div class="text-xl font-black italic text-emerald-400">Rp 42M</div>
+                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Revenue Gen.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merchant Card 2 -->
+            <div class="merchant-card glass p-6 rounded-[32px] space-y-6 hover:border-[#d4ff33]/50 transition group cursor-pointer border border-white/5 relative overflow-hidden" data-category="wellness" data-search="bali oasis spa seminyak wellness">
+                <div class="flex items-start justify-between">
+                    <div class="w-16 h-16 rounded-2xl bg-gray-800 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&q=80')"></div>
+                    <span class="bg-[#d4ff33]/10 text-[#d4ff33] px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest border border-[#d4ff33]/20">10% OFF</span>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold tracking-tighter">Bali Oasis Spa</h3>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mt-1">Seminyak • Wellness</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-6 border-t border-white/5 pt-6">
+                    <div>
+                        <div class="text-xl font-black italic">1,402</div>
+                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Visits</div>
+                    </div>
+                    <div>
+                        <div class="text-xl font-black italic text-emerald-400">Rp 56M</div>
+                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Revenue Gen.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merchant Card 3 -->
+            <div class="merchant-card glass p-6 rounded-[32px] space-y-6 hover:border-[#d4ff33]/50 transition group cursor-pointer border border-white/5 relative overflow-hidden" data-category="fitness" data-search="body factory canggu fitness">
+                <div class="flex items-start justify-between">
+                    <div class="w-16 h-16 rounded-2xl bg-gray-800 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80')"></div>
+                    <span class="bg-gray-500/10 text-gray-400 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest border border-gray-500/20">Inactive</span>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold tracking-tighter">Body Factory</h3>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mt-1">Canggu • Fitness</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-6 border-t border-white/5 pt-6">
+                    <div>
+                        <div class="text-xl font-black italic text-gray-400">824</div>
+                        <div class="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Visits</div>
+                    </div>
+                    <div>
+                        <div class="text-xl font-black italic text-gray-400">Rp 12M</div>
+                        <div class="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Revenue Gen.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Admin Float for test reset -->
+    <div class="fixed bottom-10 right-10 z-[100] group">
+        <button onclick="location.reload()" class="w-16 h-16 btn-lime rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition">
+            <i data-lucide="refresh-cw" class="w-8 h-8"></i>
+        </button>
+        <span class="absolute right-20 top-1/2 -translate-y-1/2 bg-black/80 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Refresh Data</span>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let currentCategory = 'all';
+
+        function setCategory(element, category) {
+            // Reset active styles
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-[#d4ff33]', 'text-black');
+                btn.classList.add('glass', 'text-gray-400');
+            });
+
+            // Set active style for clicked
+            element.classList.remove('glass', 'text-gray-400');
+            element.classList.add('bg-[#d4ff33]', 'text-black');
+
+            currentCategory = category;
+            applyMerchantFilters();
+        }
+
+        function applyMerchantFilters() {
+            const searchQuery = document.getElementById('searchMerchant').value.toLowerCase();
+            const cards = document.querySelectorAll('.merchant-card');
+
+            cards.forEach(card => {
+                const searchData = card.getAttribute('data-search').toLowerCase();
+                const categoryData = card.getAttribute('data-category');
+
+                const matchesSearch = searchData.includes(searchQuery);
+                const matchesCategory = currentCategory === 'all' || categoryData === currentCategory;
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

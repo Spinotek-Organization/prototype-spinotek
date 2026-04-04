@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Intel | Bali DC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --lime: #d4ff33;
+            --dark: #0a0a0a;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark);
+            color: #ffffff;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .btn-lime {
+            background-color: var(--lime);
+            color: #000000;
+            font-weight: 700;
+        }
+        .card-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 overflow-x-hidden lg:pl-64">
+
+    <!-- Sidebar (Desktop focus) -->
+    <aside class="fixed left-0 top-0 bottom-0 w-64 glass hidden lg:flex flex-col p-8 space-y-12">
+        <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div class="bg-lime-400 p-1.5 rounded-md">
+                <i data-lucide="palm-tree" class="text-black w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+        </a>
+
+        <nav class="flex-1 space-y-4">
+            <a href="dashboard-admin.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Dashboard</span>
+            </a>
+            <a href="dashboard-admin-customers.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl bg-[#d4ff33] text-black font-bold transition">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Customers</span>
+            </a>
+            <a href="dashboard-admin-merchants.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="store" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Merchants</span>
+            </a>
+            <a href="dashboard-admin-transactions.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Transactions</span>
+            </a>
+            <a href="dashboard-admin-settings.html" class="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition text-gray-500 hover:text-white font-bold">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-xs uppercase tracking-widest">Settings</span>
+            </a>
+        </nav>
+
+        <a href="index.html" class="flex items-center space-x-4 p-4 rounded-2xl text-gray-500 hover:text-red-500 transition font-bold uppercase text-xs tracking-widest">
+            <i data-lucide="log-out" class="w-6 h-6"></i>
+            <span>Log Out</span>
+        </a>
+    </aside>
+
+    <!-- Header (Mobile focus) -->
+    <header class="p-6 flex justify-between items-center border-b border-white/5 bg-black/60 sticky top-0 z-50 backdrop-blur-xl lg:hidden">
+        <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div class="bg-lime-400 p-1.5 rounded-md">
+                <i data-lucide="palm-tree" class="text-black w-4 h-4"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tighter">Bali <span class="text-[#d4ff33]">DC</span></span>
+        </a>
+        <div class="flex items-center space-x-4">
+            <span class="text-[10px] font-bold text-[#d4ff33] tracking-[0.2em] uppercase">Super Admin</span>
+            <div class="w-10 h-10 rounded-full glass border-[#d4ff33]/30 flex items-center justify-center text-[#d4ff33]">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-10 space-y-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between space-y-4">
+            <div class="space-y-1">
+                <h1 class="text-4xl font-bold italic tracking-tighter">Customers Hub</h1>
+                <p class="text-gray-500 uppercase text-xs font-bold tracking-[0.3em]">Manage Customer Memberships</p>
+            </div>
+            <div class="flex space-x-3">
+                <div class="glass px-4 py-3 rounded-full flex items-center space-x-3 border-white/10 focus-within:border-[#d4ff33]/50 transition bg-black/40 min-w-[300px]">
+                    <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                    <input type="text" id="searchCustomer" oninput="applyFilters()" placeholder="Search by name, email, or code..." class="bg-transparent border-none outline-none text-sm w-full font-bold placeholder:text-gray-500 text-white">
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric Scoreboard -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass p-6 rounded-[32px] space-y-2 border-white/5">
+                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Total Users</div>
+                <div class="text-white text-3xl font-black italic">8,421</div>
+                <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest flex items-center mt-2"><i data-lucide="trending-up" class="w-3 h-3 mr-1"></i>+124 This Week</div>
+            </div>
+            <div class="glass p-6 rounded-[32px] space-y-2 border-[#d4ff33]/20 relative overflow-hidden group">
+                <div class="absolute -right-10 -bottom-10 w-24 h-24 bg-[#d4ff33]/10 blur-[40px] group-hover:scale-150 transition-transform"></div>
+                <div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Active Subs</div>
+                <div class="text-[#d4ff33] text-3xl font-black italic">4,821</div>
+                <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest flex items-center mt-2"><i data-lucide="activity" class="w-3 h-3 mr-1"></i>57% Conversion</div>
+            </div>
+            <div class="glass p-6 rounded-[32px] space-y-2 border-white/5">
+                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Expired</div>
+                <div class="text-white text-3xl font-black italic">1,204</div>
+                <div class="text-[10px] text-pink-400 font-bold uppercase tracking-widest flex items-center mt-2"><i data-lucide="alert-circle" class="w-3 h-3 mr-1"></i>Needs Follow-up</div>
+            </div>
+            <div class="glass p-6 rounded-[32px] space-y-2 border-white/5">
+                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Unsubscribed</div>
+                <div class="text-gray-400 text-3xl font-black italic">2,396</div>
+                <div class="text-[10px] text-gray-600 font-bold uppercase tracking-widest flex items-center mt-2"><i data-lucide="minus-circle" class="w-3 h-3 mr-1"></i>28% Attrition</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide" id="filterContainer">
+            <button onclick="setFilter(this, 'all')" class="filter-btn bg-[#d4ff33] text-black px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0">All Customers</button>
+            <button onclick="setFilter(this, 'active')" class="filter-btn glass text-gray-400 hover:text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Active Subs</button>
+            <button onclick="setFilter(this, 'expired')" class="filter-btn glass text-gray-400 hover:text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Expired</button>
+            <button onclick="setFilter(this, 'unsubscribed')" class="filter-btn glass text-gray-400 hover:text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Unsubscribed</button>
+        </div>
+
+        <!-- Table Data -->
+        <div class="glass rounded-[40px] overflow-hidden border border-white/5">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-white/5 text-xs uppercase tracking-widest text-gray-500">
+                            <th class="px-8 py-6 font-bold">User Information</th>
+                            <th class="px-8 py-6 font-bold hidden md:table-cell">BDC Code</th>
+                            <th class="px-8 py-6 font-bold">Status</th>
+                            <th class="px-8 py-6 font-bold hidden lg:table-cell">Join Date</th>
+                            <th class="px-8 py-6 font-bold text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5 text-sm" id="customerTableBody">
+                        <!-- Row 1 -->
+                        <tr class="customer-row hover:bg-white/5 transition group" data-status="active" data-search="john doe johndoe@email.com bdcm-8293-1120 active subs">
+                            <td class="px-8 py-6">
+                                <div class="font-bold text-white text-base group-hover:text-[#d4ff33] transition">John Doe</div>
+                                <div class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">johndoe@email.com</div>
+                            </td>
+                            <td class="px-8 py-6 hidden md:table-cell">
+                                <div class="font-mono text-xs opacity-70">BDCM-8293-1120</div>
+                            </td>
+                            <td class="px-8 py-6">
+                                <span class="bg-[#d4ff33]/20 text-[#d4ff33] px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest flex items-center w-fit border border-[#d4ff33]/20"><div class="w-1.5 h-1.5 rounded-full bg-[#d4ff33] mr-2"></div>Active</span>
+                            </td>
+                            <td class="px-8 py-6 hidden lg:table-cell text-gray-400 font-bold text-[10px] uppercase tracking-widest">
+                                12 Mar 2026
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <button onclick="viewCustomerDetail('John Doe', 'johndoe@email.com', 'BDCM-8293-1120', 'active')" class="p-2 glass rounded-xl text-[#d4ff33] hover:text-white transition inline-flex items-center">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest mr-2 flex items-center">View</span>
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr class="customer-row hover:bg-white/5 transition group" data-status="expired" data-search="sarah parker sarah.p@email.com bdcm-4492-2241 expired">
+                            <td class="px-8 py-6">
+                                <div class="font-bold text-white text-base group-hover:text-[#d4ff33] transition">Sarah Parker</div>
+                                <div class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">sarah.p@email.com</div>
+                            </td>
+                            <td class="px-8 py-6 hidden md:table-cell">
+                                <div class="font-mono text-xs opacity-70">BDCM-4492-2241</div>
+                            </td>
+                            <td class="px-8 py-6">
+                                <span class="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest flex items-center w-fit border border-red-500/20"><div class="w-1.5 h-1.5 rounded-full bg-red-400 mr-2"></div>Expired</span>
+                            </td>
+                            <td class="px-8 py-6 hidden lg:table-cell text-gray-400 font-bold text-[10px] uppercase tracking-widest">
+                                01 Jan 2026
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <button onclick="viewCustomerDetail('Sarah Parker', 'sarah.p@email.com', 'BDCM-4492-2241', 'expired')" class="p-2 glass rounded-xl text-[#d4ff33] hover:text-white transition inline-flex items-center">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest mr-2 flex items-center">View</span>
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr class="customer-row hover:bg-white/5 transition group" data-status="unsubscribed" data-search="michael chang michael.c@email.com unsubscribed">
+                            <td class="px-8 py-6">
+                                <div class="font-bold text-white text-base group-hover:text-[#d4ff33] transition">Michael Chang</div>
+                                <div class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">michael.c@email.com</div>
+                            </td>
+                            <td class="px-8 py-6 hidden md:table-cell">
+                                <div class="font-mono text-xs opacity-70">-</div>
+                            </td>
+                            <td class="px-8 py-6">
+                                <span class="glass text-gray-400 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest flex items-center w-fit"><div class="w-1.5 h-1.5 rounded-full bg-gray-500 mr-2"></div>Unsubscribed</span>
+                            </td>
+                            <td class="px-8 py-6 hidden lg:table-cell text-gray-400 font-bold text-[10px] uppercase tracking-widest">
+                                03 Apr 2026
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <button onclick="viewCustomerDetail('Michael Chang', 'michael.c@email.com', '-', 'unsubscribed')" class="p-2 glass rounded-xl text-[#d4ff33] hover:text-white transition inline-flex items-center">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest mr-2 flex items-center">View</span>
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-8 py-6 border-t border-white/5 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                <span>Showing 3 of 4,821</span>
+                <div class="flex space-x-2">
+                    <button class="p-1 hover:text-white transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                    <button class="p-1 hover:text-white transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Customer Detail Sidebar (Slide-over) -->
+    <div id="customerModal" class="fixed inset-0 z-[200] flex justify-end invisible pointer-events-none">
+        <div id="modalBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-500" onclick="closeCustomerDetail()"></div>
+        <div id="modalContent" class="relative w-full max-w-md bg-[#0a0a0a] border-l border-white/10 h-full flex flex-col shadow-2xl translate-x-full transition-transform duration-500 mr-0">
+            <!-- Header -->
+            <div class="px-8 py-8 border-b border-white/5 flex justify-between items-center glass sticky top-0 z-10">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tighter italic">Customer <span class="text-[#d4ff33]">Profile</span></h2>
+                </div>
+                <button onclick="closeCustomerDetail()" class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-8 space-y-10 pb-20">
+                <!-- Profile Base -->
+                <div class="text-center space-y-4">
+                    <div class="w-24 h-24 rounded-[32px] bg-white/5 border border-white/10 mx-auto flex items-center justify-center text-4xl font-black italic text-[#d4ff33]" id="modalAvatar">J</div>
+                    <div>
+                        <h3 class="text-2xl font-bold" id="modalName">John Doe</h3>
+                        <p class="text-[10px] uppercase font-bold tracking-widest text-gray-500 mt-1" id="modalEmail">johndoe@email.com</p>
+                    </div>
+                    <div class="flex justify-center mt-2" id="modalStatusBadge">
+                        <!-- badge injected via js -->
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass p-5 rounded-3xl border-white/5 space-y-1">
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">BDC Code</div>
+                        <div class="font-mono text-sm text-white" id="modalCode">BDCM-8293</div>
+                    </div>
+                    <div class="glass p-5 rounded-3xl border-white/5 space-y-1">
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Total Saved</div>
+                        <div class="font-black italic text-lg text-[#d4ff33]">Rp 450K</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="space-y-6">
+                    <h4 class="text-xs uppercase font-bold tracking-[0.2em] text-gray-500 border-b border-white/10 pb-4">Activity Logs</h4>
+                    <div class="space-y-4" id="modalActivities">
+                        <div class="flex justify-between items-center group">
+                            <div class="flex space-x-4 items-center">
+                                <div class="w-10 h-10 rounded-full bg-white/5 flex justify-center items-center text-emerald-400">
+                                    <i data-lucide="coffee" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-sm text-white">Breeze Café</div>
+                                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Today, 2:14 PM</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs font-bold text-[#d4ff33]">-Rp 45.000</div>
+                                <div class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Discount</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center group">
+                            <div class="flex space-x-4 items-center">
+                                <div class="w-10 h-10 rounded-full bg-white/5 flex justify-center items-center text-pink-400">
+                                    <i data-lucide="flower" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-sm text-white">Bali Oasis Spa</div>
+                                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">4 Apr, 10:00 AM</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs font-bold text-[#d4ff33]">-Rp 125.000</div>
+                                <div class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Discount</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-8 border-t border-white/5 glass mt-auto space-y-3">
+                <button class="w-full py-4 glass text-white hover:text-red-500 font-bold uppercase text-[10px] tracking-widest rounded-2xl transition border-white/5 hover:border-red-500/30">Suspend User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Float for test reset -->
+    <div class="fixed bottom-10 right-10 z-[100] group hidden md:block">
+        <button onclick="location.reload()" class="w-16 h-16 btn-lime rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition">
+            <i data-lucide="refresh-cw" class="w-8 h-8"></i>
+        </button>
+        <span class="absolute right-20 top-1/2 -translate-y-1/2 bg-black/80 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Refresh Data</span>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let currentFilter = 'all';
+
+        function setFilter(element, status) {
+            // Reset active state of all filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-[#d4ff33]', 'text-black');
+                btn.classList.add('glass', 'text-gray-400');
+            });
+            
+            // Highlight clicked button
+            element.classList.remove('glass', 'text-gray-400');
+            element.classList.add('bg-[#d4ff33]', 'text-black');
+            
+            currentFilter = status;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchCustomer').value.toLowerCase();
+            const rows = document.querySelectorAll('.customer-row');
+            
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const searchData = row.getAttribute('data-search').toLowerCase();
+                const statusData = row.getAttribute('data-status');
+                
+                const matchesSearch = searchData.includes(searchQuery);
+                const matchesFilter = currentFilter === 'all' || statusData === currentFilter;
+                
+                if (matchesSearch && matchesFilter) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function viewCustomerDetail(name, email, code, status) {
+            const modal = document.getElementById('customerModal');
+            const backdrop = document.getElementById('modalBackdrop');
+            const content = document.getElementById('modalContent');
+            
+            // Populate
+            document.getElementById('modalName').innerText = name;
+            document.getElementById('modalEmail').innerText = email;
+            document.getElementById('modalAvatar').innerText = name.charAt(0).toUpperCase();
+            document.getElementById('modalCode').innerText = code;
+            
+            const badgeContainer = document.getElementById('modalStatusBadge');
+            if(status === 'active') {
+                badgeContainer.innerHTML = `<span class="bg-[#d4ff33]/20 text-[#d4ff33] px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest flex items-center border border-[#d4ff33]/20"><div class="w-1.5 h-1.5 rounded-full bg-[#d4ff33] mr-2"></div>Active</span>`;
+                document.getElementById('modalActivities').innerHTML = `
+                        <div class="flex justify-between items-center group">
+                            <div class="flex space-x-4 items-center">
+                                <div class="w-10 h-10 rounded-full bg-white/5 flex justify-center items-center text-emerald-400">
+                                    <i data-lucide="coffee" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-sm text-white">Breeze Café</div>
+                                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Today, 2:14 PM</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs font-bold text-[#d4ff33]">-Rp 45.000</div>
+                                <div class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Discount</div>
+                            </div>
+                        </div>`;
+            } else if(status === 'expired') {
+                badgeContainer.innerHTML = `<span class="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest flex items-center border border-red-500/20"><div class="w-1.5 h-1.5 rounded-full bg-red-400 mr-2"></div>Expired</span>`;
+                document.getElementById('modalActivities').innerHTML = `
+                    <div class="p-6 glass rounded-2xl text-center text-gray-500 text-[10px] uppercase font-bold tracking-widest">Latest Activity > 6 months ago</div>
+                `;
+            } else {
+                badgeContainer.innerHTML = `<span class="glass text-gray-400 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest flex items-center border border-white/5"><div class="w-1.5 h-1.5 rounded-full bg-gray-500 mr-2"></div>Unsubscribed</span>`;
+                document.getElementById('modalActivities').innerHTML = `
+                    <div class="p-6 glass rounded-2xl text-center text-gray-500 text-[10px] uppercase font-bold tracking-widest">No activities recorded.</div>
+                `;
+            }
+            lucide.createIcons();
+            
+            // Show off-canvas
+            modal.classList.remove('invisible', 'pointer-events-none');
+            // Allow layout repaint
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                content.classList.remove('translate-x-full');
+            }, 10);
+            
+            // lock scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCustomerDetail() {
+            const modal = document.getElementById('customerModal');
+            const backdrop = document.getElementById('modalBackdrop');
+            const content = document.getElementById('modalContent');
+            
+            backdrop.classList.add('opacity-0');
+            content.classList.add('translate-x-full');
+            
+            setTimeout(() => {
+                modal.classList.add('invisible', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }, 500); // match duration-500
+        }
+    </script>
+</body>
+</html>
