@@ -86,6 +86,7 @@ The platform is built as a **Progressive Web App (PWA)** to provide a native app
     *   "You saved $120 this month" - Visual motivation element.
 *   **📍 Merchant Directory (Basic)**:
     *   List of merchants by category and location.
+    *   *Note: Geolocation features (e.g., GPS tracking, maps) are not yet available in this MVP.*
 
 ### 4.2 Merchant Features
 *   **📸 QR Scanner**: Browser-based scanner for real-time member validation.
