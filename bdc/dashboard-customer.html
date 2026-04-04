@@ -64,159 +64,327 @@
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-6 py-10 space-y-10">
+    <main class="max-w-md mx-auto px-6 py-6 relative h-full min-h-screen">
 
-        <!-- Welcome -->
-        <div class="space-y-1">
-            <h1 class="text-4xl font-bold">Hi, John!</h1>
-            <p class="text-gray-500">Your membership is active and ready.</p>
-        </div>
+        <!-- TAB: HOME -->
+        <div id="tab-home" class="tab-content space-y-10">
+            <!-- Welcome -->
+            <div class="space-y-1">
+                <h1 class="text-4xl font-bold">Hi, John!</h1>
+                <p class="text-gray-500">Your membership is active and ready.</p>
+            </div>
 
-        <!-- Digital Card -->
-        <div class="relative group">
-            <div class="absolute -inset-10 bg-[#d4ff33]/5 blur-[60px] rounded-full"></div>
-            <!-- Adjusted Aspect Ratio to 1.5/1 for more vertical space -->
-            <div
-                class="relative card-gradient p-6 rounded-[40px] aspect-[1.5/1] flex flex-col justify-between shadow-2xl overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-[#d4ff33]/10 blur-[80px]"></div>
+            <!-- Digital Card -->
+            <div class="relative group">
+                <div class="absolute -inset-10 bg-[#d4ff33]/5 blur-[60px] rounded-full"></div>
+                <!-- Adjusted Aspect Ratio to 1.5/1 for more vertical space -->
+                <div
+                    class="relative card-gradient p-6 rounded-[40px] aspect-[1.5/1] flex flex-col justify-between shadow-2xl overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-[#d4ff33]/10 blur-[80px]"></div>
 
-                <!-- Card Header -->
-                <div class="flex justify-between items-start z-10">
-                    <span class="text-2xl font-black italic tracking-tighter">Bali <span
-                            class="text-[#d4ff33]">DC</span></span>
-                    <div class="glass px-4 py-1.5 rounded-full flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-[#d4ff33] rounded-full animate-pulse"></span>
-                        <span class="text-[10px] font-bold tracking-widest uppercase">Member Since 2024</span>
+                    <!-- Card Header -->
+                    <div class="flex justify-between items-start z-10">
+                        <span class="text-2xl font-black italic tracking-tighter">Bali <span
+                                class="text-[#d4ff33]">DC</span></span>
+                        <div class="glass px-4 py-1.5 rounded-full flex items-center space-x-2">
+                            <span class="w-2 h-2 bg-[#d4ff33] rounded-full animate-pulse"></span>
+                            <span class="text-[10px] font-bold tracking-widest uppercase">Member Since 2024</span>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Main Card Content (QR + Info) -->
-                <div class="flex items-center space-x-8 z-10 py-4   ">
-                    <!-- QR Code Block (Left Side) -->
-                    <div onclick="toggleQRModal(true)"
-                        class="bg-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform duration-300 cursor-pointer shrink-0">
-                        <!-- Mock QR Code (More Realistic) -->
-                        <div class="w-16 h-16 bg-white grid grid-cols-8 grid-rows-8 gap-0.5 p-0.5 relative">
-                            <script>
-                                for (let i = 0; i < 64; i++) {
-                                    const row = Math.floor(i / 8);
-                                    const col = i % 8;
-                                    // QR Positioning Squares (Top-Left, Top-Right, Bottom-Left)
-                                    const isPosSquare = (row < 3 && col < 3) || (row < 3 && col > 4) || (row > 4 && col < 3);
-                                    if (isPosSquare) {
-                                        const isOuter = (row === 0 || row === 2 || col === 0 || col === 2 || row === 7 || col === 7 || (row === 0 && col > 4) || (row === 2 && col > 4) || (col === 5 && row < 3) || (col === 7 && row < 3));
-                                        // Simple logic for the squares
-                                        document.write(`<div class="bg-black rounded-[0.5px]"></div>`);
-                                    } else {
-                                        document.write(`<div class="${Math.random() > 0.4 ? 'bg-black' : 'bg-transparent'} rounded-[0.5px]"></div>`);
+                    <!-- Main Card Content (QR + Info) -->
+                    <div class="flex items-center space-x-8 z-10 py-4   ">
+                        <!-- QR Code Block (Left Side) -->
+                        <div onclick="toggleQRModal(true)"
+                            class="bg-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform duration-300 cursor-pointer shrink-0">
+                            <!-- Mock QR Code (More Realistic) -->
+                            <div class="w-16 h-16 bg-white grid grid-cols-8 grid-rows-8 gap-0.5 p-0.5 relative">
+                                <script>
+                                    for (let i = 0; i < 64; i++) {
+                                        const row = Math.floor(i / 8);
+                                        const col = i % 8;
+                                        // QR Positioning Squares (Top-Left, Top-Right, Bottom-Left)
+                                        const isPosSquare = (row < 3 && col < 3) || (row < 3 && col > 4) || (row > 4 && col < 3);
+                                        if (isPosSquare) {
+                                            const isOuter = (row === 0 || row === 2 || col === 0 || col === 2 || row === 7 || col === 7 || (row === 0 && col > 4) || (row === 2 && col > 4) || (col === 5 && row < 3) || (col === 7 && row < 3));
+                                            // Simple logic for the squares
+                                            document.write(`<div class="bg-black rounded-[0.5px]"></div>`);
+                                        } else {
+                                            document.write(`<div class="${Math.random() > 0.4 ? 'bg-black' : 'bg-transparent'} rounded-[0.5px]"></div>`);
+                                        }
                                     }
-                                }
-                            </script>
+                                </script>
+                            </div>
+                            <div
+                                class="text-[8px] text-black font-bold text-center mt-1 uppercase tracking-tighter opacity-40">
+                                Tap to expand</div>
                         </div>
+
+                        <!-- Card Info (Middle/Right) -->
+                        <div class="space-y-1">
+                            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-widest pl-0.5">Card
+                                Holder
+                            </div>
+                            <div class="text-xl font-bold tracking-tight">John Doe</div>
+                            <div class="text-[11px] font-mono text-[#d4ff33] uppercase tracking-tighter">BDCM-8293-1120
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer (Expires Only) -->
+                    <div class="z-10 border-t border-white/5 pt-5 flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">Verified Digital
+                            Membership</span>
+                        <div class="text-right">
+                            <span
+                                class="text-[10px] uppercase font-bold text-gray-400 tracking-widest block">Expires</span>
+                            <span class="text-sm font-bold text-[#d4ff33]">12/26</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-gray-600 mt-6 font-bold tracking-widest uppercase">Show this to the
+                    merchant for scanning</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-6 rounded-[32px] border-[#d4ff33]/10">
+                    <div class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Total Saved</div>
+                    <div class="text-3xl font-bold text-[#d4ff33]">$1,240.50</div>
+                    <div class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-tighter">Island-wide savings
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-[32px]">
+                    <div class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Active Perks</div>
+                    <div class="text-3xl font-bold">242</div>
+                    <div class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-tighter">Partner Merchants
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Discover -->
+            <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold uppercase tracking-tighter">Trending Offers</h3>
+                    <a href="#" class="text-[#d4ff33] text-xs font-bold uppercase tracking-widest">View All</a>
+                </div>
+
+                <div class="space-y-4">
+                    <div
+                        class="glass p-5 rounded-[28px] flex items-center space-x-5 group hover:border-[#d4ff33]/50 transition">
                         <div
-                            class="text-[8px] text-black font-bold text-center mt-1 uppercase tracking-tighter opacity-40">
-                            Tap to expand</div>
-                    </div>
-
-                    <!-- Card Info (Middle/Right) -->
-                    <div class="space-y-1">
-                        <div class="text-[10px] uppercase font-bold text-gray-400 tracking-widest pl-0.5">Card Holder
+                            class="w-16 h-16 rounded-2xl bg-white/5 group-hover:scale-110 transition flex items-center justify-center text-[#d4ff33]">
+                            <i data-lucide="coffee"></i>
                         </div>
-                        <div class="text-xl font-bold tracking-tight">John Doe</div>
-                        <div class="text-[11px] font-mono text-[#d4ff33] uppercase tracking-tighter">BDCM-8293-1120
+                        <div class="flex-1">
+                            <div class="font-bold text-lg">Breeze Café</div>
+                            <div class="text-xs text-gray-500 font-bold uppercase tracking-widest">Seminyak • 10% OFF
+                            </div>
+                        </div>
+                        <button
+                            class="bg-[#d4ff33]/10 p-2.5 rounded-full text-[#d4ff33] group-hover:bg-[#d4ff33] group-hover:text-black transition">
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <div
+                        class="glass p-5 rounded-[28px] flex items-center space-x-5 group hover:border-[#d4ff33]/50 transition">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-white/5 group-hover:scale-110 transition flex items-center justify-center text-[#d4ff33]">
+                            <i data-lucide="flower"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-bold text-lg">Bali Oasis Spa</div>
+                            <div class="text-xs text-gray-500 font-bold uppercase tracking-widest">Canggu • 10% OFF
+                            </div>
+                        </div>
+                        <button
+                            class="bg-[#d4ff33]/10 p-2.5 rounded-full text-[#d4ff33] group-hover:bg-[#d4ff33] group-hover:text-black transition">
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End Tab Home -->
+
+        <!-- TAB: EXPLORE -->
+        <div id="tab-explore" class="tab-content hidden space-y-8 pb-10">
+            <!-- Header -->
+            <div class="space-y-2">
+                <h2 class="text-3xl font-black italic tracking-tighter">Explore <span class="text-[#d4ff33]">Bali</span>
+                </h2>
+                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">Find your next favorite spot</p>
+            </div>
+
+            <!-- Search -->
+            <div
+                class="glass px-4 py-3 rounded-full flex items-center space-x-3 border-white/10 group focus-within:border-[#d4ff33]/50 transition bg-black/40">
+                <i data-lucide="search" class="w-5 h-5 text-gray-400 group-focus-within:text-[#d4ff33] transition"></i>
+                <input type="text" id="searchInput" oninput="filterSearch(this.value)" placeholder="Search cafes, spas, gyms..."
+                    class="bg-transparent border-none outline-none text-sm w-full font-bold placeholder:text-gray-500">
+            </div>
+
+            <!-- Categories -->
+            <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide -mx-6 px-6" id="categoryContainer">
+                <button onclick="filterCategory('all', this)"
+                    class="cat-btn bg-[#d4ff33] text-black px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">All</button>
+                <button onclick="filterCategory('food', this)"
+                    class="cat-btn glass text-gray-400 hover:text-white hover:border-white/30 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Food</button>
+                <button onclick="filterCategory('cafes', this)"
+                    class="cat-btn glass text-gray-400 hover:text-white hover:border-white/30 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Cafes</button>
+                <button onclick="filterCategory('spas', this)"
+                    class="cat-btn glass text-gray-400 hover:text-white hover:border-white/30 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Spas</button>
+                <button onclick="filterCategory('fitness', this)"
+                    class="cat-btn glass text-gray-400 hover:text-white hover:border-white/30 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shrink-0 transition">Fitness</button>
+            </div>
+
+            <!-- Merchant Grid -->
+            <div class="space-y-4" id="merchantGrid">
+                <!-- Card 1 -->
+                <div data-category="cafes" data-name="pison coffee"
+                    class="merchant-card glass p-4 rounded-[28px] flex items-center space-x-4 hover:border-[#d4ff33]/50 transition cursor-pointer">
+                    <div class="w-20 h-20 bg-gray-800 rounded-2xl shrink-0 bg-cover bg-center border border-white/5"
+                        style="background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&q=80')">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="font-bold text-lg truncate">Pison Coffee</h4>
+                            <span
+                                class="bg-[#d4ff33] text-black px-2 py-0.5 rounded text-[10px] font-black italic">10%</span>
+                        </div>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate mb-2">
+                            Petitenget • Cafe</p>
+                        <div class="flex space-x-2">
+                            <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-gray-400">☕ Coffee</span>
+                            <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-gray-400">🥐 Bakery</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Footer (Expires Only) -->
-                <div class="z-10 border-t border-white/5 pt-5 flex justify-between items-center">
-                    <span class="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">Verified Digital
-                        Membership</span>
-                    <div class="text-right">
-                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-widest block">Expires</span>
-                        <span class="text-sm font-bold text-[#d4ff33]">12/26</span>
+                <!-- Card 2 -->
+                <div data-category="spas" data-name="bodyworks spa"
+                    class="merchant-card glass p-4 rounded-[28px] flex items-center space-x-4 hover:border-[#d4ff33]/50 transition cursor-pointer">
+                    <div class="w-20 h-20 bg-gray-800 rounded-2xl shrink-0 bg-cover bg-center border border-white/5"
+                        style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&q=80')">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="font-bold text-lg truncate">Bodyworks Spa</h4>
+                            <span
+                                class="bg-[#d4ff33] text-black px-2 py-0.5 rounded text-[10px] font-black italic">10%</span>
+                        </div>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate mb-2">Seminyak
+                            • Spa</p>
+                        <div class="flex space-x-2">
+                            <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-gray-400">💆‍♀️
+                                Massage</span>
+                            <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-gray-400">💅 Nails</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div data-category="fitness" data-name="body factory"
+                    class="merchant-card glass p-4 rounded-[28px] flex items-center space-x-4 hover:border-[#d4ff33]/50 transition cursor-pointer">
+                    <div class="w-20 h-20 bg-gray-800 rounded-2xl shrink-0 bg-cover bg-center border border-white/5"
+                        style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80')">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="font-bold text-lg truncate">Body Factory</h4>
+                            <span
+                                class="bg-[#d4ff33] text-black px-2 py-0.5 rounded text-[10px] font-black italic">10%</span>
+                        </div>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate mb-2">Canggu •
+                            Gym</p>
+                        <div class="flex space-x-2">
+                            <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-gray-400">🏋️
+                                Fitness</span>
+                            <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-gray-400">🧊
+                                Recovery</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <p class="text-center text-xs text-gray-600 mt-6 font-bold tracking-widest uppercase">Show this to the
-                merchant for scanning</p>
-        </div>
+        </div> <!-- End Tab Explore -->
 
-        <!-- Stats -->
-        <div class="grid grid-cols-2 gap-4">
-            <div class="glass p-6 rounded-[32px] border-[#d4ff33]/10">
-                <div class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Total Saved</div>
-                <div class="text-3xl font-bold text-[#d4ff33]">$1,240.50</div>
-                <div class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-tighter">Island-wide savings
-                </div>
-            </div>
-            <div class="glass p-6 rounded-[32px]">
-                <div class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Active Perks</div>
-                <div class="text-3xl font-bold">242</div>
-                <div class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-tighter">Partner Merchants</div>
-            </div>
-        </div>
-
-        <!-- Quick Discover -->
-        <div class="space-y-6">
-            <div class="flex justify-between items-center">
-                <h3 class="text-xl font-bold uppercase tracking-tighter">Hot Offers Near You</h3>
-                <a href="#" class="text-[#d4ff33] text-xs font-bold uppercase tracking-widest">View All</a>
+        <!-- TAB: ACTIVITY -->
+        <div id="tab-activity" class="tab-content hidden space-y-8 pb-10">
+            <div class="space-y-2">
+                <h2 class="text-3xl font-black italic tracking-tighter">Recent <span
+                        class="text-[#d4ff33]">Activity</span></h2>
+                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">Track your savings & visits</p>
             </div>
 
             <div class="space-y-4">
-                <div
-                    class="glass p-5 rounded-[28px] flex items-center space-x-5 group hover:border-[#d4ff33]/50 transition">
+                <div class="glass p-4 rounded-[24px] flex items-center space-x-4 border-l-4 border-[#d4ff33]">
                     <div
-                        class="w-16 h-16 rounded-2xl bg-white/5 group-hover:scale-110 transition flex items-center justify-center text-[#d4ff33]">
-                        <i data-lucide="coffee"></i>
+                        class="w-12 h-12 bg-[#d4ff33]/10 text-[#d4ff33] rounded-full flex items-center justify-center shrink-0">
+                        <i data-lucide="coffee" class="w-5 h-5"></i>
                     </div>
                     <div class="flex-1">
-                        <div class="font-bold text-lg">Breeze Café</div>
-                        <div class="text-xs text-gray-500 font-bold uppercase tracking-widest">Seminyak • 15% OFF</div>
+                        <div class="font-bold">Breeze Café</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-widest">Today, 10:45 AM</div>
                     </div>
-                    <button
-                        class="bg-[#d4ff33]/10 p-2.5 rounded-full text-[#d4ff33] group-hover:bg-[#d4ff33] group-hover:text-black transition">
-                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </button>
+                    <div class="text-right">
+                        <div class="font-black italic text-[#d4ff33]">-$4.50</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-widest">Saved</div>
+                    </div>
                 </div>
 
-                <div
-                    class="glass p-5 rounded-[28px] flex items-center space-x-5 group hover:border-[#d4ff33]/50 transition">
+                <div class="glass p-4 rounded-[24px] flex items-center space-x-4 border-l-4 border-white/10">
                     <div
-                        class="w-16 h-16 rounded-2xl bg-white/5 group-hover:scale-110 transition flex items-center justify-center text-[#d4ff33]">
-                        <i data-lucide="flower"></i>
+                        class="w-12 h-12 bg-white/5 text-gray-400 rounded-full flex items-center justify-center shrink-0">
+                        <i data-lucide="flower" class="w-5 h-5"></i>
                     </div>
                     <div class="flex-1">
-                        <div class="font-bold text-lg">Bali Oasis Spa</div>
-                        <div class="text-xs text-gray-500 font-bold uppercase tracking-widest">Canggu • 20% OFF</div>
+                        <div class="font-bold">Bali Oasis Spa</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-widest">Yesterday</div>
                     </div>
-                    <button
-                        class="bg-[#d4ff33]/10 p-2.5 rounded-full text-[#d4ff33] group-hover:bg-[#d4ff33] group-hover:text-black transition">
-                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </button>
+                    <div class="text-right">
+                        <div class="font-black italic text-gray-300">-$25.00</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-widest">Saved</div>
+                    </div>
+                </div>
+
+                <div class="glass p-4 rounded-[24px] flex items-center space-x-4 border-l-4 border-white/10">
+                    <div
+                        class="w-12 h-12 bg-white/5 text-gray-400 rounded-full flex items-center justify-center shrink-0">
+                        <i data-lucide="dumbbell" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold">Body Factory</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-widest">3 Days Ago</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-black italic text-gray-300">-$12.00</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-widest">Saved</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </div> <!-- End Tab Activity -->
 
     </main>
 
     <!-- Bottom Navigation -->
     <nav
         class="fixed bottom-0 left-0 right-0 glass h-20 flex justify-around items-center z-50 bg-black/80 px-4 md:max-w-md md:mx-auto md:rounded-t-[32px] border-x border-white/5">
-        <button class="flex flex-col items-center space-y-1 text-[#d4ff33]">
+        <button onclick="switchTab('tab-home', this)"
+            class="nav-btn flex flex-col items-center space-y-1 text-[#d4ff33] transition">
             <i data-lucide="home" class="w-6 h-6"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest">Home</span>
         </button>
-        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+        <button onclick="switchTab('tab-explore', this)"
+            class="nav-btn flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
             <i data-lucide="search" class="w-6 h-6"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest">Explore</span>
         </button>
-        <button class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
-            <i data-lucide="map-pin" class="w-6 h-6"></i>
-            <span class="text-[10px] font-bold uppercase tracking-widest">Map</span>
+        <button onclick="switchTab('tab-activity', this)"
+            class="nav-btn flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+            <i data-lucide="list" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Activity</span>
         </button>
-        <a href="index.html" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-white transition">
+        <a href="index.html" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-red-500 transition">
             <i data-lucide="log-out" class="w-6 h-6"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest">Exit</span>
         </a>
@@ -283,6 +451,68 @@
             } else {
                 modal.classList.add('hidden');
             }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId, btnElement) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            // Show target
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Reset all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-[#d4ff33]');
+                btn.classList.add('text-gray-600');
+            });
+
+            // Highlight active button
+            btnElement.classList.remove('text-gray-600');
+            btnElement.classList.add('text-[#d4ff33]');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Search Filter Logic
+        function filterSearch(query) {
+            const cards = document.querySelectorAll('.merchant-card');
+            const lowerQuery = query.toLowerCase();
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(lowerQuery)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Category Filter Logic
+        function filterCategory(category, btnElement) {
+            // Update active state of buttons
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-[#d4ff33]', 'text-black');
+                btn.classList.add('glass', 'text-gray-400');
+            });
+            btnElement.classList.remove('glass', 'text-gray-400');
+            btnElement.classList.add('bg-[#d4ff33]', 'text-black');
+
+            // Filter cards
+            const cards = document.querySelectorAll('.merchant-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Reset search input
+            document.getElementById('searchInput').value = '';
         }
     </script>
 </body>
