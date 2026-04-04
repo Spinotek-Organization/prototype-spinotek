@@ -17,6 +17,23 @@
     "added_at": "2026-03-08"
   },
   {
+    "slug": "bdc",
+    "name": "Bali Discount Club",
+    "description": "Bali Discount Club (BDC) is an exclusive digital membership platform designed to provide instant access to various offers and discounts at selected merchant networks across Bali (Restaurants, Spas, Cafes, Activities, etc.).",
+    "category": "Web App",
+    "status": "ACTIVE",
+    "tech": [
+      "html",
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/bdc/img/logo.png",
+    "demo_url": "https://demo.spinotek.com/bdc",
+    "repo_url": null,
+    "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/bdc/img/hero.png",
+    "added_at": "2026-04-05"
+  },
+  {
     "slug": "lpk-talenta",
     "name": "LPK Talenta",
     "description": "LPK Talenta adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
