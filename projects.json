@@ -5,11 +5,7 @@
     "description": "",
     "category": "Web App",
     "status": "COMPLETED",
-    "tech": [
-      "html",
-      "javascript",
-      "tailwindcss"
-    ],
+    "tech": ["html", "javascript", "tailwindcss"],
     "icon": "https://dlu.co.id/wp-content/uploads/2025/04/logodluheight-150x150.png",
     "demo_url": "https://demo.spinotek.com/dlu",
     "repo_url": null,
@@ -17,15 +13,25 @@
     "added_at": "2026-03-08"
   },
   {
+    "slug": "bdc",
+    "name": "Bali Discount Club",
+    "description": "Bali Discount Club (BDC) is an exclusive digital membership platform designed to provide instant access to various offers and discounts at selected merchant networks across Bali (Restaurants, Spas, Cafes, Activities, etc.).",
+    "category": "Web App",
+    "status": "ACTIVE",
+    "tech": ["html", "javascript", "tailwindcss"],
+    "icon": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/bdc/img/logo.png",
+    "demo_url": "https://demo.spinotek.com/bdc",
+    "repo_url": null,
+    "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/bdc/img/hero.png",
+    "added_at": "2026-04-05"
+  },
+  {
     "slug": "lpk-talenta",
     "name": "LPK Talenta",
     "description": "LPK Talenta adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
     "category": "Web App",
     "status": "COMPLETED",
-    "tech": [
-      "javascript",
-      "tailwindcss"
-    ],
+    "tech": ["javascript", "tailwindcss"],
     "icon": "https://talentaacademy.id/wp-content/uploads/2023/04/WhatsApp-Image-2023-04-02-at-09.53.42.jpeg",
     "demo_url": "https://demo.spinotek.com/lpk-talenta",
     "repo_url": null,
@@ -38,14 +44,24 @@
     "description": "Pandora Wedding Planner adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
     "category": "Web App",
     "status": "COMPLETED",
-    "tech": [
-      "javascript",
-      "tailwindcss"
-    ],
+    "tech": ["javascript", "tailwindcss"],
     "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReM2Jpgqb3HMEKbGWHSd38PIGGSw6dlRIMbg&s",
     "demo_url": "https://demo.spinotek.com/pandora-wedding-planner/",
     "repo_url": null,
     "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/pandora-wedding-planner/card.png",
     "added_at": "2026-02-23"
+  },
+  {
+    "slug": "otopalu-otomotif",
+    "name": "Otopalu Otomotif",
+    "description": "Showroom mobil premium pilihan dengan layanan inspeksi profesional dan harga transparan. Unit pre-owned berkualitas tinggi.",
+    "category": "Landing Page",
+    "status": "COMPLETED",
+    "tech": ["html", "javascript", "tailwindcss"],
+    "icon": "otopalu-otomotif/img/otopalu.png",
+    "demo_url": "otopalu-otomotif/index.html",
+    "repo_url": null,
+    "image": "otopalu-otomotif/card.png",
+    "added_at": "2026-04-06"
   }
 ]
