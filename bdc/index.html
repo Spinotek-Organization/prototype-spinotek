@@ -840,6 +840,93 @@
         </div>
     </div>
 
+    <!-- Welcome Info Modal -->
+    <div id="welcome-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-6 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeWelcomeModal()"></div>
+        <div
+            class="relative glass max-w-3xl w-full p-8 rounded-[40px] text-left border-white/10 animate-in fade-in zoom-in duration-300 shadow-2xl">
+            <button onclick="closeWelcomeModal()"
+                class="absolute top-6 right-6 md:top-8 md:right-8 z-20 text-gray-400 hover:text-white transition bg-black/40 backdrop-blur p-2 rounded-full">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div
+                class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full mb-6">
+                <span class="flex h-2 w-2 rounded-full bg-[#d4ff33] animate-pulse"></span>
+                <span class="text-[10px] uppercase font-bold tracking-[0.2em] text-[#d4ff33]">Prototype Guide</span>
+            </div>
+
+            <h2 class="text-3xl md:text-4xl font-bold mb-3 tracking-tighter italic">Welcome to <span
+                    class="text-[#d4ff33]">Bali DC</span></h2>
+            <p class="text-gray-400 mb-8 leading-relaxed text-sm md:text-base">This is an interactive web prototype
+                featuring 3 unique access roles. Here's what you can explore:</p>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-8">
+                <!-- Customer -->
+                <div class="glass p-6 rounded-3xl border-white/5 hover:border-[#d4ff33]/30 transition group">
+                    <div
+                        class="bg-white/5 p-3 rounded-2xl text-[#d4ff33] w-max mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="user" class="w-6 h-6"></i>
+                    </div>
+                    <div class="font-bold text-lg mb-2">1. Customer</div>
+                    <div class="text-xs text-gray-500 leading-relaxed">Access personal digital QR card, browse
+                        merchants, and track total savings.</div>
+                </div>
+                <!-- Merchant -->
+                <div class="glass p-6 rounded-3xl border-white/5 hover:border-[#d4ff33]/30 transition group">
+                    <div
+                        class="bg-white/5 p-3 rounded-2xl text-[#d4ff33] w-max mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="store" class="w-6 h-6"></i>
+                    </div>
+                    <div class="font-bold text-lg mb-2">2. Merchant</div>
+                    <div class="text-xs text-gray-500 leading-relaxed">Use the built-in scanner to validate member QR
+                        codes and view transaction history.</div>
+                </div>
+                <!-- Admin -->
+                <div class="glass p-6 rounded-3xl border-white/5 hover:border-[#d4ff33]/30 transition group">
+                    <div
+                        class="bg-white/5 p-3 rounded-2xl text-[#d4ff33] w-max mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                    </div>
+                    <div class="font-bold text-lg mb-2">3. Admin</div>
+                    <div class="text-xs text-gray-500 leading-relaxed">Supervise platform analytics, manage user roles,
+                        and edit merchant listings.</div>
+                </div>
+            </div>
+
+            <div
+                class="bg-gradient-to-r from-[#d4ff33]/10 to-transparent border border-[#d4ff33]/20 p-6 rounded-3xl mb-10">
+                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                    <div class="bg-[#d4ff33] p-2.5 rounded-2xl text-black shrink-0 w-max">
+                        <i data-lucide="info" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-3 text-lg">Bagaimana cara akses 3 role ini?</h4>
+                        <ol class="text-sm text-gray-400 space-y-3 list-decimal list-inside">
+                            <li>Klik tombol <span class="text-[#d4ff33] font-bold">"Get Your Card"</span> di navigasi
+                                atas untuk menuju halaman Login.</li>
+                            <li>Di halaman Login, Anda akan menemukan 3 tombol akses:
+                                <ul class="list-disc list-inside ml-4 mt-2 space-y-1.5 text-gray-300">
+                                    <li>Klik <span class="text-white font-bold">Login with Google</span> untuk masuk ke
+                                        role Customer</li>
+                                    <li>Klik tombol <span class="text-white font-bold">Merchant</span> untuk masuk ke
+                                        role Merchant</li>
+                                    <li>Klik tombol <span class="text-white font-bold">Admin</span> untuk masuk ke Admin
+                                        dashboard</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeWelcomeModal()"
+                class="w-full btn-lime py-4 rounded-3xl font-bold uppercase text-sm tracking-widest shadow-[0_10px_20px_#d4ff3333] hover:scale-[1.02] transition-transform">
+                Mengerti, Mulai Eksplorasi! &rarr;
+            </button>
+        </div>
+    </div>
+
     <script>
         lucide.createIcons();
 
@@ -861,6 +948,11 @@
             document.getElementById('outlet-modal').classList.add('hidden');
         }
 
+        function closeWelcomeModal() {
+            document.getElementById('welcome-modal').classList.add('hidden');
+            localStorage.setItem('welcomeShown', 'true');
+        }
+
         function filterCategory(category, btn) {
             // Update buttons
             document.querySelectorAll('.filter-btn').forEach(el => {
@@ -879,6 +971,15 @@
                 }
             });
         }
+
+        // Show welcome modal on first visit
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('welcomeShown')) {
+                setTimeout(() => {
+                    document.getElementById('welcome-modal').classList.remove('hidden');
+                }, 800);
+            }
+        });
     </script>
 </body>
 
