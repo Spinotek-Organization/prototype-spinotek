@@ -1007,10 +1007,10 @@
                             </div>
                             <div class="p-8">
                                 <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Toyota Avanza G</h3>
-                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2018 | 85K KM | Matic</p>
-                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6 no-anim">2018 | 85K KM | Matic</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5 no-anim">
                                     <div>
-                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1 no-anim">CASH PRICE</p>
                                         <p class="text-3xl font-black text-brand italic">Rp 125 Juta</p>
                                     </div>
                                     <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Toyota%20Avanza%20G" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
@@ -1026,10 +1026,10 @@
                             </div>
                             <div class="p-8">
                                 <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Honda CR-V Prestige</h3>
-                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2019 | 65K KM | Matic</p>
-                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6 no-anim">2019 | 65K KM | Matic</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5 no-anim">
                                     <div>
-                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1 no-anim">CASH PRICE</p>
                                         <p class="text-3xl font-black text-brand italic">Rp 385 Juta</p>
                                     </div>
                                     <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Honda%20CR-V%20Prestige" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
@@ -1045,10 +1045,10 @@
                             </div>
                             <div class="p-8">
                                 <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Mitsubishi Xpander</h3>
-                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2020 | 45K KM | Matic</p>
-                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6 no-anim">2020 | 45K KM | Matic</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5 no-anim">
                                     <div>
-                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1 no-anim">CASH PRICE</p>
                                         <p class="text-3xl font-black text-brand italic">Rp 215 Juta</p>
                                     </div>
                                     <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Mitsubishi%20Xpander" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
@@ -1351,11 +1351,11 @@
             });
 
             function animateCursor() {
-                // Smooth lerp animation
-                cursorX += (mouseX - cursorX) * 0.15;
-                cursorY += (mouseY - cursorY) * 0.15;
-                dotX += (mouseX - dotX) * 0.25;
-                dotY += (mouseY - dotY) * 0.25;
+                // Smooth lerp animation - INCREASED SPEED
+                cursorX += (mouseX - cursorX) * 0.35;
+                cursorY += (mouseY - cursorY) * 0.35;
+                dotX += (mouseX - dotX) * 0.5;
+                dotY += (mouseY - dotY) * 0.5;
 
                 cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
                 cursorDot.style.transform = `translate(${dotX - 3}px, ${dotY - 3}px)`;
@@ -1621,7 +1621,7 @@
             gsap.from('#hero-title', {
                 y: 100,
                 opacity: 0,
-                duration: 1.2,
+                duration: 0.7, // Speed up to 0.7s
                 ease: 'power4.out',
                 delay: 2
             });
@@ -1629,7 +1629,7 @@
             gsap.from('#hero-subtitle', {
                 y: 50,
                 opacity: 0,
-                duration: 1,
+                duration: 0.6, // Speed up to 0.6s
                 ease: 'power3.out',
                 delay: 2.3
             });
@@ -1637,9 +1637,9 @@
             gsap.from('.hero-cta', {
                 y: 30,
                 opacity: 0,
-                duration: 0.8,
+                duration: 0.5, // Speed up to 0.5s
                 ease: 'back.out(1.4)',
-                stagger: 0.2,
+                stagger: 0.15, // Faster stagger
                 delay: 2.6
             });
 
@@ -1666,7 +1666,7 @@
 
             // Scroll-triggered animations for sections
             gsap.utils.toArray('section').forEach(section => {
-                gsap.from(section.querySelectorAll('h2, h3, p'), {
+                gsap.from(section.querySelectorAll('h2, h3, p:not(.no-anim)'), {
                     scrollTrigger: {
                         trigger: section,
                         start: 'top 80%',
@@ -1675,8 +1675,8 @@
                     },
                     y: 60,
                     opacity: 0,
-                    duration: 1,
-                    stagger: 0.15,
+                    duration: 0.4, // Speed up to 0.4s
+                    stagger: 0.08, // Reduce stagger to 0.08s
                     ease: 'power3.out'
                 });
             });
@@ -1690,8 +1690,8 @@
                     },
                     scale: 0.8,
                     opacity: 0,
-                    duration: 0.6,
-                    delay: i * 0.1,
+                    duration: 0.4, // Speed up from 0.6s
+                    delay: i * 0.05, // Snappier stagger
                     ease: 'back.out(1.7)'
                 });
             });
@@ -1707,7 +1707,7 @@
                 const animateCounter = () => {
                     gsap.to(target, {
                         value: endValue,
-                        duration: 3,
+                        duration: 1.2, // Speed up from 3s
                         ease: 'power2.out',
                         onUpdate: () => {
                             counter.innerText = Math.ceil(target.value) + suffix;
