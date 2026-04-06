@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otopalu - Showroom Mobil Premium Pilihan</title>
+    <meta name="description"
+        content="Showroom mobil bekas premium dengan inspeksi 150+ titik. Harga transparan, dokumentasi lengkap, garansi terpercaya!">
+    <link rel="icon" type="image/png" href="img/otopalu.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#A41113', // Deep Logo Red
+                            dark: '#800D0F',
+                            darker: '#5C090A',
+                            bright: '#D12023',
+                            soft: '#FFF5F5',
+                            light: '#FFF9F9',
+                        },
+                        accent: {
+                            gold: '#FFD700',
+                            silver: '#C0C0C0',
+                        },
+                        ink: '#1A1A1A',
+                    },
+                    fontFamily: {
+                        heading: ['Sora', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        glow: '0 20px 60px -30px rgba(164, 17, 19, 0.45)',
+                        'glow-lg': '0 30px 90px -40px rgba(164, 17, 19, 0.6)',
+                        card: '0 12px 25px -10px rgba(0, 0, 0, 0.1)',
+                        'card-hover': '0 25px 50px -12px rgba(164, 17, 19, 0.25)',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #FFFFFF;
+            color: #1A1A1A;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* CUSTOM CURSOR - MAGNETIC */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D62828;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        .custom-cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #D62828;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+        }
+
+        /* ANIMATED GRADIENT BACKGROUND */
+        .animated-bg {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(-45deg, #FFF9F9, #FFFFFF, #FFF5F5, #FFFFFF);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* PARTICLES BACKGROUND */
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #D62828;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* GLASSMORPHISM */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-red {
+            background: rgba(164, 17, 19, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(164, 17, 19, 0.2);
+        }
+
+        .glass-red {
+            background: rgba(164, 17, 19, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(164, 17, 19, 0.2);
+        }
+
+        /* MAGNETIC BUTTON */
+        .magnetic {
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* SPLIT TEXT FOR ANIMATION */
+        .split-text {
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .split-text .char {
+            display: inline-block;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .split-text.animate .char {
+            transform: translateY(0);
+        }
+
+        /* GRADIENT TEXT ANIMATED */
+        .gradient-text {
+            background: linear-gradient(90deg, #D62828, #FF4D4D, #D62828);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* FLOATING SHAPES */
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: floatShape 20s ease-in-out infinite;
+        }
+
+        @keyframes floatShape {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        /* CARD REVEAL ANIMATION */
+        .card-reveal {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-reveal::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .card-reveal:hover::before {
+            transform: translateX(100%);
+        }
+
+        /* STAGGER ANIMATION */
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stagger-item.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* PARALLAX LAYERS */
+        .parallax-slow {
+            will-change: transform;
+        }
+
+        .parallax-medium {
+            will-change: transform;
+        }
+
+        .parallax-fast {
+            will-change: transform;
+        }
+
+        /* MORPHING SHAPES */
+        @keyframes morph {
+
+            0%,
+            100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+
+            50% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+            }
+        }
+
+        .morphing {
+            animation: morph 8s ease-in-out infinite;
+        }
+
+        /* NEON BORDER */
+        .neon-border {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #D62828, #FF4D4D, #D62828, #FF4D4D);
+            background-size: 400%;
+            z-index: -1;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s;
+            animation: neonFlow 3s linear infinite;
+        }
+
+        .neon-border:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes neonFlow {
+            to {
+                background-position: 400% 0;
+            }
+        }
+
+        /* COUNTER ANIMATION */
+        .counter {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* GLITCH EFFECT */
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-2px, 2px);
+            }
+
+            40% {
+                transform: translate(-2px, -2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .glitch:hover {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+
+        /* TYPING CURSOR */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #D62828;
+            margin-left: 5px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* SCROLL PROGRESS BAR */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #D62828, #FF4D4D);
+            z-index: 9999;
+            transition: width 0.1s;
+        }
+
+        /* IMAGE HOVER ZOOM */
+        .hover-zoom {
+            overflow: hidden;
+        }
+
+        .hover-zoom img {
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hover-zoom:hover img {
+            transform: scale(1.15) rotate(2deg);
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            body {
+                cursor: default;
+            }
+
+            .custom-cursor,
+            .custom-cursor-dot {
+                display: none;
+            }
+        }
+
+        /* NEW RESPONSIVE NAVBAR STYLES */
+        #mobileMenuBtn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: #A41113;
+            margin: 5px 0;
+            transition: 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        #mobileMenuBtn.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        #mobileMenuBtn.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        #mobileMenuBtn.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        #mobileDrawer {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(25px);
+            z-index: 45;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        #mobileDrawer.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-link-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        #mobileDrawer.active .mobile-link-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.menu-open {
+            overflow: hidden !important;
+        }
+
+        body.menu-open #header {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- SCROLL PROGRESS BAR -->
+    <div class="scroll-progress"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-dot"></div>
+
+    <!-- ANIMATED BACKGROUND -->
+    <div class="animated-bg"></div>
+
+    <!-- PARTICLES -->
+    <div class="particles" id="particles"></div>
+
+    <!-- LOADING SCREEN - PREMIUM -->
+    <div id="loading-screen" class="fixed inset-0 z-[100000] flex items-center justify-center bg-white">
+        <div class="relative flex flex-col items-center">
+            <!-- Spinner & Logo Group -->
+            <div class="relative w-32 h-32 flex items-center justify-center">
+                <!-- Inner Glow -->
+                <div class="absolute inset-0 bg-brand/5 rounded-full blur-2xl animate-pulse"></div>
+                
+                <!-- Rotating Rings -->
+                <div class="absolute inset-0 border-[3px] border-ink/5 rounded-full"></div>
+                <div class="absolute inset-0 border-[3px] border-transparent border-t-brand rounded-full animate-spin" style="animation-duration: 0.8s;"></div>
+                
+                <!-- Logo -->
+                <div class="relative z-10 w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center p-3 animate-pulse">
+                    <img src="img/otopalu.png" alt="Loading Logo" class="w-full h-full object-contain">
+                </div>
+            </div>
+
+            <!-- Brand Name -->
+            <div class="mt-10 text-center">
+                <span class="block text-4xl font-black text-ink uppercase tracking-[0.3em] italic">Otopalu</span>
+                <div class="flex items-center gap-2 mt-2 justify-center">
+                    <div class="w-1 h-1 bg-brand rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                    <div class="w-1 h-1 bg-brand rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    <div class="w-1 h-1 bg-brand rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING WHATSAPP BUTTON - MAGNETIC -->
+    <a href="https://wa.me/6281234567890" class="magnetic fixed bottom-8 right-8 z-[999] group" target="_blank"
+        aria-label="Chat WhatsApp">
+        <div class="relative">
+            <!-- Pulse Rings -->
+            <div class="absolute inset-0 rounded-full bg-[#25D366]/20 animate-ping"></div>
+            <div class="absolute inset-0 rounded-full bg-[#25D366]/30"
+                style="animation: pulseRing 2s ease-out infinite"></div>
+
+            <!-- Button -->
+            <div
+                class="relative w-16 h-16 rounded-full bg-gradient-to-br from-[#25D366] to-[#128C7E] flex items-center justify-center shadow-glow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                </svg>
+            </div>
+
+            <!-- Unread Badge -->
+            <div
+                class="absolute -top-1 -right-1 w-5 h-5 bg-brand rounded-full flex items-center justify-center text-white text-xs font-bold animate-bounce">
+                3
+            </div>
+        </div>
+    </a>
+
+    <!-- HEADER - GLASSMORPHISM -->
+    <!-- MAIN HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10 shadow-sm" id="header">
+        <!-- Top Thin Info Bar -->
+
+
+        <div class="mx-auto max-w-7xl px-6 py-4 lg:px-8">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#home" class="magnetic group flex items-center gap-3 md:gap-4 shrink-0">
+                    <div class="relative">
+                        <div
+                            class="absolute inset-0 bg-brand/20 rounded-2xl blur-xl group-hover:bg-brand/40 transition-all">
+                        </div>
+                        <img src="img/otopalu.png" alt="Otopalu Logo"
+                            class="relative w-10 h-10 md:w-14 md:h-14 rounded-2xl object-cover shadow-glow group-hover:scale-105 transition-transform">
+                    </div>
+                    <div>
+                        <span
+                            class="block font-display text-lg md:text-xl font-black uppercase text-ink tracking-widest">Otopalu</span>
+                        <span class="block text-[8px] md:text-[10px] font-bold text-brand tracking-[0.2em] uppercase">Premium
+                            Otomotif</span>
+                    </div>
+                </a>
+
+                <nav class="hidden lg:flex items-center gap-8">
+                    <a href="#stok"
+                        class="nav-link text-sm font-bold text-ink/70 hover:text-brand transition-colors relative group">
+                        Stok Mobil
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#keunggulan"
+                        class="nav-link text-sm font-bold text-ink/70 hover:text-brand transition-colors relative group">
+                        Keunggulan
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#tentang"
+                        class="nav-link text-sm font-bold text-ink/70 hover:text-brand transition-colors relative group">
+                        Tentang
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#kontak"
+                        class="nav-link text-sm font-bold text-ink/70 hover:text-brand transition-colors relative group">
+                        Kontak
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                </nav>
+
+                <!-- CTA Button -->
+                <div class="hidden lg:block">
+                    <a href="https://wa.me/6281234567890"
+                        class="relative inline-flex items-center justify-center px-8 py-3 rounded-xl bg-brand text-white font-black uppercase tracking-widest text-[11px] shadow-glow hover:bg-ink transition-all duration-300 group gap-3">
+                        <i class="fab fa-whatsapp text-lg"></i>
+                        <span>Hubungi Kami</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn"
+                    class="lg:hidden relative z-[60] w-12 h-12 flex flex-col items-center justify-center rounded-xl bg-ink/5 hover:bg-brand/10 transition-all">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer (Overlay) -->
+        <div id="mobileDrawer" class="lg:hidden">
+            <div class="flex flex-col items-center justify-center h-full w-full px-8 gap-8">
+                <div class="mobile-link-item w-full" style="transition-delay: 0.1s;">
+                    <a href="#stok"
+                        class="block text-4xl font-black text-center uppercase tracking-tighter text-white hover:text-brand transition-colors">Stok
+                        Mobil</a>
+                </div>
+                <div class="mobile-link-item w-full" style="transition-delay: 0.2s;">
+                    <a href="#keunggulan"
+                        class="block text-4xl font-black text-center uppercase tracking-tighter text-white hover:text-brand transition-colors">Keunggulan</a>
+                </div>
+                <div class="mobile-link-item w-full" style="transition-delay: 0.3s;">
+                    <a href="#tentang"
+                        class="block text-4xl font-black text-center uppercase tracking-tighter text-white hover:text-brand transition-colors">Tentang</a>
+                </div>
+                <div class="mobile-link-item w-full" style="transition-delay: 0.4s;">
+                    <a href="#kontak"
+                        class="block text-4xl font-black text-center uppercase tracking-tighter text-white hover:text-brand transition-colors">Kontak</a>
+                </div>
+
+                <div class="mobile-link-item w-full mt-12" style="transition-delay: 0.5s;">
+                    <a href="https://wa.me/6281234567890"
+                        class="block w-full py-5 bg-brand text-white font-black uppercase tracking-widest text-center shadow-glow-brand transform skew-x-[-12deg]">
+                        <span class="inline-block skew-x-[12deg]">Hubungi Kami</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Meta info -->
+                <div class="mobile-link-item mt-12 text-center" style="transition-delay: 0.6s;">
+                    <p class="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Official Showroom</p>
+                    <div class="flex gap-6 justify-center">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-brand hover:border-brand transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-brand hover:border-brand transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-brand hover:border-brand transition-all">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="home" class="relative">
+        <!-- HERO SECTION - ULTRA MODERN -->
+        <main id="home" class="relative">
+            <!-- MEGA TYPOGRAPHY BACKGROUND - FIXED -->
+            <div
+                class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full pointer-events-none z-0 overflow-hidden opacity-[0.03] select-none">
+                <h2
+                    class="text-[30vw] font-black uppercase leading-none whitespace-nowrap text-brand text-center translate-y-[-10%]">
+                    OTOMOTIF</h2>
+            </div>
+
+            <!-- HERO SECTION - CRAZY & CREATIVE -->
+            <section class="relative min-h-screen flex items-center justify-center overflow-hidden px-6 pt-32 pb-20">
+                <!-- Diagonal Split Background -->
+                <div class="absolute inset-0 bg-white z-[-1]"></div>
+                <div class="absolute top-0 right-0 w-1/2 h-full bg-brand/5 skew-x-[-15deg] translate-x-20 z-[-1]">
+                </div>
+
+                <div class="relative z-10 mx-auto max-w-7xl w-full">
+                    <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
+                        <!-- Left Content -->
+                        <div class="space-y-10">
+                            <!-- Badge -->
+                            <div
+                                class="inline-flex items-center gap-4 bg-brand px-6 py-2 rounded-full skew-x-[-12deg]">
+                                <span
+                                    class="text-[11px] font-black uppercase tracking-[0.2em] text-white skew-x-[12deg]">Est.
+                                    2014 • Premium Showroom</span>
+                            </div>
+
+                            <!-- Main Heading -->
+                            <div class="relative">
+                                <h1
+                                    class="font-display text-5xl md:text-7xl lg:text-9xl font-black leading-[0.85] text-ink uppercase italic transform lg:-skew-x-6">
+                                    <span class="block">Mobil</span>
+                                    <span class="block text-transparent stroke-brand stroke-2"
+                                        style="-webkit-text-stroke: 2px #A41113;">Pre-owned</span>
+                                    <span class="block bg-brand text-white px-4 md:px-6 inline-block mt-2">Premium</span>
+                                </h1>
+                                <!-- Decorative Lines -->
+                                <div class="absolute -left-12 top-1/2 w-24 h-1 bg-brand"></div>
+                            </div>
+
+                            <!-- Description -->
+                            <p
+                                class="text-xl text-ink/60 leading-relaxed max-w-xl font-medium border-l-4 border-brand pl-8">
+                                Kami tidak sekadar menjual unit. Kami mengkurasi <span
+                                    class="text-brand font-extrabold italic uppercase">Kualitas & Kepercayaan</span>
+                                untuk perjalanan Anda yang tak ternilai.
+                            </p>
+
+                            <!-- CTA Buttons -->
+                            <div class="flex flex-wrap gap-6 items-center">
+                                <a href="https://wa.me/6281234567890"
+                                    class="magnetic group relative px-10 py-5 bg-ink text-white font-black uppercase tracking-widest text-sm overflow-hidden transform skew-x-[-12deg] transition-all hover:bg-brand hover:scale-105">
+                                    <span class="relative z-10 flex items-center gap-4 skew-x-[12deg]">
+                                        Lihat Koleksi
+                                        <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </span>
+                                </a>
+                                <a href="#tentang"
+                                    class="font-black text-ink uppercase tracking-widest text-xs hover:text-brand transition-colors flex items-center gap-2 group">
+                                    <span
+                                        class="w-8 h-[2px] bg-ink group-hover:w-12 group-hover:bg-brand transition-all"></span>
+                                    Selengkapnya
+                                </a>
+                            </div>
+
+                            <!-- Animated Stats -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                                <div
+                                    class="bg-white border-2 border-ink/5 p-6 rounded-2xl group hover:border-brand/30 transition-all">
+                                    <div class="counter text-4xl font-black text-ink" data-target="1500">0</div>
+                                    <div class="text-[10px] text-ink/40 mt-1 font-black uppercase tracking-widest">
+                                        Happy Clients</div>
+                                </div>
+                                <div
+                                    class="bg-white border-2 border-ink/5 p-6 rounded-2xl group hover:border-brand/30 transition-all">
+                                    <div class="counter text-4xl font-black text-brand" data-target="850">0</div>
+                                    <div class="text-[10px] text-ink/40 mt-1 font-black uppercase tracking-widest">
+                                        Units Sold</div>
+                                </div>
+                                <div class="bg-brand p-6 rounded-2xl shadow-glow">
+                                    <div class="counter text-4xl font-black text-white" data-target="150">0</div>
+                                    <div class="text-[10px] text-white/60 mt-1 font-black uppercase tracking-widest">
+                                        Points Check</div>
+                                </div>
+                                <div
+                                    class="bg-white border-2 border-ink/5 p-6 rounded-2xl group hover:border-brand/30 transition-all">
+                                    <div class="text-4xl font-black text-ink">4.9<span class="text-brand">★</span>
+                                    </div>
+                                    <div class="text-[10px] text-ink/40 mt-1 font-black uppercase tracking-widest">
+                                        Google Rating</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right - Hero Image Side -->
+                        <div class="relative group">
+                            <!-- Background Accent -->
+                            <div
+                                class="absolute -inset-4 bg-brand/5 rounded-[40px] rotate-3 transition-transform group-hover:rotate-6">
+                            </div>
+
+                            <!-- Main Card -->
+                            <div class="relative bg-white p-4 rounded-[32px] shadow-2xl overflow-hidden">
+                                <div class="relative overflow-hidden rounded-[24px]">
+                                    <img src="img/hero-car.png"
+                                        alt="Featured Car"
+                                        class="w-full h-[500px] object-cover transition-transform duration-1000 group-hover:scale-110">
+
+                                    <!-- Overlay Label -->
+                                    <div
+                                        class="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-3 shadow-xl">
+                                        <div class="w-3 h-3 bg-brand rounded-full animate-ping"></div>
+                                        <span class="text-[11px] font-black uppercase text-ink">Premium Choice</span>
+                                    </div>
+                                </div>
+
+                                <!-- Bottom Floating Sticker -->
+                                <div
+                                    class="absolute bottom-10 -right-4 bg-ink text-white px-8 py-6 rounded-3xl shadow-glow-lg rotate-[-8deg] transform group-hover:rotate-0 transition-transform">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-white/50 mb-1">
+                                        Starting From</p>
+                                    <p class="text-3xl font-black tracking-tight italic">Rp 100jt</p>
+                                    <div class="mt-4 flex items-center gap-3">
+                                        <div class="px-3 py-1 bg-brand rounded text-[9px] font-bold">2021 MODEL</div>
+                                        <div class="px-3 py-1 bg-white/10 rounded text-[9px] font-bold">FULL RECORD
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MARQUEE - CREATIVE OVERLAP -->
+            <section class="relative overflow-hidden bg-ink py-10 z-20 transform -rotate-1 origin-center shadow-2xl">
+                <div class="flex gap-16 whitespace-nowrap">
+                    <div class="flex gap-16 animate-marquee">
+                        <span class="text-4xl font-black uppercase italic text-white flex items-center gap-4">
+                            <span class="text-brand">Otopalu</span> Premium Choice
+                        </span>
+                        <span class="text-4xl font-black uppercase italic text-transparent stroke-white"
+                            style="-webkit-text-stroke: 1px rgba(255,255,255,0.3)">
+                            Verified Quality
+                        </span>
+                        <span class="text-4xl font-black uppercase italic text-white flex items-center gap-4">
+                            <span class="text-brand">since</span> 2014
+                        </span>
+                        <span class="text-4xl font-black uppercase italic text-transparent stroke-white"
+                            style="-webkit-text-stroke: 1px rgba(255,255,255,0.3)">
+                            Customer Satisfaction First
+                        </span>
+                    </div>
+                    <div class="flex gap-16 animate-marquee" aria-hidden="true">
+                        <span class="text-4xl font-black uppercase italic text-white flex items-center gap-4">
+                            <span class="text-brand">Otopalu</span> Premium Choice
+                        </span>
+                        <span class="text-4xl font-black uppercase italic text-transparent stroke-white"
+                            style="-webkit-text-stroke: 1px rgba(255,255,255,0.3)">
+                            Verified Quality
+                        </span>
+                        <span class="text-4xl font-black uppercase italic text-white flex items-center gap-4">
+                            <span class="text-brand">since</span> 2014
+                        </span>
+                        <span class="text-4xl font-black uppercase italic text-transparent stroke-white"
+                            style="-webkit-text-stroke: 1px rgba(255,255,255,0.3)">
+                            Customer Satisfaction First
+                        </span>
+                    </div>
+                </div>
+            </section> <!-- KEUNGGULAN SECTION - CREATIVE GRID -->
+            <section id="keunggulan" class="relative px-6 py-32 overflow-hidden bg-white">
+                <!-- Diagonal Divider -->
+                <div class="absolute top-0 left-0 w-full h-32 bg-ink transform -skew-y-3 -translate-y-16"></div>
+
+                <div class="relative z-10 mx-auto max-w-7xl">
+                    <!-- Section Header -->
+                    <div class="grid lg:grid-cols-2 gap-12 items-end mb-20">
+                        <div>
+                            <div class="w-20 h-1 bg-brand mb-6"></div>
+                            <h2 class="font-display text-4xl md:text-6xl lg:text-8xl font-black text-ink uppercase leading-none">
+                                Standar<br>
+                                <span class="text-brand">Tertinggi</span>
+                            </h2>
+                        </div>
+                        <p class="text-xl text-ink/50 font-medium leading-relaxed">
+                            Kami tidak berkompromi dengan kualitas. Setiap unit melewati kurasi ketat untuk memastikan
+                            kepuasan Anda yang absolut.
+                        </p>
+                    </div>
+
+                    <!-- Modern Feature Grid -->
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-0 border-2 border-ink">
+                        <div class="p-10 border border-ink/10 hover:bg-brand group transition-colors duration-500">
+                            <div class="mb-8 w-16 h-16 bg-brand group-hover:bg-white flex items-center justify-center transition-colors">
+                                <svg class="w-8 h-8 text-white group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-display text-2xl font-black text-ink group-hover:text-white mb-4 transition-colors tracking-tight">UNIT BERKUALITAS</h3>
+                            <p class="text-ink/60 group-hover:text-white/80 transition-colors leading-relaxed">Setiap unit telah melalui seleksi ketat untuk standar performa terbaik.</p>
+                        </div>
+                        <div class="p-10 border border-ink/10 hover:bg-brand group transition-colors duration-500">
+                            <div class="mb-8 w-16 h-16 bg-brand group-hover:bg-white flex items-center justify-center transition-colors">
+                                <svg class="w-8 h-8 text-white group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-display text-2xl font-black text-ink group-hover:text-white mb-4 transition-colors tracking-tight">HARGA TRANSPARAN</h3>
+                            <p class="text-ink/60 group-hover:text-white/80 transition-colors leading-relaxed">Tidak ada biaya tersembunyi. Deal jujur di depan.</p>
+                        </div>
+                        <div class="p-10 border border-ink/10 hover:bg-brand group transition-colors duration-500">
+                            <div class="mb-8 w-16 h-16 bg-brand group-hover:bg-white flex items-center justify-center transition-colors">
+                                <svg class="w-8 h-8 text-white group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-display text-2xl font-black text-ink group-hover:text-white mb-4 transition-colors tracking-tight">DOKUMEN LENGKAP</h3>
+                            <p class="text-ink/60 group-hover:text-white/80 transition-colors leading-relaxed">BPKB, STNK, hingga Faktur dijamin keasliannya.</p>
+                        </div>
+                        <div class="p-10 border border-ink/10 hover:bg-brand group transition-colors duration-500">
+                            <div class="mb-8 w-16 h-16 bg-brand group-hover:bg-white flex items-center justify-center transition-colors">
+                                <svg class="w-8 h-8 text-white group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-display text-2xl font-black text-ink group-hover:text-white mb-4 transition-colors tracking-tight">GARANSI MESIN</h3>
+                            <p class="text-ink/60 group-hover:text-white/80 transition-colors leading-relaxed">Proteksi ekstra untuk ketenangan berkendara Anda.</p>
+                        </div>
+                        <div class="p-10 border border-ink/10 hover:bg-brand group transition-colors duration-500">
+                            <div class="mb-8 w-16 h-16 bg-brand group-hover:bg-white flex items-center justify-center transition-colors">
+                                <svg class="w-8 h-8 text-white group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-display text-2xl font-black text-ink group-hover:text-white mb-4 transition-colors tracking-tight">PROSES CEPAT</h3>
+                            <p class="text-ink/60 group-hover:text-white/80 transition-colors leading-relaxed">Pengurusan dokumen dan transaksi efisien untuk waktu Anda.</p>
+                        </div>
+                        <div class="p-10 border border-ink/10 hover:bg-brand group transition-colors duration-500">
+                            <div class="mb-8 w-16 h-16 bg-brand group-hover:bg-white flex items-center justify-center transition-colors">
+                                <svg class="w-8 h-8 text-white group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-display text-2xl font-black text-ink group-hover:text-white mb-4 transition-colors tracking-tight">HARGA BISA NEGO</h3>
+                            <p class="text-ink/60 group-hover:text-white/80 transition-colors leading-relaxed">Penawaran fleksibel yang kompetitif sesuai budget Anda.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- STOK MOBIL SECTION - HIGH IMPACT -->
+            <section id="stok" class="relative px-6 py-32 bg-brand overflow-hidden">
+                <!-- Background Decoration -->
+                <div class="absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none">
+                    <h2 class="text-[40vw] font-black uppercase leading-none text-white absolute -top-20 -right-40">
+                        STOK</h2>
+                </div>
+
+                <div class="mx-auto max-w-7xl relative z-10">
+                    <!-- Section Header -->
+                    <div class="flex flex-col lg:flex-row items-start justify-between gap-12 mb-20">
+                        <div>
+                            <h2
+                                class="font-display text-4xl md:text-6xl lg:text-8xl font-black text-white uppercase leading-none italic transform lg:-skew-x-6">
+                                Panggung<br>
+                                <span class="text-black">Koleksi</span>
+                            </h2>
+                            <div class="mt-8 flex items-center gap-4">
+                                <div class="w-12 h-[2px] bg-white"></div>
+                                <p class="text-white/80 font-bold uppercase tracking-widest text-sm">Update Setiap Hari
+                                </p>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20mau%20minta%20katalog%20stok%20lengkap."
+                            class="bg-white text-brand px-12 py-6 font-black uppercase italic tracking-widest hover:bg-black hover:text-white transition-all transform -skew-x-12">
+                            Katalog Lengkap
+                        </a>
+                    </div>
+
+                    <!-- Cars Grid -->
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        <div class="group relative bg-white overflow-hidden shadow-2xl">
+                            <div class="relative h-72 overflow-hidden">
+                                <img src="img/models/avanza.png" alt="Toyota Avanza G" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute top-4 right-4 bg-brand text-white px-4 py-1 text-[10px] font-black uppercase italic tracking-widest">Family Pick</div>
+                            </div>
+                            <div class="p-8">
+                                <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Toyota Avanza G</h3>
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2018 | 85K KM | Matic</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                    <div>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-3xl font-black text-brand italic">Rp 125 Juta</p>
+                                    </div>
+                                    <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Toyota%20Avanza%20G" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group relative bg-white overflow-hidden shadow-2xl">
+                            <div class="relative h-72 overflow-hidden">
+                                <img src="img/models/crv.png" alt="Honda CR-V Prestige" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute top-4 right-4 bg-brand text-white px-4 py-1 text-[10px] font-black uppercase italic tracking-widest">Luxury SUV</div>
+                            </div>
+                            <div class="p-8">
+                                <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Honda CR-V Prestige</h3>
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2019 | 65K KM | Matic</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                    <div>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-3xl font-black text-brand italic">Rp 385 Juta</p>
+                                    </div>
+                                    <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Honda%20CR-V%20Prestige" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group relative bg-white overflow-hidden shadow-2xl">
+                            <div class="relative h-72 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?q=80&w=1200&auto=format&fit=crop" alt="Mitsubishi Xpander" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute top-4 right-4 bg-brand text-white px-4 py-1 text-[10px] font-black uppercase italic tracking-widest">Best Value</div>
+                            </div>
+                            <div class="p-8">
+                                <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Mitsubishi Xpander</h3>
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2020 | 45K KM | Matic</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                    <div>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-3xl font-black text-brand italic">Rp 215 Juta</p>
+                                    </div>
+                                    <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Mitsubishi%20Xpander" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group relative bg-white overflow-hidden shadow-2xl">
+                            <div class="relative h-72 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1200&auto=format&fit=crop" alt="Mitsubishi Pajero Sport" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute top-4 right-4 bg-brand text-white px-4 py-1 text-[10px] font-black uppercase italic tracking-widest">Tough Offroad</div>
+                            </div>
+                            <div class="p-8">
+                                <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Mitsubishi Pajero Sport</h3>
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2017 | 70K KM | Diesel</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                    <div>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-3xl font-black text-brand italic">Rp 425 Juta</p>
+                                    </div>
+                                    <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Mitsubishi%20Pajero%20Sport" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group relative bg-white overflow-hidden shadow-2xl">
+                            <div class="relative h-72 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1200&auto=format&fit=crop" alt="Toyota Fortuner VRZ" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute top-4 right-4 bg-brand text-white px-4 py-1 text-[10px] font-black uppercase italic tracking-widest">Premium SUV</div>
+                            </div>
+                            <div class="p-8">
+                                <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Toyota Fortuner VRZ</h3>
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2018 | 60K KM | Diesel</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                    <div>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-3xl font-black text-brand italic">Rp 450 Juta</p>
+                                    </div>
+                                    <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Toyota%20Fortuner%20VRZ" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group relative bg-white overflow-hidden shadow-2xl">
+                            <div class="relative h-72 overflow-hidden">
+                                <img src="img/models/civic.png" alt="Honda Civic Turbo" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute top-4 right-4 bg-brand text-white px-4 py-1 text-[10px] font-black uppercase italic tracking-widest">Sporty Sedan</div>
+                            </div>
+                            <div class="p-8">
+                                <h3 class="font-display text-2xl font-black text-ink uppercase mb-2 tracking-tight">Honda Civic Turbo</h3>
+                                <p class="text-ink/40 text-xs font-bold uppercase mb-6">2019 | 35K KM | Matic</p>
+                                <div class="flex items-center justify-between pt-6 border-t border-ink/5">
+                                    <div>
+                                        <p class="text-[10px] font-black text-ink/30 uppercase mb-1">CASH PRICE</p>
+                                        <p class="text-3xl font-black text-brand italic">Rp 295 Juta</p>
+                                    </div>
+                                    <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Honda%20Civic%20Turbo" class="w-14 h-14 bg-ink flex items-center justify-center hover:bg-brand transition-colors text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- TENTANG SECTION - BOLD & MINIMALIST -->
+            <section id="tentang" class="relative px-6 py-32 overflow-hidden bg-white">
+                <div class="relative z-10 mx-auto max-w-7xl">
+                    <div class="grid lg:grid-cols-2 gap-24 items-center">
+                        <!-- Image Side -->
+                        <div class="relative group">
+                            <div
+                                class="absolute -inset-4 bg-brand/10 skew-x-[-6deg] transition-transform group-hover:skew-x-0">
+                            </div>
+                            <div
+                                class="relative overflow-hidden bg-ink p-2 transform -rotate-2 group-hover:rotate-0 transition-transform">
+                                <img src="img/about-car.png"
+                                    alt="Showroom"
+                                    class="w-full h-[600px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+
+                                <!-- Floating Badge -->
+                                <div
+                                    class="absolute bottom-10 left-10 bg-brand text-white px-8 py-4 font-black uppercase text-xs tracking-widest skew-x-[-12deg]">
+                                    ESTABLISHED 2014
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content Side -->
+                        <div class="space-y-10">
+                            <div class="w-20 h-2 bg-brand"></div>
+                            <h2 class="font-display text-4xl md:text-6xl lg:text-8xl font-black text-ink uppercase leading-[0.9]">
+                                Bukan<br>Sekadar<br><span class="text-brand">Showroom.</span>
+                            </h2>
+                            <p class="text-xl text-ink/60 leading-relaxed font-medium">
+                                Di Otopalu, kami percaya bahwa setiap mobil memiliki cerita. Misi kami adalah memastikan
+                                cerita Anda berikutnya dimulai dengan <span
+                                    class="text-ink font-black uppercase tracking-tighter italic">Kesempurnaan &
+                                    Ketenangan</span>.
+                            </p>
+
+                            <div class="grid grid-cols-2 gap-8 pt-10">
+                                <div>
+                                    <p class="text-4xl font-black text-brand mb-2 italic">10+</p>
+                                    <p class="text-[10px] font-black text-ink/40 uppercase tracking-widest">Tahun
+                                        Melayani</p>
+                                </div>
+                                <div>
+                                    <p class="text-4xl font-black text-ink mb-2 italic">24/7</p>
+                                    <p class="text-[10px] font-black text-ink/40 uppercase tracking-widest">Customer
+                                        Care</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- KONTAK SECTION - MINIMALIST RED -->
+            <section id="kontak" class="relative px-6 py-32 bg-ink overflow-hidden">
+                <div class="mx-auto max-w-7xl">
+                    <!-- Section Header -->
+                    <div class="text-center mb-32">
+                        <h2
+                            class="font-display text-4xl md:text-6xl lg:text-9xl font-black text-white uppercase italic leading-none transform lg:-skew-x-6">
+                            Siap <span class="text-brand">Gas?</span>
+                        </h2>
+                        <p class="mt-8 text-white/40 font-bold uppercase tracking-[0.4em] text-xs">Jadwalkan Kunjungan
+                            Anda Sekarang</p>
+                    </div>
+
+                    <!-- Interactive Contact Grid -->
+                    <div class="grid lg:grid-cols-2 gap-0 border-2 border-white/10">
+                        <!-- Left: Contact Details -->
+                        <div class="p-8 md:p-12 lg:p-16 lg:border-r border-b lg:border-b-0 border-white/10 space-y-10 lg:space-y-16">
+                            <div class="group">
+                                <p class="text-brand font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-3">
+                                    <i class="fas fa-phone-alt"></i>
+                                    Direct Call
+                                </p>
+                                <a href="tel:6281234567890"
+                                    class="text-2xl md:text-4xl lg:text-5xl font-black text-white hover:text-brand transition-colors">+6281234567890</a>
+                            </div>
+                            <div class="group">
+                                <p class="text-brand font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-3">
+                                    <i class="fab fa-whatsapp text-lg"></i>
+                                    WhatsApp Support
+                                </p>
+                                <a href="https://wa.me/6281234567890"
+                                    class="text-2xl md:text-4xl lg:text-5xl font-black text-white hover:text-brand transition-colors italic">@chat.otopalu</a>
+                            </div>
+                            <div class="group">
+                                <p class="text-brand font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-3">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Showroom Address
+                                </p>
+                                <p class="text-2xl font-bold text-white/60 leading-relaxed">Jl. Raya Sunter No. 123, Jakarta</p>
+                            </div>
+
+                            <!-- Opening Hours (NEW) -->
+                            <div class="group pt-8 border-t border-white/5">
+                                <p class="text-brand font-black text-xs uppercase tracking-widest mb-6 flex items-center gap-3">
+                                    <i class="far fa-clock"></i>
+                                    Showroom Hours
+                                    <span class="ml-auto flex items-center gap-2 px-3 py-1 bg-brand/20 rounded-full">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></span>
+                                        <span class="text-[9px] text-brand">OPEN NOW</span>
+                                    </span>
+                                </p>
+                                <div class="grid grid-cols-2 gap-y-4">
+                                    <div class="space-y-1">
+                                        <p class="text-[10px] font-black text-white/30 uppercase">Mon - Sat</p>
+                                        <p class="text-lg font-bold text-white">09:00 - 18:00</p>
+                                    </div>
+                                    <div class="space-y-1 text-right">
+                                        <p class="text-[10px] font-black text-white/30 uppercase">Sunday</p>
+                                        <p class="text-lg font-bold text-white">10:00 - 16:00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Quick Booking -->
+                        <div class="bg-brand p-8 md:p-12 lg:p-16 flex flex-col justify-center items-center text-center">
+                            <h3 class="text-4xl lg:text-5xl font-black text-white uppercase italic leading-none mb-10">
+                                Booking<br>Test Drive</h3>
+                            <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20mau%20booking%20test%20drive."
+                                class="bg-white text-brand px-10 py-5 lg:px-12 lg:py-6 font-black uppercase italic tracking-widest hover:bg-ink hover:text-white transition-all transform -skew-x-12 flex items-center gap-4">
+                                Kirim Pesan
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Google Maps Embed Placeholder (NEW) -->
+                    <div class="mt-12 lg:mt-20 relative h-[350px] lg:h-[500px] border-4 border-white/10 group overflow-hidden">
+                        <div class="absolute inset-0 bg-ink/20 group-hover:bg-transparent transition-colors z-10 pointer-events-none"></div>
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126932.32766063468!2d106.746098!3d-6.175392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e1f563d3a1%3A0xc3cf33379963e6d2!2sJakarta!5e0!3m2!1sen!2sid!4v1712390000000!5m2!1sen!2sid" 
+                            class="w-full h-full lg:grayscale lg:invert lg:opacity-50 lg:group-hover:grayscale-0 lg:group-hover:invert-0 lg:group-hover:opacity-100 transition-all duration-1000"
+                            style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        
+                        <!-- Floating Location Badge -->
+                        <div class="absolute bottom-6 left-6 lg:bottom-10 lg:left-10 z-20 bg-ink p-6 border-l-4 border-brand shadow-2xl lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-500">
+                            <p class="text-[10px] font-black text-brand uppercase tracking-widest mb-1">Our Location</p>
+                            <p class="text-white font-bold text-sm">Sunlake Waterfront, Sunter Jakarta</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- FOOTER - MINIMALIST -->
+            <footer class="relative overflow-hidden bg-white pt-24 pb-12 border-t-8 border-brand">
+                <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+                        <!-- Company Info -->
+                        <div class="space-y-6">
+                            <img src="img/otopalu.png"
+                                class="w-32 h-32 object-contain grayscale hover:grayscale-0 transition-all">
+                            <p class="text-sm text-ink/40 leading-relaxed font-bold uppercase tracking-tight">
+                                The definitive premium car marketplace in Indonesia.
+                            </p>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div>
+                            <h4 class="font-black text-xs uppercase tracking-[0.3em] text-brand mb-8">Navigation</h4>
+                            <ul class="space-y-4 text-sm font-black uppercase text-ink">
+                                <li><a href="#stok" class="hover:text-brand transition-colors">Koleksi Stok</a></li>
+                                <li><a href="#keunggulan" class="hover:text-brand transition-colors">Keunggulan
+                                        Kami</a></li>
+                                <li><a href="#tentang" class="hover:text-brand transition-colors">Tentang Otopalu</a>
+                                </li>
+                                <li><a href="#kontak" class="hover:text-brand transition-colors">Hubungi Kami</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Services -->
+                        <div>
+                            <h4 class="font-black text-xs uppercase tracking-[0.3em] text-brand mb-8">Services</h4>
+                            <ul class="space-y-4 text-sm font-black uppercase text-ink/60">
+                                <li>Jual Unit Premium</li>
+                                <li>Trade-In / Tukar Tambah</li>
+                                <li>Pembiayaan / Kredit</li>
+                                <li>Inspeksi Profesional</li>
+                            </ul>
+                        </div>
+
+                        <!-- Contact -->
+                        <div>
+                            <h4 class="font-black text-xs uppercase tracking-[0.3em] text-brand mb-8">Direct</h4>
+                            <ul class="space-y-4 text-sm font-black uppercase text-ink">
+                                <li class="flex items-center gap-4 hover:text-brand transition-colors">
+                                    <div class="w-8 h-8 bg-brand/10 text-brand flex items-center justify-center rounded-lg text-sm">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </div>
+                                    +6281234567890
+                                </li>
+                                <li class="flex items-center gap-4 hover:text-brand transition-colors">
+                                    <div class="w-8 h-8 bg-ink/5 text-ink flex items-center justify-center rounded-lg text-sm">
+                                        <i class="far fa-envelope"></i>
+                                    </div>
+                                    info@otopalu.com
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-12 text-center">
+                        <p class="text-[10px] font-black uppercase tracking-[0.5em] text-ink/20">&copy;
+                            2024 Otopalu. Otopalu Premium Otomotif Showcase.</p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <!-- JAVASCRIPT - ULTRA MODERN ANIMATIONS -->
+        <script>
+            // ==========================================
+            // 1. CUSTOM CURSOR - MAGNETIC FOLLOWER
+            // ==========================================
+            const cursor = document.querySelector('.custom-cursor');
+            const cursorDot = document.querySelector('.custom-cursor-dot');
+
+            let mouseX = 0,
+                mouseY = 0;
+            let cursorX = 0,
+                cursorY = 0;
+            let dotX = 0,
+                dotY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursor() {
+                // Smooth lerp animation
+                cursorX += (mouseX - cursorX) * 0.15;
+                cursorY += (mouseY - cursorY) * 0.15;
+                dotX += (mouseX - dotX) * 0.25;
+                dotY += (mouseY - dotY) * 0.25;
+
+                cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
+                cursorDot.style.transform = `translate(${dotX - 3}px, ${dotY - 3}px)`;
+
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Cursor grow on hover
+            document.querySelectorAll('a, button, .magnetic').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.width = '60px';
+                    cursor.style.height = '60px';
+                    cursor.style.borderColor = '#A41113';
+                    cursor.style.background = 'rgba(164, 17, 19, 0.1)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.width = '20px';
+                    cursor.style.height = '20px';
+                    cursor.style.borderColor = '#A41113';
+                    cursor.style.background = 'transparent';
+                });
+            });
+
+            // ==========================================
+            // 2. PARTICLES BACKGROUND
+            // ==========================================
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+
+            // ==========================================
+            // 3. LOADING SCREEN
+            // ==========================================
+            window.addEventListener('load', () => {
+                const loadingScreen = document.getElementById('loading-screen');
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => loadingScreen.style.display = 'none', 500);
+                }, 1500);
+            });
+
+            // ==========================================
+            // 4. SCROLL PROGRESS BAR
+            // ==========================================
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                document.querySelector('.scroll-progress').style.width = scrollPercent + '%';
+            });
+
+            // ==========================================
+            // 5. MOBILE MENU TOGGLE
+            // ==========================================
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            const mobileNavLinks = document.querySelectorAll('#mobileDrawer a');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuBtn.classList.toggle('active');
+                mobileDrawer.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+            });
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuBtn.classList.remove('active');
+                    mobileDrawer.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                });
+            });
+
+            // ==========================================
+            // 6. MAGNETIC BUTTONS
+            // ==========================================
+            document.querySelectorAll('.magnetic').forEach(button => {
+                button.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+
+                    this.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translate(0, 0)';
+                });
+            });
+
+            // ==========================================
+            // 7. STAGGER REVEAL ON SCROLL
+            // ==========================================
+            const staggerItems = document.querySelectorAll('.stagger-item');
+
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const staggerObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.style.getPropertyValue('--delay') || '0ms';
+                        setTimeout(() => {
+                            entry.target.classList.add('show');
+                        }, parseInt(delay));
+                        staggerObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            staggerItems.forEach(item => staggerObserver.observe(item));
+
+            // ==========================================
+            // 8. PARALLAX EFFECT
+            // ==========================================
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+
+                document.querySelectorAll('.parallax-slow').forEach(el => {
+                    el.style.transform = `translateY(${scrolled * 0.1}px)`;
+                });
+
+                document.querySelectorAll('.parallax-medium').forEach(el => {
+                    el.style.transform = `translateY(${scrolled * 0.2}px)`;
+                });
+
+                document.querySelectorAll('.parallax-fast').forEach(el => {
+                    el.style.transform = `translateY(${scrolled * 0.3}px)`;
+                });
+            });
+
+            // ==========================================
+            // 9. COUNTER ANIMATION
+            // ==========================================
+            const counters = document.querySelectorAll('.counter');
+
+            counters.forEach(counter => {
+                const target = parseInt(counter.innerText);
+                let current = 0;
+                const increment = target / 50;
+                const duration = 2000;
+                const stepTime = duration / 50;
+
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.innerText = Math.ceil(current);
+                        setTimeout(updateCounter, stepTime);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+
+                const counterObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCounter();
+                            counterObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.5
+                });
+
+                counterObserver.observe(counter);
+            });
+
+            // ==========================================
+            // 10. SPLIT TEXT CHARACTER ANIMATION
+            // ==========================================
+            document.querySelectorAll('.split-text').forEach(el => {
+                const text = el.textContent;
+                el.innerHTML = '';
+
+                text.split('').forEach((char, i) => {
+                    const span = document.createElement('span');
+                    span.classList.add('char');
+                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    span.style.transitionDelay = (i * 0.03) + 's';
+                    el.appendChild(span);
+                });
+
+                // Trigger animation
+                setTimeout(() => {
+                    el.classList.add('animate');
+                }, 500);
+            });
+
+            // ==========================================
+            // 11. HEADER SCROLL EFFECT
+            // ==========================================
+            let lastScroll = 0;
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+
+                if (currentScroll > 100) {
+                    header.style.background = 'rgba(255, 255, 255, 0.9)';
+                    header.style.backdropFilter = 'blur(15px)';
+                    header.querySelector('span.text-ink').classList.add('text-brand');
+                } else {
+                    header.style.background = 'rgba(255, 255, 255, 0.05)';
+                    header.style.backdropFilter = 'blur(20px)';
+                    header.querySelector('span.text-ink').classList.remove('text-brand');
+                }
+
+                lastScroll = currentScroll;
+            });
+
+            // ==========================================
+            // 12. MARQUEE ANIMATION CSS
+            // ==========================================
+            const style = document.createElement('style');
+            style.textContent = `
+            @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-100%); }
+            }
+            .animate-marquee {
+                animation: marquee 20s linear infinite;
+            }
+            
+            @keyframes pulseRing {
+                0% {
+                    transform: scale(1);
+                    opacity: 0.4;
+                }
+                100% {
+                    transform: scale(1.5);
+                    opacity: 0;
+                }
+            }
+            
+            .flip-card {
+                perspective: 1000px;
+            }
+            
+            .flip-card-inner {
+                position: relative;
+                width: 100%;
+                transition: transform 0.8s;
+                transform-style: preserve-3d;
+            }
+        `;
+            document.head.appendChild(style);
+
+            // ==========================================
+            // 13. GSAP SCROLL ANIMATIONS
+            // ==========================================
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Text Animation
+            gsap.from('#hero-title', {
+                y: 100,
+                opacity: 0,
+                duration: 1.2,
+                ease: 'power4.out',
+                delay: 2
+            });
+
+            gsap.from('#hero-subtitle', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out',
+                delay: 2.3
+            });
+
+            gsap.from('.hero-cta', {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'back.out(1.4)',
+                stagger: 0.2,
+                delay: 2.6
+            });
+
+            // Car Cards Hover Effect
+            document.querySelectorAll('.car-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    gsap.to(this, {
+                        y: -15,
+                        scale: 1.03,
+                        duration: 0.4,
+                        ease: 'power2.out'
+                    });
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    gsap.to(this, {
+                        y: 0,
+                        scale: 1,
+                        duration: 0.4,
+                        ease: 'power2.out'
+                    });
+                });
+            });
+
+            // Scroll-triggered animations for sections
+            gsap.utils.toArray('section').forEach(section => {
+                gsap.from(section.querySelectorAll('h2, h3, p'), {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 80%',
+                        end: 'bottom 20%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    y: 60,
+                    opacity: 0,
+                    duration: 1,
+                    stagger: 0.15,
+                    ease: 'power3.out'
+                });
+            });
+
+            // Feature Cards Scale Animation
+            gsap.utils.toArray('.flip-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                    },
+                    scale: 0.8,
+                    opacity: 0,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    ease: 'back.out(1.7)'
+                });
+            });
+
+            // Stats Counter with GSAP
+            document.querySelectorAll('.counter').forEach(counter => {
+                const target = {
+                    value: 0
+                };
+                const endValue = parseInt(counter.getAttribute('data-target') || counter.innerText.replace(/\D/g, ''));
+                const suffix = counter.innerText.replace(/[0-9]/g, '');
+
+                const animateCounter = () => {
+                    gsap.to(target, {
+                        value: endValue,
+                        duration: 3,
+                        ease: 'power2.out',
+                        onUpdate: () => {
+                            counter.innerText = Math.ceil(target.value) + suffix;
+                        }
+                    });
+                };
+
+                ScrollTrigger.create({
+                    trigger: counter,
+                    start: 'top 95%',
+                    onEnter: animateCounter,
+                    onRefresh: (self) => {
+                        if (self.progress > 0) animateCounter();
+                    }
+                });
+            });
+
+            // Floating shapes animation
+            gsap.utils.toArray('.floating-shape').forEach(shape => {
+                gsap.to(shape, {
+                    y: 'random(-50, 50)',
+                    x: 'random(-50, 50)',
+                    duration: 'random(3, 5)',
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'sine.inOut'
+                });
+            });
+
+            // ==========================================
+            // 14. SMOOTH SCROLL FOR ANCHOR LINKS
+            // ==========================================
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#' || targetId === '#home') {
+                        e.preventDefault();
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            e.preventDefault();
+                            const offsetTop = target.offsetTop - 80;
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Lazy load images
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                            }
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('img[data-src]').forEach(img => imageObserver.observe(img));
+            }
+
+            // Reduce animations on low-end devices
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if (reducedMotion.matches) {
+                document.querySelectorAll('*').forEach(el => {
+                    el.style.animation = 'none';
+                    el.style.transition = 'none';
+                });
+            }
+
+            // ==========================================
+            // 16. CONSOLE EASTER EGG
+            // ==========================================
+            console.log('%c🚗 OTOPALU OTOMOTIF 🚗', 'font-size: 24px; font-weight: bold; color: #D62828;');
+            console.log('%cPremium Car. Premium Experience. Ultra-Modern Design.', 'font-size: 14px; color: #FF4D4D;');
+            console.log('%c💎 Designed with passion for car enthusiasts 💎', 'font-size: 12px; color: #999;');
+        </script>
+</body>
+
+</html>
