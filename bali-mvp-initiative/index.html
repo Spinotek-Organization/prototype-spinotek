@@ -507,6 +507,23 @@
         color: var(--slate-700);
         border-bottom: 1px solid var(--slate-100);
       }
+      .mobile-menu .mobile-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 16px;
+        padding: 14px 24px;
+        background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
+        color: white;
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: var(--radius-full);
+        border-bottom: none;
+        box-shadow: var(--shadow-brand);
+        text-align: center;
+      }
 
       /* ═══════════════════════════════════════════
            ANNOUNCEMENT TICKER
@@ -626,7 +643,7 @@
       }
 
       .pain-left {
-        animation: slide-up 0.8s ease both;
+        /* animation removed */
       }
 
       .pain-badge {
@@ -643,7 +660,7 @@
         margin-bottom: 28px;
         box-shadow: var(--shadow-sm);
         letter-spacing: 0.02em;
-        animation: slide-up 0.6s ease both;
+        /* animation removed */
       }
       .pain-badge .dot-live {
         width: 8px;
@@ -665,7 +682,7 @@
       .pain-title {
         font-size: clamp(38px, 5vw, 60px);
         margin-bottom: 24px;
-        animation: slide-up 0.8s 0.1s ease both;
+        /* animation removed */
       }
       .pain-title .highlight {
         background: linear-gradient(
@@ -684,14 +701,14 @@
         line-height: 1.7;
         margin-bottom: 48px;
         max-width: 480px;
-        animation: slide-up 0.8s 0.2s ease both;
+        /* animation removed */
       }
 
       .pain-cards {
         display: flex;
         flex-direction: column;
         gap: 14px;
-        animation: slide-up 0.8s 0.3s ease both;
+        /* animation removed */
       }
 
       .pain-card-item {
@@ -763,7 +780,7 @@
       /* === RIGHT SIDE — Interactive Visual === */
       .pain-right {
         position: relative;
-        animation: slide-up 0.8s 0.2s ease both;
+        /* animation removed */
       }
 
       /* Product mockup card */
@@ -3151,6 +3168,9 @@
         .navbar-links {
           display: none;
         }
+        .navbar-cta {
+          display: none;
+        }
         .mobile-toggle {
           display: flex;
         }
@@ -3298,7 +3318,13 @@
       <a href="#use-case">Use Case</a>
       <a href="#pricing">Harga</a>
       <a href="#timeline">Proses</a>
-      <a href="#contact">Diskusi Gratis</a>
+      <a href="#contact">Kontak</a>
+      <a href="#contact" class="mobile-cta">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+        Diskusi Gratis
+      </a>
     </div>
 
     <!-- ══ SECTION 1 — PAIN POINT HERO ══════════════ -->
@@ -5540,52 +5566,7 @@
         }, 1500);
       }
 
-      /* ── INTERSECTION OBSERVER — Animate on scroll ─ */
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -60px 0px",
-      };
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
-          }
-        });
-      }, observerOptions);
-
-      document
-        .querySelectorAll(
-          ".pain-card-item, .hero-bullet-card, .bento-card, .usecase-card, .tech-card, .maint-card, .spec-chip, .stat-item",
-        )
-        .forEach((el) => {
-          el.style.opacity = "0";
-          el.style.transform = "translateY(28px)";
-          el.style.transition =
-            "opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)";
-          observer.observe(el);
-        });
-
-      /* Stagger delays */
-      document
-        .querySelectorAll(".pain-card-item")
-        .forEach((el, i) => (el.style.transitionDelay = `${i * 0.1}s`));
-      document
-        .querySelectorAll(".hero-bullet-card")
-        .forEach((el, i) => (el.style.transitionDelay = `${i * 0.1}s`));
-      document
-        .querySelectorAll(".bento-card")
-        .forEach((el, i) => (el.style.transitionDelay = `${i * 0.08}s`));
-      document
-        .querySelectorAll(".usecase-card")
-        .forEach((el, i) => (el.style.transitionDelay = `${i * 0.1}s`));
-      document
-        .querySelectorAll(".tech-card")
-        .forEach((el, i) => (el.style.transitionDelay = `${i * 0.06}s`));
-      document
-        .querySelectorAll(".spec-chip")
-        .forEach((el, i) => (el.style.transitionDelay = `${i * 0.05}s`));
 
       /* ── SMOOTH ANCHOR SCROLL OFFSET ───────────── */
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
