@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SmartWMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'], },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a'},
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .view-section { display: none; animation: fadeUp 0.3s ease-out forwards; }
+        .view-section.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Toasts and Modals CSS handled by Tailwind utility classes */
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white border-r border-slate-200 fixed top-0 bottom-0 flex flex-col z-20">
+        <div class="h-20 flex items-center px-6 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white">
+                    <i data-lucide="boxes" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-900">Smart<span class="text-brand-600">WMS</span></span>
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+            <p class="px-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 mt-4">Menu Utama</p>
+            <button onclick="switchView('dashboard', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-brand-600 bg-brand-50 font-medium transition-colors">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Dashboard
+            </button>
+            <button onclick="switchView('master', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+                <i data-lucide="package-search" class="w-5 h-5"></i>
+                Master Barang
+            </button>
+            <button onclick="switchView('qr', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+                <i data-lucide="qr-code" class="w-5 h-5"></i>
+                Data QR Code
+            </button>
+
+            <p class="px-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 mt-8">Laporan</p>
+            <button onclick="switchView('billing', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+                <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                Tagihan / Billing
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-slate-100">
+            <a href="index.html" class="flex items-center gap-2 justify-center w-full py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium text-sm transition-all">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Web
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ml-64 flex-1 flex flex-col min-h-screen">
+        
+        <!-- HEADER -->
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
+            <div class="flex items-center gap-2 text-slate-500 text-sm font-medium">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                <span>/</span>
+                <span class="text-slate-900" id="header-breadcrumb">Dashboard Overview</span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 relative">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer">
+                    <div class="text-right hidden md:block">
+                        <p class="text-sm font-bold text-slate-900">Admin Utama</p>
+                        <p class="text-xs text-slate-500">Administrator</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow flex items-center justify-center text-slate-600 font-bold">
+                        A
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-8">
+            
+            <!-- VIEW 1: DASHBOARD -->
+            <div id="view-dashboard" class="view-section active">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Ringkasan Operasional</h1>
+                        <p class="text-slate-500 text-sm mt-1">Realtime update data gudang pusat.</p>
+                    </div>
+                    <button onclick="openGenerateModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-brand-500/30 transition-all flex items-center gap-2">
+                        <i data-lucide="plus" class="w-5 h-5"></i> Generate QR Baru
+                    </button>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-sm font-medium text-slate-500 mb-4 flex items-center justify-between">
+                            Total Barang
+                            <i data-lucide="package" class="w-4 h-4 text-slate-400"></i>
+                        </p>
+                        <h3 class="text-3xl font-bold text-slate-900" id="dash-val-total">1,248</h3>
+                        <p class="text-xs font-semibold text-green-600 mt-2 flex items-center gap-1">
+                            <i data-lucide="trending-up" class="w-3 h-3"></i> +24 Hari ini
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-sm font-medium text-slate-500 mb-4 flex items-center justify-between">
+                            Barang Keluar
+                            <i data-lucide="truck" class="w-4 h-4 text-slate-400"></i>
+                        </p>
+                        <h3 class="text-3xl font-bold text-slate-900">156</h3>
+                        <p class="text-xs font-semibold text-orange-500 mt-2 flex items-center gap-1">
+                            Dalam pengiriman
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-sm font-medium text-slate-500 mb-4 flex items-center justify-between">
+                            Total QR Aktif
+                            <i data-lucide="qr-code" class="w-4 h-4 text-slate-400"></i>
+                        </p>
+                        <h3 class="text-3xl font-bold text-slate-900" id="dash-val-qr">3,490</h3>
+                        <p class="text-xs font-semibold text-slate-500 mt-2 flex items-center gap-1">
+                            Semua tercetak riwayat
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+                        <p class="text-sm font-medium text-slate-400 mb-4 flex items-center justify-between">
+                            Estimasi Billing (Bulan)
+                            <i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i>
+                        </p>
+                        <h3 class="text-2xl font-bold">Rp 45.2M</h3>
+                        <p class="text-xs font-medium text-brand-300 mt-2">Dihitung dari durasi inap</p>
+                    </div>
+                </div>
+
+                <!-- Recent Activities Table -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <h2 class="font-bold text-slate-800">Aktivitas Pemindaian Terakhir (Staf Lapangan)</h2>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Online Sync
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50 text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">Kode Item</th>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">Nama Barang & Detail</th>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">Status</th>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">PIC & Waktu</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="dash-table-body">
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 font-mono font-bold text-brand-600">QR-7629A</td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-slate-900">Oli Mesin 5L #998</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">Customer: PT. Maju Jaya</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-700">Keluar Gudang</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-slate-700">Budi S. • Zone A</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">10:45 AM (Selesai inap)</p>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 font-mono font-bold text-brand-600">QR-9182C</td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-slate-900">Palet C #991</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">Customer: PT. ABC</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-green-100 text-green-700">Masuk Gudang</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-slate-700">Andi K. • Zone B</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">09:12 AM (Mulai argo)</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: MASTER BARANG -->
+            <div id="view-master" class="view-section">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Master Data Barang</h1>
+                        <p class="text-slate-500 text-sm mt-1">Kelola SKU dan identitas inventori sebelum pencetakan QR.</p>
+                    </div>
+                    <button class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-all flex items-center gap-2">
+                        <i data-lucide="plus" class="w-5 h-5"></i> Tambah SKU Baru
+                    </button>
+                </div>
+                <!-- Box Content... sama strukturnya, ini mockup ringkas -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                        <i data-lucide="package-open" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-lg">Daftar SKU Master</h3>
+                    <p class="text-slate-500 text-sm mb-6 max-w-md mx-auto">Data master digunakan sebagai referensi saat menghubungkan/mencetak QR fisik baru.</p>
+                    <table class="w-full text-left text-sm whitespace-nowrap border-t border-slate-100">
+                        <thead class="bg-slate-50 text-slate-500">
+                            <tr>
+                                <th class="px-6 py-4 font-semibold border-b border-slate-100">SKU ID</th>
+                                <th class="px-6 py-4 font-semibold border-b border-slate-100">Nama Induk Barang</th>
+                                <th class="px-6 py-4 font-semibold border-b border-slate-100">Stok</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr>
+                                <td class="px-6 py-4 font-mono font-bold text-slate-700">SKU-HND-1</td>
+                                <td class="px-6 py-4 font-semibold">Mesin Genset Honda</td>
+                                <td class="px-6 py-4 font-bold text-slate-900">142 Unit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW 3: DATA QR CODE -->
+            <div id="view-qr" class="view-section">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Daftar QR & Generate</h1>
+                        <p class="text-slate-500 text-sm mt-1">Riwayat stiker QR unik yang tertaut pada item.</p>
+                    </div>
+                    <button onclick="openGenerateModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-brand-500/30 transition-all flex items-center gap-2">
+                        <i data-lucide="plus" class="w-5 h-5"></i> Generate QR Baru
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50 text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">ID Label / QR</th>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">Ditautkan ke Master / SKU</th>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">Status</th>
+                                    <th class="px-6 py-4 font-semibold border-b border-slate-100">Aksi Cetak</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="qr-table-body">
+                                <tr>
+                                    <td class="px-6 py-4 font-mono font-bold text-brand-600">QR-00981</td>
+                                    <td class="px-6 py-4 font-semibold text-slate-800">(SKU-HND-1) Mesin Genset Honda</td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center px-2 py-1 rounded bg-slate-100 text-slate-600 text-xs font-bold">Sudah Terdistribusi</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <button class="px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 font-semibold text-xs flex items-center gap-1.5">
+                                            <i data-lucide="printer" class="w-4 h-4"></i> Cetak Ulang
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: BILLING -->
+            <div id="view-billing" class="view-section">
+                <!-- Similar simplified structure for completeness -->
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Tagihan & Billing Inap</h1>
+                        <p class="text-slate-500 text-sm mt-1">Sistem akan secara akurat menghitung tarif sewa gudang berjalan maupun final (saat barang keluar).</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col items-center justify-center py-20 text-center">
+                    <div class="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mb-4 text-brand-500">
+                        <i data-lucide="calculator" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-slate-800">Sistem Kalkulasi Aktif</h3>
+                    <p class="text-slate-500 mt-2 max-w-md">Di purwarupa ini, perhitungan tarif bergantung pada data histori keluar-masuk QR dari Mobile App yang diproses di sistem backend bulanan.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODALS & TOASTS -->
+    
+    <!-- Generate QR Modal Backdrop -->
+    <div id="modal-generate" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0">
+        <!-- Modal Content -->
+        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="modal-generate-content">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h2 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i data-lucide="qr-code" class="text-brand-600"></i> Generate QR Code Baru
+                </h2>
+                <button onclick="closeGenerateModal()" class="w-8 h-8 rounded-full hover:bg-slate-200 flex items-center justify-center text-slate-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            
+            <div class="p-6 space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Pilih SKU Master Barang</label>
+                    <select id="modal-input-sku" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm font-medium">
+                        <option value="Ban Traktor (SKU-BAN-9)">Ban Traktor (SKU-BAN-9)</option>
+                        <option value="Pelumas Drum 100L (SKU-OLI-X)">Pelumas Drum 100L (SKU-OLI-X)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Pilih Customer Pendaftar</label>
+                    <select id="modal-input-customer" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm font-medium">
+                        <option>PT. Nusantara Abadi</option>
+                        <option>CV. Agro Makmur</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-slate-100 flex gap-3 bg-slate-50/50">
+                <button onclick="closeGenerateModal()" class="flex-1 py-3 bg-white border border-slate-300 rounded-xl text-slate-700 font-bold hover:bg-slate-50 transition-colors">Batal</button>
+                <button onclick="executeGenerate()" class="flex-1 py-3 bg-brand-600 rounded-xl text-white font-bold hover:bg-brand-700 transition-colors shadow-md shadow-brand-500/20">Generate & Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast Fixed Top Right -->
+    <div id="toast" class="fixed top-6 right-6 bg-slate-900 text-white p-4 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-x-[150%] opacity-0 z-50">
+        <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="check" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-sm">Berhasil Digenerate</h4>
+            <p class="text-xs text-slate-400">QR Code baru berhasil ditambahkan.</p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // SPA Navigation Logic
+        function switchView(target, btnElement) {
+            // Hide all
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + target).classList.add('active');
+
+            // Handle active classes on sidebar
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('bg-brand-50', 'text-brand-600');
+                btn.classList.add('text-slate-500', 'hover:bg-slate-50', 'hover:text-slate-900');
+            });
+
+            // Set current active
+            btnElement.classList.add('bg-brand-50', 'text-brand-600');
+            btnElement.classList.remove('text-slate-500', 'hover:bg-slate-50', 'hover:text-slate-900');
+
+            // Update Breadcrumb Text
+            const textMap = { 'dashboard': 'Dashboard Overview', 'master': 'Master Barang', 'qr': 'Data QR Code', 'billing': 'Tagihan / Billing' };
+            document.getElementById('header-breadcrumb').innerText = textMap[target];
+        }
+
+        // Modal Logic
+        const modalContainer = document.getElementById('modal-generate');
+        const modalContent = document.getElementById('modal-generate-content');
+
+        function openGenerateModal() {
+            modalContainer.classList.remove('hidden');
+            setTimeout(() => {
+                modalContainer.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeGenerateModal() {
+            modalContainer.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modalContainer.classList.add('hidden');
+            }, 300);
+        }
+
+        // Generate Action Logic
+        function executeGenerate() {
+            const skuName = document.getElementById('modal-input-sku').value;
+            const custName = document.getElementById('modal-input-customer').value;
+            const newCode = 'QR-' + Math.floor(Math.random() * 9000 + 1000) + 'X'; 
+            
+            closeGenerateModal();
+
+            // Insert to UI gracefully
+            setTimeout(() => {
+                // Show Toast
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-x-[150%]', 'opacity-0');
+                setTimeout(() => toast.classList.add('translate-x-[150%]', 'opacity-0'), 3000);
+
+                // Add to QR Table (if it's rendered)
+                const markupQR = `
+                    <tr class="bg-green-50 animate-[fadeUp_0.5s_ease-out]">
+                        <td class="px-6 py-4 font-mono font-bold text-brand-600">${newCode}</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">${skuName}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2 py-1 rounded bg-brand-100 text-brand-700 text-xs font-bold">Baru (Siap Cetak)</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <button class="px-4 py-2 bg-brand-600 rounded-lg text-white hover:bg-brand-700 font-semibold text-xs flex items-center gap-1.5 shadow-md shadow-brand-500/20">
+                                <i data-lucide="printer" class="w-4 h-4"></i> Cetak Fisik
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('qr-table-body').insertAdjacentHTML('afterbegin', markupQR);
+
+                // Add to Dashboard Recent Scan implicitly
+                // Just to simulate system reactivity
+                const dashValTotal = document.getElementById('dash-val-total');
+                dashValTotal.innerText = (parseInt(dashValTotal.innerText.replace(',','')) + 1).toLocaleString();
+                
+                const dashValQR = document.getElementById('dash-val-qr');
+                dashValQR.innerText = (parseInt(dashValQR.innerText.replace(',','')) + 1).toLocaleString();
+
+                const markupDash = `
+                    <tr class="bg-green-50 animate-[fadeUp_0.5s_ease-out]">
+                        <td class="px-6 py-4 font-mono font-bold text-brand-600">${newCode}</td>
+                        <td class="px-6 py-4">
+                            <p class="font-semibold text-slate-900">${skuName.split(' ')[0]}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Customer: ${custName}</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-green-100 text-green-700">Masuk / Generate</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="font-semibold text-slate-700">Admin Utama • System</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Baru Saja</p>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('dash-table-body').insertAdjacentHTML('afterbegin', markupDash);
+
+                lucide.createIcons();
+
+                // Switch nicely to QR view so they see it
+                switchView('qr', document.querySelector('[onclick="switchView(\\'qr\\', this)"]'));
+
+            }, 400); // Wait for modal to close
+        }
+    </script>
+</body>
+</html>

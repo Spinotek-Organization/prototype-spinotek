@@ -36,5 +36,22 @@ window.PROJECTS_DATA = [
     "repo_url": null,
     "image": "otopalu-otomotif/card.png",
     "added_at": "2026-04-06"
+  },
+  {
+    "slug": "smart-inventory",
+    "name": "Smart Inventory WMS",
+    "description": "Dashboard Web Admin dan Aplikasi Mobile untuk Manajemen Gudang berbasis kode QR dengan pelacakan realtime dan kalkulasi durasi.",
+    "category": "Web App",
+    "status": "LIVE DEMO",
+    "tech": [
+      "html",
+      "javascript",
+      "css"
+    ],
+    "icon": "smart-inventory/assets/dashboard.png",
+    "demo_url": "smart-inventory/index.html",
+    "repo_url": null,
+    "image": "smart-inventory/assets/dashboard.png",
+    "added_at": "2026-04-21"
   }
 ];

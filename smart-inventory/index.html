@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Inventory - QR Code Warehouse Management</title>
+    <meta name="description" content="Dashboard Web Admin dan Aplikasi Mobile untuk Manajemen Gudang berbasis kode QR dengan pelacakan realtime dan kalkulasi durasi.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                SmartWMS
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features" class="nav-link">Fitur Utama</a></li>
+                <li><a href="#admin" class="nav-link">Web Admin</a></li>
+                <li><a href="#mobile" class="nav-link">Mobile Apps</a></li>
+            </ul>
+            <a href="https://wa.me/6281234567890" class="btn btn-primary">Konsultasi Sekarang</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-badge">✨ Rilis Terbaru: Pembaruan Sinkronisasi Realtime</div>
+            <h1 class="hero-title">Manajemen Stok Gudang Cerdas Berbasis QR Code</h1>
+            <p class="hero-subtitle">Kendalikan pergerakan barang Anda dengan dua platform terintegrasi: Web Dashboard untuk Admin dan Mobile Scanner untuk Staf Lapangan.</p>
+            <div class="hero-actions">
+                <a href="mockup-admin.html" class="btn btn-primary">Coba Web Admin</a>
+                <a href="mockup-mobile.html" class="btn btn-secondary"><i class="fa-solid fa-mobile-screen mr-2"></i> Coba Mobile App</a>
+            </div>
+
+            <div class="hero-mockups">
+                <img src="assets/dashboard.png" alt="Web Admin Dashboard" class="mockup-dashboard">
+                <img src="assets/mobile.png" alt="Mobile App Scanner" class="mockup-mobile">
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur Utama (Grid) -->
+    <section id="features" class="section-padding" style="background: white;">
+        <div class="container">
+            <div class="text-center" style="max-width: 700px; margin: 0 auto;">
+                <span class="platform-tag">Sistem Terintegrasi</span>
+                <h2 style="font-size: 36px; margin-bottom: 24px;">Fitur Lengkap Untuk Operasional Gudang</h2>
+                <p style="color: var(--text-light); margin-bottom: 48px;">Semua yang Anda butuhkan untuk memantau, melacak, dan menagih biaya penyimpanan barang otomatis.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-qrcode"></i></div>
+                    <h3 class="feature-title">QR Code System</h3>
+                    <p class="feature-desc">Generate QR Code unik per item atau batch langsung dari sistem. Scan barang menggunakan kamera smartphone staf.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                    <h3 class="feature-title">Tracking Pergerakan</h3>
+                    <p class="feature-desc">Catat riwayat barang masuk/keluar lengkap dengan user, tanggal, jam. Perubahan status otomatis dan realtime.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3 class="feature-title">Role Management</h3>
+                    <p class="feature-desc">Akses terpisah antara Admin (Master Data, Laporan) dan Staf Gudang (Input Scan, Cek Status).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h3 class="feature-title">Sewa & Logistik</h3>
+                    <p class="feature-desc">Perhitungan otomatis durasi penyimpanan (jam/hari) untuk rekap tagihan (billing) per customer atau barang.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Web Admin Dashboard -->
+    <section id="admin" class="platform-section">
+        <div class="container platform-container">
+            <div class="platform-content">
+                <span class="platform-tag">Untuk Administrator</span>
+                <h2 class="platform-title">Web Admin Dashboard</h2>
+                <p style="font-size: 18px; color: var(--text-light); line-height: 1.6;">
+                    Pusat komando operasional gudang. Kelola seluruh master data, buat dan ekspor QR Code, serta dapatkan wawasan realtime tentang pergerakan stok.
+                </p>
+                
+                <div class="platform-list">
+                    <div class="platform-item">
+                        <div class="item-icon"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="item-content">
+                            <h4>Kelola Data Barang & Stok</h4>
+                            <p>Manajemen SKU, input manual jika diperlukan, edit kategori, dan pantau indikator stok secara keseluruhan.</p>
+                        </div>
+                    </div>
+                    <div class="platform-item">
+                        <div class="item-icon"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="item-content">
+                            <h4>Generate QR Code</h4>
+                            <p>Sistem pencetakan stiker label QR Code massal untuk ditempel pada palet atau produk fisik.</p>
+                        </div>
+                    </div>
+                    <div class="platform-item">
+                        <div class="item-icon"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="item-content">
+                            <h4>Laporan & Billing</h4>
+                            <p>Rekapitulasi tanggal masuk ke keluar untuk menghitung total biaya inap dan durasi sewa setiap item.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="platform-image">
+                <img src="assets/dashboard.png" alt="Admin Dashboard Interface">
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile App Scanner -->
+    <section id="mobile" class="platform-section reverse" style="background: white;">
+        <div class="container platform-container">
+            <div class="platform-content">
+                <span class="platform-tag">Untuk Staf Lapangan</span>
+                <h2 class="platform-title">Mobile Scanner App (Android)</h2>
+                <p style="font-size: 18px; color: var(--text-light); line-height: 1.6;">
+                    Aplikasi ringan untuk staf gudang fokus pada kecepatan. Ubah smartphone Android apa pun menjadi alat pindai barang kelas profesional.
+                </p>
+                
+                <div class="platform-list">
+                    <div class="platform-item">
+                        <div class="item-icon"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="item-content">
+                            <h4>Scan QR Instant</h4>
+                            <p>Gunakan kamera smartphone untuk memindai barang dengan cepat dan akurat, bebas dari kesalahan ketik.</p>
+                        </div>
+                    </div>
+                    <div class="platform-item">
+                        <div class="item-icon"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="item-content">
+                            <h4>Input Keluar / Masuk</h4>
+                            <p>Satu ketukan setelah scan untuk memproses barang sebagai 'Masuk' atau 'Keluar', langsung tercatat ke basis data admin.</p>
+                        </div>
+                    </div>
+                    <div class="platform-item">
+                        <div class="item-icon"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="item-content">
+                            <h4>Stok Otomatis Sinkron</h4>
+                            <p>Admin langsung melihat update stok terkini detik itu juga tanpa perlu serah-terima kertas laporan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="platform-image" style="display: flex; justify-content: center;">
+                <img src="assets/mobile.png" alt="Mobile App Screen" style="width: 50%; max-width: 300px; border-radius: 30px; border: 8px solid #f8fafc; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+            </div>
+        </div>
+    </section>
+
+    <!-- Cara Kerja -->
+    <section class="section-padding platform-section" style="background: var(--bg-gray);">
+        <div class="container">
+            <div class="text-center">
+                <h2 style="font-size: 36px;">Alur Kerja yang Disederhanakan</h2>
+                <p style="color: var(--text-light); max-width: 600px; margin: 16px auto 0;">Sistem kami bekerja dengan proses 4 tahap ringkas untuk menjamin keselamatan data dan integritas inventaris Anda.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Generate QR</h4>
+                    <p class="step-desc">Admin mendaftarkan item di Dashboard Web dan mencetak stiker QR unik.</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Scan Barang</h4>
+                    <p class="step-desc">Staf lapangan scan QR stiker menggunakan Mobile App saat barang tiba atau pergi.</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Update Realtime</h4>
+                    <p class="step-desc">Status barang berubah otomatis menjadi "Tersimpan" atau "Keluar".</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Hitung Billing</h4>
+                    <p class="step-desc">Sistem mengalkulasi durasi penyimpanan secara jam/hari untuk rincian tagihan klien.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        SmartWMS
+                    </a>
+                    <p>Sistem manajemen inventori cerdas generasi baru untuk kemudahan pelacakan dan keamanan pergudangan.</p>
+                </div>
+                
+                <div>
+                    <h3 style="color: white; margin-bottom: 24px;">Kontak Kami</h3>
+                    <a href="https://wa.me/6281234567890" class="btn btn-primary" style="padding: 10px 20px;">Hubungi Engineer</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Spinotek Organization. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth Scrolling Navbar
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.7)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
