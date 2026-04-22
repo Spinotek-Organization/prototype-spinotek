@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            width: 1200px;
+            height: 630px;
+            margin: 0;
+            background: linear-gradient(135deg, #0A192F 0%, #172A45 100%);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .bg-glow {
+            position: absolute;
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(30,136,229,0.4) 0%, transparent 60%);
+            top: -200px; left: -200px;
+            border-radius: 50%;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            padding: 60px 80px;
+            box-sizing: border-box;
+            align-items: center;
+        }
+        .text-section {
+            flex: 1;
+            padding-right: 40px;
+        }
+        .logo {
+            display: flex; align-items: center; gap: 16px;
+            font-size: 42px; font-weight: 800; margin-bottom: 30px;
+        }
+        .logo-icon {
+            width: 70px; height: 70px;
+        }
+        .tagline {
+            font-size: 58px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #ffffff, #7DD3FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .sub-tagline {
+            font-size: 26px;
+            color: #94A3B8;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .visuals {
+            position: relative;
+            width: 580px;
+            height: 500px;
+        }
+        .desktop-frame {
+            position: absolute;
+            top: 20px; left: 0;
+            width: 520px; height: 360px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 4px solid #334155;
+        }
+        .mobile-frame {
+            position: absolute;
+            bottom: -20px; right: -20px;
+            width: 220px; height: 460px;
+            background: white;
+            border-radius: 36px;
+            box-shadow: -10px 25px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 8px solid #0F172A;
+            z-index: 20;
+        }
+        iframe {
+            width: 100%; height: 100%; border: none; background: #FAFBFF;
+        }
+        .desktop-frame iframe {
+            width: 1040px; height: 720px;
+            transform: scale(0.5);
+            transform-origin: 0 0;
+            pointer-events: none;
+        }
+        .mobile-frame iframe {
+            width: 393px; height: 852px;
+            transform: scale(0.52);
+            transform-origin: 0 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="logo">
+                <img src="./assets/favicon.svg" class="logo-icon">
+                <div>Smart<span style="color:#0EA5E9">WMS</span></div>
+            </div>
+            <div class="tagline">Gudang Cerdas, Terpantau Real-time</div>
+            <div class="sub-tagline">Kendali penuh aset & stok dengan integrasi Cloud Dashboard & Mobile Scanner.</div>
+        </div>
+        <div class="visuals">
+            <div class="desktop-frame">
+                <iframe src="./mockup-admin.html"></iframe>
+            </div>
+            <div class="mobile-frame">
+                <iframe src="./mockup-mobile.html"></iframe>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            setTimeout(() => {
+                try {
+                    const desktopDoc = document.querySelector('.desktop-frame iframe').contentWindow.document;
+                    desktopDoc.querySelector('#login-form button').click();
+                } catch(e) {}
+                
+                try {
+                    const mobileDoc = document.querySelector('.mobile-frame iframe').contentWindow.document;
+                    mobileDoc.querySelector('#m-btn-login').click();
+                } catch(e) {}
+            }, 500);
+        };
+    </script>
+</body>
+</html>

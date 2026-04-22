@@ -3,340 +3,1378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Scanner App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Outfit', 'sans-serif'], },
-                    colors: {
-                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a'},
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Mobile Scanner — SmartWMS</title>
+    <meta property="og:title" content="Mobile Scanner — SmartWMS">
+    <meta property="og:image" content="./assets/og-image.png">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .phone-frame {
-            width: 390px; height: 844px; background: white; border-radius: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            overflow: hidden; display: flex; flex-direction: column; position: relative; border: 8px solid #e5e7eb;
+        :root {
+            --primary: #1E88E5;
+            --primary-dark: #1565C0;
+            --primary-light: #E0F2FE;
+            --accent-green: #10B981;
+            --accent-green-light: #ECFDF5;
+            --accent-amber: #F59E0B;
+            --accent-amber-light: #FFFBEB;
+            --accent-rose: #F43F5E;
+            --text-900: #0F0D15;
+            --text-700: #374151;
+            --text-500: #6B7280;
+            --text-400: #9CA3AF;
+            --text-200: #E5E7EB;
+            --text-100: #F3F4F6;
+            --white: #FFFFFF;
+            --surface: #FAFBFF;
         }
-        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 25px; background: #e5e7eb; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; z-index: 50; }
-        .view-section { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.3s ease; }
-        .view-section.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Floating Scanner Frame */
-        .scan-line { width: 100%; height: 2px; background: #22c55e; box-shadow: 0 0 10px #22c55e; position: absolute; animation: scanAnim 2s infinite ease-in-out; }
-        @keyframes scanAnim { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        /* HIDE DEFAULT SCROLLBARS FOR APP FEEL */
+        *::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: #E8E8ED;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        /* Hide scrollbar */
+        /* Phone Frame */
+        .phone-frame {
+            width: 393px;
+            height: 852px;
+            background: var(--surface);
+            border-radius: 48px;
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 32px;
+            background: #1A1A1A;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 60;
+        }
+        .notch::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #2D2D3F;
+            border-radius: 50%;
+            right: 24px;
+            top: 8px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+        @keyframes scanAnim { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.3); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-</head>
-<body class="bg-gray-100">
 
-<div class="phone-frame bg-gray-50 relative">
+        /* ===== LOGIN SCREEN ===== */
+        .screen-login {
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .screen-login.hidden {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-900);
+        }
+        .login-logo .icon {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, #1E88E5, #0EA5E9);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 6px 16px rgba(30,136,229,0.3);
+        }
+        .login-logo span { background: linear-gradient(135deg, #1E88E5, #0EA5E9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .login-title { font-size: 22px; font-weight: 800; color: var(--text-900); margin-bottom: 6px; text-align: center; }
+        .login-sub { font-size: 14px; color: var(--text-500); margin-bottom: 32px; text-align: center; }
+        .m-form { width: 100%; }
+        .m-form-group { margin-bottom: 16px; }
+        .m-form-group label { font-size: 12px; font-weight: 700; color: var(--text-700); margin-bottom: 6px; display: block; }
+        .m-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--text-200);
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: var(--text-900);
+        }
+        .m-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(30,136,229,0.1); }
+        .m-btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1E88E5, #0EA5E9);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 8px 20px rgba(30,136,229,0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        .m-btn-login:active { transform: scale(0.98); }
+        .m-btn-login .m-spinner {
+            width: 18px; height: 18px;
+            border: 2.5px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+        .login-hint {
+            background: var(--primary-light);
+            border: 1px dashed rgba(30,136,229,0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 24px;
+            font-size: 11px;
+            color: var(--primary-dark);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* ===== HOME VIEW ===== */
+        .view-section { display: none; height: 100%; flex-direction: column; }
+        .view-section.active { display: flex; }
+
+        .home-header {
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #1E88E5 0%, #0EA5E9 60%, #38BDF8 100%);
+            padding: 52px 24px 28px;
+            border-radius: 0 0 32px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .home-header::after {
+            content: '';
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 200px; height: 200px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+        .home-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .home-top .greeting { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500; }
+        .home-top .user-name { color: white; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+        .home-top .avatar {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+        }
+        .home-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .home-stat {
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.35);
+        }
+        .home-stat .label { color: rgba(255,255,255,0.6); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .home-stat .value { color: white; font-size: 24px; font-weight: 900; letter-spacing: -0.02em; }
+        .home-stat .sub { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+        .home-stat .sub .dot { width: 6px; height: 6px; background: #10B981; border-radius: 50%; animation: pulse 2s infinite; }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 24px 24px 0;
+        }
+        .q-action {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 18px 12px;
+            text-align: center;
+            border: 1px solid var(--text-100);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .q-action:active { transform: scale(0.95); }
+        .q-action .q-icon {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 18px;
+        }
+        .q-icon.indigo { background: var(--primary-light); color: var(--primary); }
+        .q-icon.green { background: var(--accent-green-light); color: var(--accent-green); }
+        .q-icon.amber { background: var(--accent-amber-light); color: var(--accent-amber); }
+        .q-action .q-label { font-size: 12px; font-weight: 700; color: var(--text-900); }
+
+        /* Section Header */
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 24px 12px;
+        }
+        .section-head h2 { font-size: 16px; font-weight: 800; color: var(--text-900); }
+        .section-head a { font-size: 12px; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+        /* Activity Cards */
+        .activity-list { 
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .activity-card {
+            background: var(--white);
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px solid var(--text-100);
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            transition: all 0.2s;
+        }
+        .activity-card.highlight { border-color: rgba(30,136,229,0.2); background: rgba(30,136,229,0.02); }
+        .a-dot {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .a-dot.in { background: #DBEAFE; color: #2563EB; }
+        .a-dot.out { background: #FED7AA; color: #C2410C; }
+        .a-body { flex: 1; }
+        .a-body .a-title { font-size: 14px; font-weight: 700; color: var(--text-900); }
+        .a-body .a-sub { font-size: 12px; color: var(--text-500); margin-top: 2px; }
+        .a-body .a-time { font-size: 10px; font-weight: 700; color: var(--text-400); margin-top: 6px; }
+
+        /* ===== STOK VIEW ===== */
+        .stok-header {
+            background: var(--white);
+            padding: 52px 24px 16px;
+            border-bottom: 1px solid var(--text-100);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .stok-header h1 { font-size: 20px; font-weight: 800; color: var(--text-900); margin-bottom: 14px; }
+        .search-wrap {
+            position: relative;
+        }
+        .search-wrap i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-400);
+            font-size: 14px;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 13px 16px 13px 44px;
+            background: var(--text-100);
+            border: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: var(--text-900);
+        }
+        .search-wrap input:focus { box-shadow: 0 0 0 3px rgba(30,136,229,0.15); }
+
+        .stok-list { padding: 16px 24px; display: flex; flex-direction: column; gap: 10px; }
+        .stok-item {
+            background: var(--white);
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid var(--text-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.15s;
+        }
+        .stok-item:active { transform: scale(0.98); }
+        .stok-item .s-info .s-name { font-size: 14px; font-weight: 700; color: var(--text-900); }
+        .stok-item .s-info .s-sku { font-size: 11px; color: var(--text-400); margin-top: 2px; font-weight: 600; }
+        .stok-item .s-count {
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 900;
+        }
+        .s-count.normal { background: var(--primary-light); color: var(--primary); }
+        .s-count.low { background: #FEE2E2; color: #DC2626; }
+
+        /* ===== PROFILE VIEW ===== */
+        .profile-header {
+            background: var(--white);
+            padding: 52px 24px 24px;
+            text-align: center;
+            border-bottom: 1px solid var(--text-100);
+        }
+        .profile-avatar {
+            width: 80px; height: 80px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #1E88E5, #0EA5E9);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 24px rgba(30,136,229,0.3);
+        }
+        .profile-header .p-name { font-size: 20px; font-weight: 800; color: var(--text-900); }
+        .profile-header .p-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 99px;
+            background: var(--accent-green-light);
+            color: #059669;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        .profile-menu { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+        .profile-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--text-100);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .profile-item:active { transform: scale(0.98); }
+        .profile-item .p-icon {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .profile-item .p-label { flex: 1; font-size: 14px; font-weight: 600; color: var(--text-900); }
+        .profile-item .p-arrow { color: var(--text-400); font-size: 12px; }
+
+        /* ===== SCANNER MODAL ===== */
+        .scanner-modal {
+            position: absolute;
+            inset: 0;
+            z-index: 40;
+            background: #0A0A0F;
+            display: none;
+            flex-direction: column;
+            transition: opacity 0.3s;
+        }
+        .scanner-modal.show { display: flex; animation: fadeIn 0.3s; }
+        .scanner-top {
+            padding: 52px 24px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        .scan-close {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .scan-title { color: white; font-size: 15px; font-weight: 700; }
+        .scanner-viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .camera-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1A1A2E 0%, #0A0A14 100%);
+            opacity: 0.9;
+        }
+        .viewfinder {
+            width: 240px; height: 240px;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 28px;
+            position: relative;
+            z-index: 5;
+            overflow: hidden;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
+        }
+        .vf-corner {
+            position: absolute;
+            width: 28px; height: 28px;
+            border-color: var(--primary);
+            border-style: solid;
+            border-width: 0;
+        }
+        .vf-corner.tl { top: 0; left: 0; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 28px; }
+        .vf-corner.tr { top: 0; right: 0; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 28px; }
+        .vf-corner.bl { bottom: 0; left: 0; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 28px; }
+        .vf-corner.br { bottom: 0; right: 0; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 28px; }
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: #10B981;
+            box-shadow: 0 0 12px #10B981, 0 0 4px #10B981;
+            position: absolute;
+            animation: scanAnim 2.5s infinite ease-in-out;
+        }
+        .scan-instruction {
+            position: absolute;
+            bottom: 120px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+        }
+        .scan-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            padding: 12px 20px;
+            border-radius: 99px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .scan-pill .dot { width: 8px; height: 8px; background: #EF4444; border-radius: 50%; animation: pulse 1.5s infinite; }
+        .scan-pill span { color: white; font-size: 13px; font-weight: 600; }
+        .scan-btn-area {
+            padding: 0 24px 40px;
+            z-index: 10;
+        }
+        .btn-simulate {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #1E88E5, #0EA5E9);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(30,136,229,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .btn-simulate:active { transform: scale(0.96); }
+
+        /* ===== ACTION BOTTOM SHEET ===== */
+        .action-sheet {
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: flex-end;
+        }
+        .action-sheet.show { display: flex; }
+        .sheet-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s;
+        }
+        .sheet-content {
+            width: 100%;
+            background: var(--white);
+            border-radius: 28px 28px 0 0;
+            padding: 24px 24px 40px;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sheet-handle {
+            width: 40px; height: 4px;
+            background: var(--text-300);
+            border-radius: 99px;
+            margin: 0 auto 24px;
+        }
+        .sheet-item-info {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .sheet-item-info .qr-badge {
+            width: 56px; height: 56px;
+            background: var(--primary-light);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-size: 24px;
+            color: var(--primary);
+        }
+        .sheet-item-info h3 { font-size: 20px; font-weight: 800; color: var(--text-900); }
+        .sheet-item-info p { font-size: 13px; color: var(--text-500); margin-top: 4px; }
+        .sheet-item-details {
+            background: var(--text-100);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .sheet-detail .d-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-400); margin-bottom: 4px; }
+        .sheet-detail .d-value { font-size: 14px; font-weight: 700; color: var(--text-900); }
+        .sheet-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .sheet-action-btn {
+            padding: 20px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--text-100);
+            background: var(--white);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .sheet-action-btn:active { transform: scale(0.95); }
+        .sheet-action-btn .sa-icon {
+            width: 48px; height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+        .sheet-action-btn:hover .sa-icon.blue { background: #2563EB; color: white; }
+        .sheet-action-btn:hover .sa-icon.orange { background: #EA580C; color: white; }
+        .sa-icon.blue { background: #DBEAFE; color: #2563EB; }
+        .sa-icon.orange { background: #FED7AA; color: #EA580C; }
+        .sheet-action-btn span { font-size: 14px; font-weight: 800; color: var(--text-900); }
+
+        /* ===== BOTTOM NAVIGATION ===== */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: var(--white);
+            border-top: 1px solid var(--text-100);
+            padding: 10px 0 28px;
+            z-index: 30;
+            display: grid;
+            grid-template-columns: 1fr 1fr 68px 1fr 1fr;
+            justify-items: center;
+            align-items: end;
+        }
+        .bot-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 4px;
+            border-radius: 12px;
+            transition: all 0.15s;
+            min-width: 0;
+        }
+        .bot-btn i { font-size: 20px; color: var(--text-400); transition: color 0.15s; }
+        .bot-btn span { font-size: 10px; font-weight: 700; color: var(--text-400); transition: color 0.15s; white-space: nowrap; }
+        .bot-btn.active i { color: var(--primary); }
+        .bot-btn.active span { color: var(--primary); }
+        .bot-fab-spacer { /* center column reserved for FAB */ }
+
+        /* Center FAB */
+        .fab-scan {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            width: 52px; height: 52px;
+            background: linear-gradient(135deg, #1E88E5, #0EA5E9);
+            border-radius: 16px;
+            border: 4px solid var(--white);
+            box-shadow: 0 6px 20px rgba(30,136,229,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 31;
+            transition: all 0.2s;
+        }
+        .fab-scan:hover { transform: translateX(-50%) translateY(-3px); }
+        .fab-scan:active { transform: translateX(-50%) scale(0.95); }
+
+        /* ===== RIWAYAT VIEW ===== */
+        .riwayat-header {
+            background: var(--white);
+            padding: 52px 24px 16px;
+            border-bottom: 1px solid var(--text-100);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .riwayat-header h1 { font-size: 20px; font-weight: 800; color: var(--text-900); margin-bottom: 4px; }
+        .riwayat-header p { font-size: 13px; color: var(--text-500); }
+        .riwayat-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 16px 24px;
+        }
+        .r-stat {
+            background: var(--white);
+            border-radius: 14px;
+            padding: 14px 12px;
+            text-align: center;
+            border: 1px solid var(--text-100);
+        }
+        .r-stat .r-val { font-size: 22px; font-weight: 900; color: var(--text-900); }
+        .r-stat .r-label { font-size: 10px; font-weight: 700; color: var(--text-400); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
+        .r-stat .r-val.blue { color: var(--primary); }
+        .r-stat .r-val.green { color: var(--accent-green); }
+        .r-stat .r-val.amber { color: var(--accent-amber); }
+        .riwayat-date {
+            padding: 12px 24px 6px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .riwayat-list { padding: 0 24px 10px; display: flex; flex-direction: column; gap: 8px; }
+        .riwayat-card {
+            background: var(--white);
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--text-100);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .riwayat-card .r-dot {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .riwayat-card .r-dot.in { background: #DBEAFE; color: #2563EB; }
+        .riwayat-card .r-dot.out { background: #FED7AA; color: #EA580C; }
+        .riwayat-card .r-body { flex: 1; }
+        .riwayat-card .r-body .r-title { font-size: 13px; font-weight: 700; color: var(--text-900); }
+        .riwayat-card .r-body .r-sub { font-size: 11px; color: var(--text-500); margin-top: 1px; }
+        .riwayat-card .r-time { font-size: 10px; font-weight: 700; color: var(--text-400); text-align: right; white-space: nowrap; }
+
+        /* ===== TOAST ===== */
+        .m-toast {
+            position: absolute;
+            top: 48px;
+            left: 20px;
+            right: 20px;
+            background: var(--text-900);
+            color: white;
+            padding: 16px 18px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+            z-index: 55;
+            transform: translateY(-120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .m-toast.show { transform: translateY(0); opacity: 1; }
+        .m-toast .mt-icon {
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            background: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .m-toast .mt-text h4 { font-size: 13px; font-weight: 700; }
+        .m-toast .mt-text p { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+        /* ===== BACK LINK ===== */
+        .back-to-landing {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E88E5;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            transition: all 0.2s;
+        }
+        .back-to-landing:hover { transform: translateX(-50%) translateY(-4px); }
+
+        /* ===== RESPONSIVE — MOBILE (REAL PHONE) ===== */
+        @media (max-width: 500px) {
+            body {
+                background: var(--surface);
+                display: block;
+                min-height: 100vh;
+            }
+            .phone-frame {
+                width: 100%;
+                height: 100vh;
+                height: 100dvh;
+                border-radius: 0;
+                box-shadow: none;
+                padding-top: 48px;
+            }
+            .notch { display: none; }
+            .home-header {
+                padding: 16px 20px 24px;
+                border-radius: 0;
+            }
+            .back-to-landing {
+                position: fixed;
+                top: 0; left: 0; right: 0;
+                bottom: auto;
+                transform: none;
+                border-radius: 0;
+                padding: 10px 20px;
+                justify-content: center;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                font-size: 12px;
+                z-index: 200;
+            }
+            .back-to-landing:hover { transform: none; }
+            .screen-login {
+                padding-top: 80px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="phone-frame">
     <div class="notch"></div>
 
-    <!-- VIEW 1: HOME (DASHBOARD) -->
-    <div id="view-home" class="view-section active flex-1 overflow-y-auto no-scrollbar pb-24">
-        <!-- Header -->
-        <div class="bg-brand-600 px-6 pt-12 pb-6 rounded-b-[32px] shadow-lg">
-            <div class="flex justify-between items-center text-white mb-6">
-                <div>
-                    <p class="text-brand-100 text-sm font-medium">Selamat datang kembali,</p>
-                    <h1 class="text-2xl font-bold">Budi Setiawan</h1>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                    <i data-lucide="user" class="text-white w-6 h-6"></i>
-                </div>
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div class="screen-login" id="screen-login">
+        <div class="login-logo">
+            <div class="icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+            Smart<span>WMS</span>
+        </div>
+        <h2 class="login-title">Masuk ke App</h2>
+        <p class="login-sub">Akses mobile scanner untuk staf gudang</p>
+        <form class="m-form" onsubmit="mobileLogin(event)">
+            <div class="m-form-group">
+                <label>Email / ID Staf</label>
+                <input type="text" class="m-input" value="budi@smartwms.id" placeholder="email@smartwms.id">
             </div>
-            <!-- Stats -->
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/20">
-                    <p class="text-brand-100 text-xs font-medium uppercase mb-1">Scan Hari Ini</p>
-                    <p class="text-2xl font-bold text-white tracking-tight" id="home-scan-count">12</p>
+            <div class="m-form-group">
+                <label>Password</label>
+                <input type="password" class="m-input" value="password123" placeholder="Masukkan password">
+            </div>
+            <button type="submit" class="m-btn-login" id="m-btn-login">
+                <span id="m-login-text">Masuk</span>
+                <div class="m-spinner" id="m-login-spinner"></div>
+            </button>
+        </form>
+        <div class="login-hint">
+            <strong>🎯 Prototype:</strong> Klik Masuk untuk demo. Data simulasi.
+        </div>
+    </div>
+
+    <!-- ===== VIEW: HOME ===== -->
+    <div id="view-home" class="view-section active" style="flex: 1; overflow-y: auto; padding-bottom: 100px;" class="no-scrollbar">
+        <div class="home-header">
+            <div class="home-top">
+                <div>
+                    <p class="greeting">Selamat datang kembali,</p>
+                    <h1 class="user-name">Budi Setiawan</h1>
                 </div>
-                <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/20">
-                    <p class="text-brand-100 text-xs font-medium uppercase mb-1">Status Shift</p>
-                    <p class="text-sm font-bold text-green-400 flex items-center gap-1 mt-1"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Zone A Aktif</p>
+                <div class="avatar"><i class="fa-solid fa-user"></i></div>
+            </div>
+            <div class="home-stats">
+                <div class="home-stat">
+                    <p class="label">Scan Hari Ini</p>
+                    <p class="value" id="home-scan-count">12</p>
+                </div>
+                <div class="home-stat">
+                    <p class="label">Status Shift</p>
+                    <div class="sub" style="margin-top: 8px;"><span class="dot"></span> <span style="color: #10B981; font-weight: 800;">Zone A Aktif</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- Quick actions -->
-        <div class="px-6 mt-8 mb-4 flex justify-between items-end">
-            <h2 class="text-lg font-bold text-gray-800">Aktivitas Terakhir</h2>
-            <button class="text-brand-600 text-sm font-semibold hover:underline">Lihat Semua</button>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="q-action" onclick="openScanner()">
+                <div class="q-icon indigo"><i class="fa-solid fa-qrcode"></i></div>
+                <p class="q-label">Scan QR</p>
+            </div>
+            <div class="q-action" onclick="switchMobileView('stok')">
+                <div class="q-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <p class="q-label">Cek Stok</p>
+            </div>
+            <div class="q-action" onclick="switchMobileView('profile')">
+                <div class="q-icon amber"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <p class="q-label">Riwayat</p>
+            </div>
         </div>
 
-        <!-- History List -->
-        <div class="px-6 space-y-4" id="history-container">
-            <!-- Initial Dummy History -->
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4">
-                <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
-                    <i data-lucide="arrow-downToLine" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-800">Masuk • Palet A12</h3>
-                    <p class="text-xs text-gray-500 mt-1">Genset Honda Besar (SKU-HND-1)</p>
-                    <span class="text-[10px] font-bold text-gray-400 mt-2 block">10 Menit yang lalu</span>
+        <div class="section-head">
+            <h2>Aktivitas Terakhir</h2>
+            <a href="#">Lihat Semua</a>
+        </div>
+
+        <div class="activity-list" id="activity-list">
+            <div class="activity-card">
+                <div class="a-dot in"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="a-body">
+                    <div class="a-title">Masuk • Palet A12</div>
+                    <div class="a-sub">Genset Honda Besar (SKU-HND-1)</div>
+                    <div class="a-time">10 Menit yang lalu • Zone A</div>
                 </div>
             </div>
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4">
-                <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
-                    <i data-lucide="arrow-upFromLine" class="w-5 h-5"></i>
+            <div class="activity-card">
+                <div class="a-dot out"><i class="fa-solid fa-arrow-up"></i></div>
+                <div class="a-body">
+                    <div class="a-title">Keluar • Box B9</div>
+                    <div class="a-sub">Oli Mesin 5L (SKU-OLI-5)</div>
+                    <div class="a-time">45 Menit yang lalu • Zone B</div>
                 </div>
-                <div>
-                    <h3 class="font-bold text-gray-800">Keluar • Box B9</h3>
-                    <p class="text-xs text-gray-500 mt-1">Oli Mesin 5L (SKU-OLI-5)</p>
-                    <span class="text-[10px] font-bold text-gray-400 mt-2 block">45 Menit yang lalu</span>
+            </div>
+            <div class="activity-card">
+                <div class="a-dot in"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="a-body">
+                    <div class="a-title">Masuk • Rak C3</div>
+                    <div class="a-sub">Ban Traktor 24" (SKU-BAN-9)</div>
+                    <div class="a-time">1 Jam yang lalu • Zone C</div>
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="a-dot out"><i class="fa-solid fa-arrow-up"></i></div>
+                <div class="a-body">
+                    <div class="a-title">Keluar • Rak A8</div>
+                    <div class="a-sub">Pelumas Drum 100L (SKU-OLI-X)</div>
+                    <div class="a-time">2 Jam yang lalu • Zone A</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- VIEW 2: STOK -->
-    <div id="view-stok" class="view-section flex-1 overflow-y-auto no-scrollbar pb-24 bg-gray-50">
-        <div class="bg-white px-6 pt-12 pb-4 shadow-sm border-b border-gray-100 sticky top-0 z-10">
-            <h1 class="text-xl font-bold text-gray-800 mb-4">Informasi Stok Gudang</h1>
-            <div class="relative">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
-                <input type="text" placeholder="Cari Master Barang..." class="w-full bg-gray-100 border-none rounded-xl py-3 pl-12 pr-4 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500">
+    <!-- ===== VIEW: STOK ===== -->
+    <div id="view-stok" class="view-section" style="flex: 1; overflow-y: auto; padding-bottom: 100px;">
+        <div class="stok-header">
+            <h1>Informasi Stok Gudang</h1>
+            <div class="search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Cari barang, SKU, zona...">
             </div>
         </div>
-        <div class="p-6 space-y-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-gray-800 text-sm">Genset Honda Besar</h3>
-                    <p class="text-[11px] text-gray-500 mt-1">SKU-HND-1 • Zone A</p>
+        <div class="stok-list">
+            <div class="stok-item">
+                <div class="s-info">
+                    <div class="s-name">Mesin Genset Honda</div>
+                    <div class="s-sku">SKU-HND-1 • Zone A</div>
                 </div>
-                <div class="bg-brand-50 px-3 py-1 rounded-lg text-brand-600 font-bold text-lg">24</div>
+                <div class="s-count normal">142</div>
             </div>
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-gray-800 text-sm">Sparepart Rem ABS</h3>
-                    <p class="text-[11px] text-gray-500 mt-1">SKU-REM-A • Zone B</p>
+            <div class="stok-item">
+                <div class="s-info">
+                    <div class="s-name">Ban Traktor 24"</div>
+                    <div class="s-sku">SKU-BAN-9 • Zone B</div>
                 </div>
-                <div class="bg-brand-50 px-3 py-1 rounded-lg text-brand-600 font-bold text-lg">89</div>
+                <div class="s-count normal">89</div>
             </div>
-            <div class="bg-red-50 p-5 rounded-2xl border border-red-100 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-gray-800 text-sm">Oli Mesin 5L</h3>
-                    <p class="text-[11px] text-gray-500 mt-1">SKU-OLI-5 • Zone C</p>
+            <div class="stok-item">
+                <div class="s-info">
+                    <div class="s-name">Sparepart Rem ABS</div>
+                    <div class="s-sku">SKU-REM-A • Zone B</div>
                 </div>
-                <div class="bg-red-100 px-3 py-1 rounded-lg text-red-600 font-bold text-lg">2</div>
+                <div class="s-count normal">34</div>
+            </div>
+            <div class="stok-item" style="background: #FEF2F2; border-color: #FECACA;">
+                <div class="s-info">
+                    <div class="s-name">Oli Mesin 5L</div>
+                    <div class="s-sku">SKU-OLI-5 • Zone C <span style="color: #DC2626; font-weight: 800;">⚠ Stok Rendah</span></div>
+                </div>
+                <div class="s-count low">2</div>
+            </div>
+            <div class="stok-item">
+                <div class="s-info">
+                    <div class="s-name">Pelumas Drum 100L</div>
+                    <div class="s-sku">SKU-OLI-X • Zone A</div>
+                </div>
+                <div class="s-count normal">56</div>
             </div>
         </div>
     </div>
 
+    <!-- ===== VIEW: PROFILE ===== -->
+    <div id="view-profile" class="view-section" style="flex: 1; overflow-y: auto; padding-bottom: 100px;">
+        <div class="profile-header">
+            <div class="profile-avatar">B</div>
+            <p class="p-name">Budi Setiawan</p>
+            <span class="p-role"><i class="fa-solid fa-shield-check"></i> Staf Gudang</span>
+        </div>
+        <div class="profile-menu">
+            <div class="profile-item">
+                <div class="p-icon" style="background: var(--primary-light); color: var(--primary);"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <span class="p-label">Riwayat Scan Saya</span>
+                <i class="fa-solid fa-chevron-right p-arrow"></i>
+            </div>
+            <div class="profile-item">
+                <div class="p-icon" style="background: var(--accent-green-light); color: var(--accent-green);"><i class="fa-solid fa-chart-simple"></i></div>
+                <span class="p-label">Statistik Saya</span>
+                <i class="fa-solid fa-chevron-right p-arrow"></i>
+            </div>
+            <div class="profile-item">
+                <div class="p-icon" style="background: var(--accent-amber-light); color: var(--accent-amber);"><i class="fa-solid fa-location-dot"></i></div>
+                <span class="p-label">Zona Shift Aktif</span>
+                <i class="fa-solid fa-chevron-right p-arrow"></i>
+            </div>
+            <div class="profile-item">
+                <div class="p-icon" style="background: var(--text-100); color: var(--text-500);"><i class="fa-solid fa-gear"></i></div>
+                <span class="p-label">Pengaturan</span>
+                <i class="fa-solid fa-chevron-right p-arrow"></i>
+            </div>
+            <div class="profile-item" style="border-color: #FECACA; margin-top: 8px;">
+                <div class="p-icon" style="background: #FEE2E2; color: #DC2626;"><i class="fa-solid fa-right-from-bracket"></i></div>
+                <span class="p-label" style="color: #DC2626;">Keluar / Logout</span>
+                <i class="fa-solid fa-chevron-right p-arrow" style="color: #FECACA;"></i>
+            </div>
+        </div>
+    </div>
 
-    <!-- FULLSCREEN MODAL: SCANNER CAMERA -->
-    <div id="modal-scanner" class="absolute inset-0 z-40 bg-gray-900 hidden flex-col transition-opacity duration-300 opacity-0">
-        <div class="pt-12 px-6 flex justify-between items-center relative z-10">
-            <button onclick="closeScanner()" class="w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center backdrop-blur"><i data-lucide="x"></i></button>
-            <span class="text-white font-semibold text-sm">Arahkan ke QR Code</span>
-            <div class="w-10"></div>
+    <!-- ===== VIEW: RIWAYAT ===== -->
+    <div id="view-riwayat" class="view-section" style="flex: 1; overflow-y: auto; padding-bottom: 100px;">
+        <div class="riwayat-header">
+            <h1>Riwayat Pergerakan</h1>
+            <p>Catatan lengkap semua aktivitas scan Anda</p>
+        </div>
+        <div class="riwayat-summary">
+            <div class="r-stat">
+                <div class="r-val blue">47</div>
+                <div class="r-label">Total</div>
+            </div>
+            <div class="r-stat">
+                <div class="r-val green">28</div>
+                <div class="r-label">Masuk</div>
+            </div>
+            <div class="r-stat">
+                <div class="r-val amber">19</div>
+                <div class="r-label">Keluar</div>
+            </div>
         </div>
 
-        <div class="flex-1 flex justify-center items-center relative">
-            <!-- Simulated Camera Feed Background -->
-            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8ed7c15f5f?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-luminosity"></div>
-            
-            <!-- Viewfinder -->
-            <div class="w-64 h-64 border-2 border-white/40 rounded-3xl relative z-10 overflow-hidden shadow-[0_0_0_9999px_rgba(0,0,0,0.6)]">
-                <!-- Corner brackets -->
-                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 rounded-tl-3xl border-brand-500"></div>
-                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 rounded-tr-3xl border-brand-500"></div>
-                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 rounded-bl-3xl border-brand-500"></div>
-                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 rounded-br-3xl border-brand-500"></div>
-                <!-- Scan Line -->
+        <div class="riwayat-date">Hari Ini — 22 April 2026</div>
+        <div class="riwayat-list" id="riwayat-list">
+            <div class="riwayat-card">
+                <div class="r-dot in"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Masuk • Palet A12</div>
+                    <div class="r-sub">Genset Honda (SKU-HND-1) • Zone A</div>
+                </div>
+                <div class="r-time">10:45</div>
+            </div>
+            <div class="riwayat-card">
+                <div class="r-dot out"><i class="fa-solid fa-arrow-up"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Keluar • Box B9</div>
+                    <div class="r-sub">Oli Mesin 5L (SKU-OLI-5) • Zone B</div>
+                </div>
+                <div class="r-time">10:12</div>
+            </div>
+            <div class="riwayat-card">
+                <div class="r-dot in"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Masuk • Rak C3</div>
+                    <div class="r-sub">Ban Traktor 24" (SKU-BAN-9) • Zone C</div>
+                </div>
+                <div class="r-time">09:30</div>
+            </div>
+            <div class="riwayat-card">
+                <div class="r-dot out"><i class="fa-solid fa-arrow-up"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Keluar • Rak A8</div>
+                    <div class="r-sub">Pelumas Drum 100L (SKU-OLI-X) • Zone A</div>
+                </div>
+                <div class="r-time">08:55</div>
+            </div>
+            <div class="riwayat-card">
+                <div class="r-dot in"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Masuk • Rak B5</div>
+                    <div class="r-sub">Sparepart Rem ABS (SKU-REM-A) • Zone B</div>
+                </div>
+                <div class="r-time">08:20</div>
+            </div>
+        </div>
+
+        <div class="riwayat-date">Kemarin — 21 April 2026</div>
+        <div class="riwayat-list">
+            <div class="riwayat-card">
+                <div class="r-dot out"><i class="fa-solid fa-arrow-up"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Keluar • Rak A3</div>
+                    <div class="r-sub">Genset Honda (SKU-HND-1) • Zone A</div>
+                </div>
+                <div class="r-time">16:30</div>
+            </div>
+            <div class="riwayat-card">
+                <div class="r-dot in"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Masuk • Rak C1</div>
+                    <div class="r-sub">Oli Mesin 5L (SKU-OLI-5) • Zone C</div>
+                </div>
+                <div class="r-time">14:15</div>
+            </div>
+            <div class="riwayat-card">
+                <div class="r-dot in"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Masuk • Rak A7</div>
+                    <div class="r-sub">Pelumas Drum 100L (SKU-OLI-X) • Zone A</div>
+                </div>
+                <div class="r-time">11:40</div>
+            </div>
+            <div class="riwayat-card">
+                <div class="r-dot out"><i class="fa-solid fa-arrow-up"></i></div>
+                <div class="r-body">
+                    <div class="r-title">Keluar • Rak B2</div>
+                    <div class="r-sub">Ban Traktor 24" (SKU-BAN-9) • Zone B</div>
+                </div>
+                <div class="r-time">09:05</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCANNER MODAL ===== -->
+    <div class="scanner-modal" id="scanner-modal">
+        <div class="scanner-top">
+            <button class="scan-close" onclick="closeScanner()"><i class="fa-solid fa-xmark"></i></button>
+            <span class="scan-title">Arahkan ke QR Code</span>
+            <div style="width: 40px;"></div>
+        </div>
+        <div class="scanner-viewport">
+            <div class="camera-bg"></div>
+            <div class="viewfinder">
+                <div class="vf-corner tl"></div>
+                <div class="vf-corner tr"></div>
+                <div class="vf-corner bl"></div>
+                <div class="vf-corner br"></div>
                 <div class="scan-line"></div>
             </div>
-            
-            <!-- Instruction -->
-            <div class="absolute bottom-32 left-0 w-full text-center z-10">
-                <div class="inline-flex bg-black/60 backdrop-blur rounded-full px-6 py-3 items-center gap-3">
-                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <span class="text-white text-sm font-medium">Mencari QR...</span>
+            <div class="scan-instruction">
+                <div class="scan-pill">
+                    <span class="dot"></span>
+                    <span>Mencari QR Code...</span>
                 </div>
             </div>
         </div>
-        
-        <!-- Simulate Scan Button for Prototype Purposes -->
-        <div class="mb-12 px-6 z-10">
-            <button onclick="openActionModal()" class="w-full py-4 bg-brand-600 rounded-2xl text-white font-bold text-lg shadow-lg shadow-brand-500/30 active:scale-95 transition-transform flex justify-center items-center gap-2">
-                <i data-lucide="scan-line"></i> Simulasikan Scan Ditemukan
+        <div class="scan-btn-area">
+            <button class="btn-simulate" onclick="showActionSheet()">
+                <i class="fa-solid fa-qrcode"></i> Simulasikan Scan Ditemukan
             </button>
         </div>
     </div>
 
-    <!-- BOTTOM SHEET MODAL: ACTION -->
-    <div id="modal-action" class="absolute inset-0 z-50 flex items-end hidden">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeActionModal()"></div>
-        <!-- Sheet Content -->
-        <div class="bg-white w-full rounded-t-[32px] p-6 relative z-10 transform translate-y-full transition-transform duration-300 ease-out flex flex-col" id="sheet-content">
-            <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
-            
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 text-brand-600 rounded-2xl mb-4">
-                    <i data-lucide="qr-code" class="w-8 h-8"></i>
+    <!-- ===== ACTION SHEET ===== -->
+    <div class="action-sheet" id="action-sheet">
+        <div class="sheet-backdrop" onclick="closeActionSheet()"></div>
+        <div class="sheet-content">
+            <div class="sheet-handle"></div>
+            <div class="sheet-item-info">
+                <div class="qr-badge"><i class="fa-solid fa-qrcode"></i></div>
+                <h3>QR-7629A Terdeteksi!</h3>
+                <p>Mesin Genset Honda (SKU-HND-1)</p>
+            </div>
+            <div class="sheet-item-details">
+                <div class="sheet-detail">
+                    <div class="d-label">Customer</div>
+                    <div class="d-value">PT. ABC</div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900">QR-7629A Terdeteksi!</h3>
-                <p class="text-gray-500 text-sm mt-1">Item: Mesin Genset Honda (SKU-HND-1)</p>
+                <div class="sheet-detail">
+                    <div class="d-label">Lokasi</div>
+                    <div class="d-value">Zone A, Rak 3</div>
+                </div>
+                <div class="sheet-detail">
+                    <div class="d-label">Stok Saat Ini</div>
+                    <div class="d-value">142 Unit</div>
+                </div>
+                <div class="sheet-detail">
+                    <div class="d-label">Status</div>
+                    <div class="d-value" style="color: var(--accent-green);">Tersimpan</div>
+                </div>
             </div>
-            
-            <h4 class="font-bold text-gray-800 mb-3">Pilih Alur Pergerakan:</h4>
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <button onclick="executeAction('Masuk', 'arrow-downToLine', 'blue')" class="group p-4 bg-gray-50 hover:bg-blue-50 rounded-2xl border-2 border-transparent hover:border-blue-200 transition-all text-center flex flex-col items-center gap-3 active:scale-95">
-                    <div class="w-12 h-12 bg-white group-hover:bg-blue-600 text-blue-600 group-hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
-                        <i data-lucide="arrow-downToLine" class="w-5 h-5"></i>
-                    </div>
-                    <span class="font-bold text-gray-900">Barang Masuk</span>
+            <h4 style="font-weight: 800; color: var(--text-900); margin-bottom: 12px; font-size: 14px;">Pilih Alur Pergerakan:</h4>
+            <div class="sheet-actions">
+                <button class="sheet-action-btn" onclick="executeActionMobile('Masuk')">
+                    <div class="sa-icon blue"><i class="fa-solid fa-arrow-down"></i></div>
+                    <span>Barang Masuk</span>
                 </button>
-                <button onclick="executeAction('Keluar', 'arrow-upFromLine', 'orange')" class="group p-4 bg-gray-50 hover:bg-orange-50 rounded-2xl border-2 border-transparent hover:border-orange-200 transition-all text-center flex flex-col items-center gap-3 active:scale-95">
-                    <div class="w-12 h-12 bg-white group-hover:bg-orange-500 text-orange-500 group-hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
-                        <i data-lucide="arrow-upFromLine" class="w-5 h-5"></i>
-                    </div>
-                    <span class="font-bold text-gray-900">Barang Keluar</span>
+                <button class="sheet-action-btn" onclick="executeActionMobile('Keluar')">
+                    <div class="sa-icon orange"><i class="fa-solid fa-arrow-up"></i></div>
+                    <span>Barang Keluar</span>
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- ===== BOTTOM NAV ===== -->
+    <div class="bottom-nav" id="bottom-nav" style="display: none;">
+        <button class="bot-btn active" id="bot-home" onclick="switchMobileView('home')">
+            <i class="fa-solid fa-house"></i>
+            <span>Beranda</span>
+        </button>
+        <button class="bot-btn" id="bot-riwayat" onclick="switchMobileView('riwayat')">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Riwayat</span>
+        </button>
+        <div class="bot-fab-spacer"></div>
+        <button class="bot-btn" id="bot-stok" onclick="switchMobileView('stok')">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Stok</span>
+        </button>
+        <button class="bot-btn" id="bot-profile" onclick="switchMobileView('profile')">
+            <i class="fa-solid fa-user"></i>
+            <span>Profil</span>
+        </button>
+    </div>
+    <button class="fab-scan" id="fab-scan" onclick="openScanner()" style="display: none;">
+        <i class="fa-solid fa-qrcode"></i>
+    </button>
 
-    <!-- CUSTOM BOTTOM NAVIGATION -->
-    <div class="absolute bottom-0 w-full bg-white border-t border-gray-100 pb-5 pt-3 px-6 z-30 rounded-b-[40px] shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-        <div class="flex justify-between items-center relative">
-            <button class="nav-btn group flex flex-col items-center w-16" onclick="switchNav('home', this)">
-                <i data-lucide="home" class="w-6 h-6 text-brand-600 nav-icon mb-1 transition-all"></i>
-                <span class="text-[10px] font-bold text-brand-600 transition-all nav-text">Beranda</span>
-            </button>
-            
-            <!-- Main FAB -->
-            <button onclick="openScanner()" class="absolute left-1/2 -translate-x-1/2 -top-10 w-16 h-16 bg-brand-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-brand-500/40 border-4 border-white hover:-translate-y-1 transition-transform active:scale-95">
-                <i data-lucide="scan" class="w-7 h-7"></i>
-            </button>
-
-            <button class="nav-btn group flex flex-col items-center w-16" onclick="switchNav('stok', this)">
-                <i data-lucide="package" class="w-6 h-6 text-gray-400 nav-icon mb-1 transition-all"></i>
-                <span class="text-[10px] font-bold text-gray-400 transition-all nav-text">Stok Item</span>
-            </button>
+    <!-- Toast -->
+    <div class="m-toast" id="m-toast">
+        <div class="mt-icon"><i class="fa-solid fa-check"></i></div>
+        <div class="mt-text">
+            <h4 id="m-toast-title">Sinkronisasi Sukses</h4>
+            <p id="m-toast-msg">Data berhasil dikirim ke Admin.</p>
         </div>
     </div>
-    
-    <!-- Success Toast Fixed Top -->
-    <div id="toast" class="absolute top-12 left-6 right-6 bg-gray-900 text-white p-4 rounded-2xl flex items-center gap-3 shadow-2xl transition-all duration-300 transform -translate-y-[150%] opacity-0 z-50">
-        <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
-            <i data-lucide="check" class="w-5 h-5 text-white"></i>
-        </div>
-        <div>
-            <h4 class="font-bold text-sm">Sinkronisasi Sukses</h4>
-            <p class="text-xs text-gray-400" id="toast-msg">Data berhasil dikirim ke Admin.</p>
-        </div>
-    </div>
-
 </div>
 
+<!-- Back to landing link -->
+<a href="index.html" class="back-to-landing">
+    <i class="fa-solid fa-arrow-left"></i> Kembali ke Landing Page
+</a>
+
 <script>
-    lucide.createIcons();
+// ===== MOBILE LOGIN =====
+function mobileLogin(e) {
+    e.preventDefault();
+    const text = document.getElementById('m-login-text');
+    const spinner = document.getElementById('m-login-spinner');
+    text.style.display = 'none';
+    spinner.style.display = 'block';
+    document.getElementById('m-btn-login').style.pointerEvents = 'none';
 
-    function switchNav(target, btnElement) {
-        // Hide views
-        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-        document.getElementById('view-' + target).classList.add('active');
+    setTimeout(() => {
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('bottom-nav').style.display = 'grid';
+        document.getElementById('fab-scan').style.display = 'flex';
+    }, 1000);
+}
 
-        // Reset nav states
-        document.querySelectorAll('.nav-icon').forEach(i => { i.classList.remove('text-brand-600'); i.classList.add('text-gray-400'); });
-        document.querySelectorAll('.nav-text').forEach(t => { t.classList.remove('text-brand-600'); t.classList.add('text-gray-400'); });
-
-        // Set active nav state
-        btnElement.querySelector('.nav-icon').classList.add('text-brand-600');
-        btnElement.querySelector('.nav-icon').classList.remove('text-gray-400');
-        btnElement.querySelector('.nav-text').classList.add('text-brand-600');
-        btnElement.querySelector('.nav-text').classList.remove('text-gray-400');
-    }
-
-    // Modal Scanners Control
-    const modalScanner = document.getElementById('modal-scanner');
-    const modalAction = document.getElementById('modal-action');
-    const sheetContent = document.getElementById('sheet-content');
+// ===== NAV =====
+function switchMobileView(target) {
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + target).classList.add('active');
     
-    function openScanner() {
-        modalScanner.classList.remove('hidden');
-        // brief delay for transition string
-        setTimeout(() => modalScanner.classList.remove('opacity-0'), 10);
-    }
+    document.querySelectorAll('.bot-btn').forEach(b => b.classList.remove('active'));
+    const map = { home: 'bot-home', riwayat: 'bot-riwayat', stok: 'bot-stok', profile: 'bot-profile' };
+    if (map[target]) document.getElementById(map[target]).classList.add('active');
+}
 
-    function closeScanner() {
-        modalScanner.classList.add('opacity-0');
-        setTimeout(() => modalScanner.classList.add('hidden'), 300);
-    }
+// ===== SCANNER =====
+function openScanner() {
+    document.getElementById('scanner-modal').classList.add('show');
+}
+function closeScanner() {
+    document.getElementById('scanner-modal').classList.remove('show');
+}
 
-    function openActionModal() {
-        modalAction.classList.remove('hidden');
-        setTimeout(() => {
-            sheetContent.classList.remove('translate-y-full');
-        }, 10);
-    }
+// ===== ACTION SHEET =====
+function showActionSheet() {
+    document.getElementById('action-sheet').classList.add('show');
+}
+function closeActionSheet() {
+    document.getElementById('action-sheet').classList.remove('show');
+}
 
-    function closeActionModal() {
-        sheetContent.classList.add('translate-y-full');
-        setTimeout(() => {
-            modalAction.classList.add('hidden');
-        }, 300);
-    }
+// ===== EXECUTE ACTION =====
+function executeActionMobile(type) {
+    closeActionSheet();
+    closeScanner();
 
-    // Flow Execution
-    function executeAction(actionType, iconName, color) {
-        closeActionModal();
-        closeScanner();
-        
-        // Show Toast
-        const toast = document.getElementById('toast');
-        document.getElementById('toast-msg').innerText = `Tercatat sebagai ${actionType}.`;
-        
-        toast.classList.remove('-translate-y-[150%]', 'opacity-0');
-        setTimeout(() => {
-            toast.classList.add('-translate-y-[150%]', 'opacity-0');
-        }, 3000);
+    const isIn = type === 'Masuk';
+    const dotClass = isIn ? 'in' : 'out';
+    const icon = isIn ? 'fa-arrow-down' : 'fa-arrow-up';
 
-        // Prepend to history container
-        const historyContainer = document.getElementById('history-container');
-        const colorClassText = `text-${color}-500`;
-        const colorClassBg = `bg-${color}-50`;
-        
-        const markup = `
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-brand-100 flex items-start gap-4 animate-[fadeIn_0.5s_ease-out]">
-                <div class="w-10 h-10 rounded-full ${colorClassBg} ${colorClassText} flex items-center justify-center flex-shrink-0">
-                    <i data-lucide="${iconName}" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-800">${actionType} • QR-7629A</h3>
-                    <p class="text-xs text-gray-500 mt-1">Mesin Genset Honda (SKU-HND-1)</p>
-                    <span class="text-[10px] font-bold text-brand-500 mt-2 block">Baru Saja</span>
-                </div>
+    // Show toast
+    showMobileToast(
+        `${type} Berhasil Dicatat!`,
+        `QR-7629A tercatat sebagai ${type}.`
+    );
+
+    // Add to activity list
+    const card = `
+        <div class="activity-card highlight" style="animation: fadeIn 0.4s ease-out;">
+            <div class="a-dot ${dotClass}"><i class="fa-solid ${icon}"></i></div>
+            <div class="a-body">
+                <div class="a-title">${type} • QR-7629A</div>
+                <div class="a-sub">Mesin Genset Honda (SKU-HND-1)</div>
+                <div class="a-time" style="color: var(--primary); font-weight: 800;">Baru Saja • Zone A</div>
             </div>
-        `;
-        
-        historyContainer.insertAdjacentHTML('afterbegin', markup);
-        lucide.createIcons();
+        </div>`;
+    document.getElementById('activity-list').insertAdjacentHTML('afterbegin', card);
 
-        // Update home stat
-        const homeStat = document.getElementById('home-scan-count');
-        homeStat.innerText = parseInt(homeStat.innerText) + 1;
-        
-        // Ensure switch to home
-        switchNav('home', document.querySelector('.nav-btn:first-child'));
-    }
+    // Also add to riwayat list
+    const now = new Date();
+    const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+    const rCard = `
+        <div class="riwayat-card" style="animation: fadeIn 0.4s ease-out; border-color: rgba(30,136,229,0.2);">
+            <div class="r-dot ${dotClass}"><i class="fa-solid ${icon}"></i></div>
+            <div class="r-body">
+                <div class="r-title">${type} • QR-7629A</div>
+                <div class="r-sub">Mesin Genset Honda (SKU-HND-1) • Zone A</div>
+            </div>
+            <div class="r-time" style="color: var(--primary);">${timeStr}</div>
+        </div>`;
+    const rList = document.getElementById('riwayat-list');
+    if (rList) rList.insertAdjacentHTML('afterbegin', rCard);
 
+    // Update scan count
+    const countEl = document.getElementById('home-scan-count');
+    countEl.textContent = parseInt(countEl.textContent) + 1;
+
+    // Switch to home
+    switchMobileView('home');
+}
+
+function showMobileToast(title, msg) {
+    const toast = document.getElementById('m-toast');
+    document.getElementById('m-toast-title').textContent = title;
+    document.getElementById('m-toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+}
 </script>
+
 </body>
 </html>
