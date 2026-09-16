@@ -1,0 +1,11 @@
+{
+  "name": "SPBU Palangka Raya",
+  "description": "Prototype V1 Sistem Pelaporan SPBU Palangka Raya berbasis kalkulasi totalisator dispenser, pencatatan kas, dan ekspor laporan.",
+  "icon": "⛽",
+  "category": "Dashboard",
+  "status": "COMPLETED",
+  "tech": ["html", "css", "javascript", "tailwindcss"],
+  "demo_url": "https://demo.spinotek.com/spbu-palangka-raya",
+  "repo_url": "https://github.com/Shadow-A2234/spbu-prototype",
+  "added_at": "2026-09-16"
+}
