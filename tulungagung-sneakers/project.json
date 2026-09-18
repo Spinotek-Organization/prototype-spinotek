@@ -1,0 +1,6 @@
+{
+  "name": "Tulungagung Sneakers",
+  "description": "Prototype V1 Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
+  "techStack": ["HTML", "Tailwind CSS", "JavaScript"],
+  "folder": "tulungagung-sneakers"
+}

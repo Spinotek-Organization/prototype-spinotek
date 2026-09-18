@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tulungagung Sneakers - POS & Inventory System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    screens: {
+                        'xs': '475px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #printable-receipt, #printable-receipt * { visibility: visible; }
+            #printable-receipt { position: absolute; left: 0; top: 0; width: 100%; }
+            .print-exact { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Navbar -->
+    <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-lg border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14 sm:h-16">
+                <div class="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+                    <div class="bg-brand-500 p-2 rounded-xl text-white font-black text-base sm:text-xl shrink-0 shadow-md shadow-brand-500/30">
+                        <i class="fa-solid fa-shoe-prints"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h1 class="text-sm sm:text-lg font-bold leading-tight truncate tracking-tight">Tulungagung Sneakers</h1>
+                        <p class="text-[10px] sm:text-xs text-slate-400 truncate font-medium">System Penjualan & Inventory (Spinotek ERP)</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+                    <span id="current-date-display" class="text-xs font-semibold bg-slate-800/80 px-3 py-1.5 rounded-lg text-slate-300 hidden md:inline-flex items-center border border-slate-700/50">
+                        <i class="fa-regular fa-calendar-alt mr-2 text-brand-500"></i> <span id="clock"></span>
+                    </span>
+                    <button onclick="resetDataToDefault()" class="text-2xs sm:text-xs bg-slate-800 hover:bg-rose-900/60 hover:text-rose-200 text-slate-300 px-2.5 sm:px-3 py-1.5 rounded-lg transition border border-slate-700/60 font-medium active:scale-95 flex items-center">
+                        <i class="fa-solid fa-rotate-left mr-1.5 text-rose-400"></i> Reset Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation Bar (Fully Mobile & Tablet Optimized Touch Bar) -->
+    <nav class="bg-white border-b border-slate-200 sticky top-14 sm:top-16 z-20 shadow-sm">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar py-2 scroll-smooth" style="-webkit-overflow-scrolling: touch;">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap transition bg-brand-50 text-brand-600 shadow-xs">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard & Laporan</span>
+                </button>
+                <button onclick="switchTab('pos')" id="nav-pos" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-cash-register"></i>
+                    <span>Penjualan (POS)</span>
+                </button>
+                <button onclick="switchTab('products')" id="nav-products" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span>Katalog Produk</span>
+                </button>
+                <button onclick="switchTab('purchases')" id="nav-purchases" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                    <span>Pembelian (Restock)</span>
+                </button>
+                <button onclick="switchTab('inventory')" id="nav-inventory" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-warehouse"></i>
+                    <span>Stok Inventory</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-1 w-full">
+
+        <!-- Notification Toast -->
+        <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 border border-slate-700 max-w-xs sm:max-w-md">
+            <i id="toast-icon" class="fa-solid fa-circle-info text-brand-500 text-lg shrink-0"></i>
+            <span id="toast-message" class="text-xs sm:text-sm font-medium">Notifikasi</span>
+        </div>
+
+        <!-- 1. DASHBOARD TAB -->
+        <section id="tab-dashboard" class="tab-content space-y-4 sm:space-y-6">
+            <!-- Top Summary Cards (Responsive: 1 col Mobile, 2-3 col Tablet/iPad, 5 col Desktop) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
+                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Penjualan Hari Ini</p>
+                        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="dash-today-sales">Rp 0</h3>
+                        <p class="text-xs text-slate-500 mt-0.5"><span id="dash-today-count" class="font-bold text-brand-600">0</span> Transaksi</p>
+                    </div>
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-xs">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Omzet Bulan Ini</p>
+                        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="dash-month-sales">Rp 0</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Total akumulasi omzet</p>
+                    </div>
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-xs">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Estimasi Keuntungan</p>
+                        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="dash-profit">Rp 0</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Estimasi Gross Profit</p>
+                    </div>
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-xs">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Modal Terpakai</p>
+                        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="dash-total-cost">Rp 0</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Akumulasi modal stok</p>
+                    </div>
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-xs">
+                        <i class="fa-solid fa-boxes-packing"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between sm:col-span-2 md:col-span-1">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Stok Menipis (&lt;5)</p>
+                        <h3 class="text-xl sm:text-2xl font-black text-rose-600 mt-1" id="dash-low-stock-count">0 Varian</h3>
+                        <p class="text-xs text-rose-500 font-semibold mt-0.5">Perlu Restock Segera</p>
+                    </div>
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-xs">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Low Stock Alert Grid (Optimized for iPad/Tablet 2-col) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <!-- Sales Chart -->
+                <div class="md:col-span-2 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Grafik Penjualan 7 Hari Terakhir</h3>
+                        <span class="text-2xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded-md">Real-time</span>
+                    </div>
+                    <div class="h-48 sm:h-64 relative">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Products & Low Stock Alerts -->
+                <div class="space-y-4 sm:space-y-6 md:col-span-2 lg:col-span-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-0">
+                    <!-- Top Selling Products -->
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-fire text-amber-500"></i>
+                            <span>Produk Terlaris</span>
+                        </h3>
+                        <div id="top-products-list" class="space-y-2.5 custom-scrollbar max-h-44 overflow-y-auto pr-1">
+                            <!-- JS Inject -->
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Alert Box -->
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                            <span>Peringatan Stok Menipis</span>
+                        </h3>
+                        <div id="low-stock-list" class="space-y-2 custom-scrollbar max-h-44 overflow-y-auto pr-1">
+                            <!-- JS Inject -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Laporan Harian / Bulanan & Export -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Laporan Penjualan & Transaksi</h3>
+                        <p class="text-xs text-slate-500">Filter transaksi berdasarkan pencarian dan tanggal</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                        <input type="text" id="filter-search" oninput="applyReportFilter()" placeholder="Cari ID / Produk..." class="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none w-full sm:w-44 bg-slate-50">
+                        <div class="flex items-center space-x-1 w-full sm:w-auto">
+                            <input type="date" id="filter-start-date" class="px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none w-full sm:w-auto bg-slate-50">
+                            <span class="text-slate-400 text-xs">s/d</span>
+                            <input type="date" id="filter-end-date" class="px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none w-full sm:w-auto bg-slate-50">
+                        </div>
+                        <div class="flex items-center space-x-2 w-full sm:w-auto">
+                            <button onclick="applyReportFilter()" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-xl transition font-semibold">
+                                <i class="fa-solid fa-filter mr-1"></i> Filter
+                            </button>
+                            <button onclick="exportToCSV()" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-xl transition font-semibold">
+                                <i class="fa-solid fa-file-excel mr-1"></i> Export (.csv)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Table -->
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs border-collapse min-w-[640px]">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                <th class="p-3">ID Transaksi</th>
+                                <th class="p-3">Tanggal</th>
+                                <th class="p-3">Detail Produk & Ukuran</th>
+                                <th class="p-3 text-center">Qty</th>
+                                <th class="p-3">Pembayaran</th>
+                                <th class="p-3 text-right">Total Transaksi</th>
+                                <th class="p-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-report-table" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- JS Inject -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. POS / PENJUALAN TAB (iPad & Mobile Optimized Split Grid) -->
+        <section id="tab-pos" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+                <!-- Product Selector (Left Panel) -->
+                <div class="lg:col-span-7 xl:col-span-8 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Pilih Produk Transaksi</h3>
+                        <div class="relative w-full sm:w-60">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                            <input type="text" id="pos-search" oninput="renderPOSProducts()" placeholder="Cari nama / brand..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                        </div>
+                    </div>
+
+                    <!-- Category Filters -->
+                    <div class="flex space-x-1.5 overflow-x-auto no-scrollbar pb-1 text-xs">
+                        <button onclick="filterPOSCategory('All')" class="pos-cat-btn px-3 py-1.5 rounded-xl font-bold bg-slate-900 text-white whitespace-nowrap">Semua</button>
+                        <button onclick="filterPOSCategory('Sepatu')" class="pos-cat-btn px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">Sepatu</button>
+                        <button onclick="filterPOSCategory('Sandal')" class="pos-cat-btn px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">Sandal</button>
+                        <button onclick="filterPOSCategory('Aksesoris')" class="pos-cat-btn px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">Aksesoris</button>
+                    </div>
+
+                    <!-- Products Grid (Responsive Grid for Mobile & iPad) -->
+                    <div id="pos-products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 custom-scrollbar max-h-[500px] sm:max-h-[550px] overflow-y-auto pr-1">
+                        <!-- JS Inject Products -->
+                    </div>
+                </div>
+
+                <!-- Transaction Cart & Checkout (Right Panel) -->
+                <div class="lg:col-span-5 xl:col-span-4 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sticky top-32 lg:top-24">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center space-x-2">
+                                <i class="fa-solid fa-shopping-cart text-brand-600"></i>
+                                <span>Keranjang Penjualan</span>
+                            </h3>
+                            <button onclick="clearCart()" class="text-xs text-rose-600 hover:underline font-semibold">Kosongkan</button>
+                        </div>
+
+                        <!-- Date input for sale -->
+                        <div class="mb-3">
+                            <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Tanggal Transaksi</label>
+                            <input type="date" id="pos-date" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium">
+                        </div>
+
+                        <!-- Cart Items List -->
+                        <div id="cart-items-container" class="space-y-2.5 custom-scrollbar max-h-52 sm:max-h-64 overflow-y-auto mb-3 border-b border-slate-100 pb-3 pr-1">
+                            <!-- JS Inject Cart Items -->
+                        </div>
+                    </div>
+
+                    <!-- Cart Summary & Payment -->
+                    <div class="space-y-3 pt-1">
+                        <div class="bg-slate-50 p-3.5 rounded-xl space-y-1.5 border border-slate-200/80">
+                            <div class="flex justify-between text-xs text-slate-600">
+                                <span>Total Item</span>
+                                <span id="cart-total-items" class="font-bold">0 Unit</span>
+                            </div>
+                            <div class="flex justify-between text-base font-black text-slate-900 border-t border-slate-200/80 pt-1.5">
+                                <span>Total Tagihan</span>
+                                <span id="cart-total-price" class="text-brand-600">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Metode Pembayaran</label>
+                            <select id="pos-payment-method" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none font-bold bg-slate-50">
+                                <option value="Tunai">Tunai / Cash</option>
+                                <option value="QRIS">QRIS</option>
+                                <option value="Transfer Bank">Transfer Bank</option>
+                            </select>
+                        </div>
+
+                        <button onclick="processCheckout()" class="w-full bg-brand-600 hover:bg-brand-700 active:scale-98 text-white font-bold py-3 rounded-xl transition shadow-md shadow-brand-500/20 text-xs sm:text-sm flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-check-circle text-sm"></i>
+                            <span>Simpan & Selesaikan Transaksi</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. KATALOG PRODUK TAB -->
+        <section id="tab-products" class="tab-content hidden space-y-4 sm:space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-800">Manajemen Katalog Produk</h2>
+                    <p class="text-xs text-slate-500">Kelola master data produk, brand, harga jual, dan varian ukuran</p>
+                </div>
+                <button onclick="openProductModal()" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white text-xs px-4 py-2.5 rounded-xl transition font-bold flex items-center justify-center space-x-2 shadow-xs active:scale-95">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Tambah Produk Baru</span>
+                </button>
+            </div>
+
+            <!-- Products List Card View Grid -->
+            <div id="products-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- JS Inject Product Cards -->
+            </div>
+        </section>
+
+        <!-- 4. PEMBELIAN (RESTOCK / MODAL) TAB -->
+        <section id="tab-purchases" class="tab-content hidden space-y-4 sm:space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+                <!-- Purchase Form (Left) -->
+                <div class="lg:col-span-5 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Input Pembelian (Restock Stok)</h3>
+                        <p class="text-xs text-slate-500">Stok varian akan bertambah otomatis setelah disimpan</p>
+                    </div>
+
+                    <form id="purchase-form" onsubmit="handlePurchaseSubmit(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Tanggal Pembelian</label>
+                            <input type="date" id="pur-date" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                        </div>
+
+                        <div>
+                            <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Nama Supplier</label>
+                            <input type="text" id="pur-supplier" required placeholder="Contoh: PT Mitra Footwear" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                        </div>
+
+                        <div>
+                            <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Pilih Produk</label>
+                            <select id="pur-product-id" onchange="updatePurchaseVariantOptions()" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium">
+                                <option value="">-- Pilih Produk --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Varian Ukuran</label>
+                            <select id="pur-variant-id" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium">
+                                <option value="">-- Pilih Ukuran Varian --</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Jumlah (Qty)</label>
+                                <input type="number" id="pur-qty" min="1" value="1" required oninput="calculatePurchaseTotal()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                            </div>
+                            <div>
+                                <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Harga Beli / Unit (Rp)</label>
+                                <input type="number" id="pur-cost" min="0" placeholder="0" required oninput="calculatePurchaseTotal()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+                            <span class="text-slate-600 font-medium">Total Pembelian:</span>
+                            <span id="pur-total-display" class="font-black text-slate-900 text-sm">Rp 0</span>
+                        </div>
+
+                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 active:scale-98 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-xs">
+                            <i class="fa-solid fa-plus-circle mr-1"></i> Simpan Pembelian & Tambah Stok
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Purchase History Table (Right) -->
+                <div class="lg:col-span-7 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Riwayat Pembelian & Restock</h3>
+                        <p class="text-xs text-slate-500">Catatan masuk barang beserta riwayat modal</p>
+                    </div>
+
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-xs border-collapse min-w-[550px]">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                    <th class="p-2.5">Tanggal</th>
+                                    <th class="p-2.5">Supplier</th>
+                                    <th class="p-2.5">Produk & Varian</th>
+                                    <th class="p-2.5 text-center">Qty</th>
+                                    <th class="p-2.5 text-right">Harga Beli</th>
+                                    <th class="p-2.5 text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchase-history-table" class="divide-y divide-slate-100 text-slate-700">
+                                <!-- JS Inject History -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. INVENTORY / MANAJEMEN STOK TAB -->
+        <section id="tab-inventory" class="tab-content hidden space-y-4 sm:space-y-6">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">Manajemen Inventory & Stok</h2>
+                        <p class="text-xs text-slate-500">Monitoring real-time jumlah stok per varian ukuran</p>
+                    </div>
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                        <input type="text" id="inventory-search" oninput="renderInventoryTable()" placeholder="Cari produk / varian..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                    </div>
+                </div>
+
+                <!-- Stock Table -->
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs border-collapse min-w-[700px]">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                <th class="p-3">Kategori</th>
+                                <th class="p-3">Nama Produk & Brand</th>
+                                <th class="p-3 text-center">Ukuran</th>
+                                <th class="p-3 text-right">Harga Modal</th>
+                                <th class="p-3 text-right">Harga Jual</th>
+                                <th class="p-3 text-center">Sisa Stok</th>
+                                <th class="p-3 text-center">Status</th>
+                                <th class="p-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- JS Inject Inventory -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: ADD/EDIT PRODUCT (Optimized Mobile Scroll) -->
+    <div id="product-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-3 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl relative max-h-[92vh] overflow-y-auto custom-scrollbar">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 id="modal-product-title" class="font-bold text-slate-800 text-base sm:text-lg">Tambah Produk Baru</h3>
+                <button onclick="closeProductModal()" class="text-slate-400 hover:text-slate-600 text-lg w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="product-form" onsubmit="handleProductFormSubmit(event)" class="space-y-3.5">
+                <input type="hidden" id="edit-product-id">
+                
+                <div>
+                    <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Nama Produk</label>
+                    <input type="text" id="prod-name" required placeholder="Contoh: Air Jordan 1 Retro Low" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Kategori</label>
+                        <select id="prod-category" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium">
+                            <option value="Sepatu">Sepatu</option>
+                            <option value="Sandal">Sandal</option>
+                            <option value="Aksesoris">Aksesoris</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Model / Brand</label>
+                        <input type="text" id="prod-brand" required placeholder="Nike / Adidas" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Harga Jual (Rp)</label>
+                    <input type="number" id="prod-price" min="0" required placeholder="500000" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                </div>
+
+                <!-- Dynamic Variants Section -->
+                <div class="border-t border-slate-100 pt-3 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-xs font-bold text-slate-700">Varian Ukuran & Stok</label>
+                        <button type="button" onclick="addVariantInputRow()" class="text-xs text-brand-600 hover:underline font-bold">
+                            <i class="fa-solid fa-plus text-2xs mr-1"></i> Tambah Ukuran
+                        </button>
+                    </div>
+                    <div id="variant-inputs-container" class="space-y-2">
+                        <!-- JS Dynamic Rows -->
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 border-t border-slate-100 pt-3">
+                    <button type="button" onclick="closeProductModal()" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl font-semibold">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-xs">Simpan Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL RECEIPT / STRUK -->
+    <div id="receipt-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-3 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-xs sm:max-w-sm w-full p-5 space-y-4 shadow-2xl relative">
+            <div id="printable-receipt" class="space-y-3 text-slate-800 text-xs">
+                <div class="text-center border-b border-dashed border-slate-300 pb-3 flex flex-col items-center justify-center">
+                    <div class="bg-brand-500 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg mb-2 print-exact">
+                        <i class="fa-solid fa-shoe-prints"></i>
+                    </div>
+                    <h2 class="font-black text-sm uppercase tracking-wider">Tulungagung Sneakers</h2>
+                    <p class="text-[10px] font-bold text-slate-600">Spinotek ERP System</p>
+                    <p class="text-[10px] text-slate-500">Jl. Cangkring Indah 1 No.17, Karangsari</p>
+                    <p class="text-[10px] text-slate-500">Telp/WA: 0821-6459-9911</p>
+                </div>
+
+                <div class="space-y-1 text-[11px] border-b border-dashed border-slate-300 pb-2">
+                    <div class="flex justify-between"><span>No Struk:</span><span id="rec-id" class="font-bold"></span></div>
+                    <div class="flex justify-between"><span>Tanggal:</span><span id="rec-date"></span></div>
+                    <div class="flex justify-between"><span>Metode:</span><span id="rec-payment"></span></div>
+                </div>
+
+                <div id="rec-items" class="space-y-2 border-b border-dashed border-slate-300 pb-3">
+                    <!-- JS Inject Receipt Items -->
+                </div>
+
+                <div class="space-y-1 font-bold text-xs">
+                    <div class="flex justify-between text-sm font-black">
+                        <span>TOTAL:</span>
+                        <span id="rec-total" class="text-slate-900"></span>
+                    </div>
+                </div>
+
+                <div class="text-center text-[10px] text-slate-400 pt-1">
+                    <p>Terima Kasih Telah Berbelanja!</p>
+                    <p>Barang yang sudah dibeli tidak dapat ditukar.</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+                <button onclick="closeReceiptModal()" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg font-medium">Tutup</button>
+                <button onclick="window.print()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-900 text-white rounded-lg flex items-center space-x-1.5 font-bold">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Cetak Struk</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-3">
+        <div class="max-w-7xl mx-auto px-4 text-center text-[11px] text-slate-400 font-medium">
+            &copy; 2026 Tulungagung Sneakers. Developed for Spinotek Corp MVP - V1.
+        </div>
+    </footer>
+
+    <script>
+        // ==========================================
+        // INITIAL SAMPLE DATA SETUP
+        // ==========================================
+        const initialData = {
+            products: [
+                {
+                    id: "PROD-001",
+                    name: "Nike Air Force 1 '07 White",
+                    category: "Sepatu",
+                    brand: "Nike",
+                    price: 1549000,
+                    variants: [
+                        { id: "VAR-001-40", size: "40", stock: 8, lastCost: 1100000 },
+                        { id: "VAR-001-41", size: "41", stock: 3, lastCost: 1100000 },
+                        { id: "VAR-001-42", size: "42", stock: 12, lastCost: 1100000 }
+                    ]
+                },
+                {
+                    id: "PROD-002",
+                    name: "Adidas Samba OG Black White",
+                    category: "Sepatu",
+                    brand: "Adidas",
+                    price: 2200000,
+                    variants: [
+                        { id: "VAR-002-39", size: "39", stock: 2, lastCost: 1650000 },
+                        { id: "VAR-002-40", size: "40", stock: 6, lastCost: 1650000 },
+                        { id: "VAR-002-41", size: "41", stock: 4, lastCost: 1650000 }
+                    ]
+                },
+                {
+                    id: "PROD-003",
+                    name: "Sandal Slide Birkenstock Arizona",
+                    category: "Sandal",
+                    brand: "Birkenstock",
+                    price: 850000,
+                    variants: [
+                        { id: "VAR-003-40", size: "40", stock: 15, lastCost: 600000 },
+                        { id: "VAR-003-41", size: "41", stock: 10, lastCost: 600000 }
+                    ]
+                },
+                {
+                    id: "PROD-004",
+                    name: "Puma Suede Classic",
+                    category: "Sepatu",
+                    brand: "Puma",
+                    price: 1100000,
+                    variants: [
+                        { id: "VAR-004-41", size: "41", stock: 1, lastCost: 800000 }
+                    ]
+                },
+                {
+                    id: "PROD-005",
+                    name: "Sneaker Cleaner Spray 250ml",
+                    category: "Aksesoris",
+                    brand: "TungSneaks",
+                    price: 75000,
+                    variants: [
+                        { id: "VAR-005-ALL", size: "All Size", stock: 25, lastCost: 40000 }
+                    ]
+                }
+            ],
+            purchases: [
+                {
+                    id: "PUR-1001",
+                    date: "2026-09-01",
+                    supplier: "PT Nike Distribution",
+                    productId: "PROD-001",
+                    variantId: "VAR-001-40",
+                    qty: 10,
+                    costPrice: 1100000,
+                    total: 11000000
+                },
+                {
+                    id: "PUR-1002",
+                    date: "2026-09-05",
+                    supplier: "Toko Grosir Sepatu Import",
+                    productId: "PROD-002",
+                    variantId: "VAR-002-40",
+                    qty: 8,
+                    costPrice: 1650000,
+                    total: 13200000
+                }
+            ],
+            sales: [
+                {
+                    id: "TRX-20260917-01",
+                    date: new Date().toISOString().split('T')[0],
+                    paymentMethod: "QRIS",
+                    items: [
+                        {
+                            productId: "PROD-001",
+                            productName: "Nike Air Force 1 '07 White",
+                            variantId: "VAR-001-40",
+                            size: "40",
+                            qty: 1,
+                            sellPrice: 1549000,
+                            costPrice: 1100000,
+                            subtotal: 1549000
+                        }
+                    ],
+                    totalAmount: 1549000,
+                    totalCost: 1100000
+                }
+            ]
+        };
+
+        let products = [];
+        let purchases = [];
+        let sales = [];
+        let cart = [];
+        let selectedCategoryPOS = 'All';
+        let salesChartInstance = null;
+
+        window.onload = function() {
+            loadState();
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('pos-date').value = todayStr;
+            document.getElementById('pur-date').value = todayStr;
+            document.getElementById('filter-start-date').value = getFirstDayOfMonth();
+            document.getElementById('filter-end-date').value = todayStr;
+
+            renderDashboard();
+            renderProductsList();
+            renderPOSProducts();
+            renderPurchasesHistory();
+            renderInventoryTable();
+            populatePurchaseDropdowns();
+        };
+
+        function loadState() {
+            const localProd = localStorage.getItem('ts_products');
+            const localPur = localStorage.getItem('ts_purchases');
+            const localSales = localStorage.getItem('ts_sales');
+
+            products = localProd ? JSON.parse(localProd) : initialData.products;
+            purchases = localPur ? JSON.parse(localPur) : initialData.purchases;
+            sales = localSales ? JSON.parse(localSales) : initialData.sales;
+            saveState();
+        }
+
+        function saveState() {
+            localStorage.setItem('ts_products', JSON.stringify(products));
+            localStorage.setItem('ts_purchases', JSON.stringify(purchases));
+            localStorage.setItem('ts_sales', JSON.stringify(sales));
+        }
+
+        function resetDataToDefault() {
+            if (confirm("Apakah Anda yakin ingin mereset seluruh data ke sampel awal? Data baru akan terhapus.")) {
+                localStorage.clear();
+                loadState();
+                location.reload();
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+        }
+
+        function getFirstDayOfMonth() {
+            const date = new Date();
+            return new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+        }
+
+        function formatRp(amount) {
+            return 'Rp ' + Number(amount).toLocaleString('id-ID');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+            if (type === 'success') toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg shrink-0";
+            else if (type === 'error') toastIcon.className = "fa-solid fa-circle-exclamation text-rose-400 text-lg shrink-0";
+            else toastIcon.className = "fa-solid fa-circle-info text-brand-400 text-lg shrink-0";
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2800);
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('fade-in');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-50', 'text-brand-600', 'shadow-xs');
+                btn.classList.add('text-slate-600');
+            });
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            activeTab.classList.remove('hidden');
+            void activeTab.offsetWidth;
+            activeTab.classList.add('fade-in');
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            activeBtn.classList.add('bg-brand-50', 'text-brand-600', 'shadow-xs');
+            activeBtn.classList.remove('text-slate-600');
+
+            if (tabId === 'dashboard') renderDashboard();
+            if (tabId === 'pos') renderPOSProducts();
+            if (tabId === 'inventory') renderInventoryTable();
+            if (tabId === 'purchases') populatePurchaseDropdowns();
+        }
+
+        function renderDashboard() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            let todaySales = 0;
+            let todayCount = 0;
+            let monthSales = 0;
+            let totalProfit = 0;
+
+            sales.forEach(sale => {
+                const saleDate = new Date(sale.date);
+                if (sale.date === todayStr) {
+                    todaySales += sale.totalAmount;
+                    todayCount++;
+                }
+
+                if (saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear) {
+                    monthSales += sale.totalAmount;
+                }
+
+                totalProfit += (sale.totalAmount - (sale.totalCost || 0));
+            });
+
+            document.getElementById('dash-today-sales').innerText = formatRp(todaySales);
+            document.getElementById('dash-today-count').innerText = todayCount;
+            document.getElementById('dash-month-sales').innerText = formatRp(monthSales);
+            document.getElementById('dash-profit').innerText = formatRp(totalProfit);
+
+            let totalModalTerpakai = 0;
+            let lowStockItems = [];
+            products.forEach(p => {
+                p.variants.forEach(v => {
+                    totalModalTerpakai += (v.stock * (v.lastCost || 0));
+                    if (v.stock < 5) {
+                        lowStockItems.push({
+                            productName: p.name,
+                            brand: p.brand,
+                            size: v.size,
+                            stock: v.stock
+                        });
+                    }
+                });
+            });
+
+            document.getElementById('dash-total-cost').innerText = formatRp(totalModalTerpakai);
+            document.getElementById('dash-low-stock-count').innerText = `${lowStockItems.length} Varian`;
+
+            const lowStockList = document.getElementById('low-stock-list');
+            if (lowStockItems.length === 0) {
+                lowStockList.innerHTML = `<p class="text-xs text-slate-400 italic">Semua stok aman (&ge; 5 unit).</p>`;
+            } else {
+                lowStockList.innerHTML = lowStockItems.map(item => `
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-rose-50 border border-rose-100 text-xs">
+                        <div class="min-w-0 pr-2">
+                            <p class="font-bold text-rose-900 truncate">${item.productName}</p>
+                            <p class="text-[10px] text-rose-600">${item.brand} - Ukuran: ${item.size}</p>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full bg-rose-200 text-rose-800 font-bold text-[10px] shrink-0">Sisa: ${item.stock}</span>
+                    </div>
+                `).join('');
+            }
+
+            const productSalesMap = {};
+            sales.forEach(s => {
+                s.items.forEach(i => {
+                    productSalesMap[i.productName] = (productSalesMap[i.productName] || 0) + i.qty;
+                });
+            });
+
+            const sortedTopProducts = Object.entries(productSalesMap).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            const topProductsList = document.getElementById('top-products-list');
+            if (sortedTopProducts.length === 0) {
+                topProductsList.innerHTML = `<p class="text-xs text-slate-400 italic">Belum ada data penjualan.</p>`;
+            } else {
+                topProductsList.innerHTML = sortedTopProducts.map(([name, qty], idx) => `
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                        <div class="flex items-center space-x-2 min-w-0 pr-2">
+                            <span class="w-5 h-5 rounded-full bg-brand-100 text-brand-700 font-black flex items-center justify-center text-[10px] shrink-0">${idx + 1}</span>
+                            <span class="font-semibold text-slate-700 truncate">${name}</span>
+                        </div>
+                        <span class="font-bold text-slate-900 shrink-0 text-[11px]">${qty} Terjual</span>
+                    </div>
+                `).join('');
+            }
+
+            renderChart();
+            applyReportFilter();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            const days = [];
+            const salesData = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                days.push(d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' }));
+
+                const totalOnDay = sales
+                    .filter(s => s.date === dateStr)
+                    .reduce((sum, s) => sum + s.totalAmount, 0);
+                salesData.push(totalOnDay);
+            }
+
+            if (salesChartInstance) salesChartInstance.destroy();
+
+            salesChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: 'Penjualan (Rp)',
+                        data: salesData,
+                        borderColor: '#0284c7',
+                        borderWidth: 2.5,
+                        backgroundColor: 'rgba(2, 132, 199, 0.08)',
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: '#0369a1',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { 
+                                callback: value => 'Rp ' + (value >= 1000000 ? (value/1000000) + 'Jt' : (value/1000) + 'k'),
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: { font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function applyReportFilter() {
+            const start = document.getElementById('filter-start-date').value;
+            const end = document.getElementById('filter-end-date').value;
+            const searchInput = document.getElementById('filter-search');
+            const search = searchInput ? searchInput.value.toLowerCase() : "";
+
+            const filteredSales = sales.filter(s => {
+                const inDate = s.date >= start && s.date <= end;
+                const matchSearch = search === "" || s.id.toLowerCase().includes(search) || s.items.some(i => i.productName.toLowerCase().includes(search));
+                return inDate && matchSearch;
+            });
+            const tableBody = document.getElementById('sales-report-table');
+
+            if (filteredSales.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-slate-400">Tidak ada transaksi pada rentang tanggal ini.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = filteredSales.map(s => {
+                const itemsStr = s.items.map(i => `${i.productName} (${i.size}) x${i.qty}`).join('<br>');
+                const totalQty = s.items.reduce((sum, i) => sum + i.qty, 0);
+                return `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="p-3 font-bold text-slate-800">${s.id}</td>
+                        <td class="p-3 font-medium text-slate-600">${s.date}</td>
+                        <td class="p-3 leading-snug">${itemsStr}</td>
+                        <td class="p-3 text-center font-bold">${totalQty}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-bold">${s.paymentMethod}</span></td>
+                        <td class="p-3 text-right font-black text-slate-900">${formatRp(s.totalAmount)}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="showReceiptModal('${s.id}')" class="text-brand-600 hover:text-brand-800 font-bold text-[11px] bg-brand-50 px-2.5 py-1 rounded-lg">
+                                <i class="fa-solid fa-receipt mr-1"></i> Struk
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function exportToCSV() {
+            const start = document.getElementById('filter-start-date').value;
+            const end = document.getElementById('filter-end-date').value;
+            const filteredSales = sales.filter(s => s.date >= start && s.date <= end);
+
+            let csvContent = "data:text/csv;charset=utf-8,ID Transaksi,Tanggal,Detail Produk,Total Item,Metode Pembayaran,Total Omzet (Rp),Total Modal (Rp),Profit (Rp)\n";
+
+            filteredSales.forEach(s => {
+                const itemsStr = s.items.map(i => `${i.productName} [${i.size}] (x${i.qty})`).join('; ');
+                const totalQty = s.items.reduce((sum, i) => sum + i.qty, 0);
+                const profit = s.totalAmount - (s.totalCost || 0);
+                csvContent += `"${s.id}","${s.date}","${itemsStr}",${totalQty},"${s.paymentMethod}",${s.totalAmount},${s.totalCost || 0},${profit}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_Penjualan_${start}_sd_${end}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Laporan berhasil di-export ke CSV/Excel", "success");
+        }
+
+        function filterPOSCategory(cat) {
+            selectedCategoryPOS = cat;
+            document.querySelectorAll('.pos-cat-btn').forEach(btn => {
+                if (btn.innerText.includes(cat) || (cat === 'All' && btn.innerText.includes('Semua'))) {
+                    btn.className = "pos-cat-btn px-3 py-1.5 rounded-xl font-bold bg-slate-900 text-white whitespace-nowrap";
+                } else {
+                    btn.className = "pos-cat-btn px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap";
+                }
+            });
+            renderPOSProducts();
+        }
+
+        function renderPOSProducts() {
+            const search = document.getElementById('pos-search').value.toLowerCase();
+            const grid = document.getElementById('pos-products-grid');
+
+            const filtered = products.filter(p => {
+                const matchCat = selectedCategoryPOS === 'All' || p.category === selectedCategoryPOS;
+                const matchSearch = p.name.toLowerCase().includes(search) || p.brand.toLowerCase().includes(search);
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-1 sm:col-span-2 text-center p-8 text-slate-400 text-xs">Produk tidak ditemukan</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 flex flex-col justify-between space-y-2.5 hover:border-brand-400 transition shadow-2xs">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-200/80 text-slate-700 uppercase tracking-wider">${p.category}</span>
+                            <span class="text-[10px] font-extrabold text-slate-400 uppercase">${p.brand}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-xs mt-1.5 leading-snug">${p.name}</h4>
+                        <p class="text-brand-600 font-extrabold text-xs sm:text-sm mt-1">${formatRp(p.price)}</p>
+                    </div>
+
+                    <div class="border-t border-slate-200/80 pt-2 space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Pilih Ukuran Varian:</label>
+                        <div class="flex flex-wrap gap-1">
+                            ${p.variants.map(v => `
+                                <button onclick="addToCart('${p.id}', '${v.id}')" ${v.stock <= 0 ? 'disabled' : ''} 
+                                    class="px-2 py-1 text-[11px] rounded-lg border ${v.stock <= 0 ? 'bg-slate-100 border-slate-200 text-slate-300 cursor-not-allowed' : 'bg-white border-slate-300 hover:bg-brand-50 hover:border-brand-500 hover:text-brand-600 font-bold active:scale-95'} transition">
+                                    ${v.size} (${v.stock})
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(productId, variantId) {
+            const product = products.find(p => p.id === productId);
+            const variant = product.variants.find(v => v.id === variantId);
+
+            if (variant.stock <= 0) {
+                showToast("Stok varian ini habis!", "error");
+                return;
+            }
+
+            const existingIndex = cart.findIndex(item => item.variantId === variantId);
+            if (existingIndex > -1) {
+                if (cart[existingIndex].qty + 1 > variant.stock) {
+                    showToast(`Stok tidak mencukupi. Sisa stok: ${variant.stock}`, "error");
+                    return;
+                }
+                cart[existingIndex].qty += 1;
+                cart[existingIndex].subtotal = cart[existingIndex].qty * cart[existingIndex].sellPrice;
+            } else {
+                cart.push({
+                    productId: product.id,
+                    productName: product.name,
+                    variantId: variant.id,
+                    size: variant.size,
+                    sellPrice: product.price,
+                    costPrice: variant.lastCost || 0,
+                    qty: 1,
+                    maxStock: variant.stock,
+                    subtotal: product.price
+                });
+            }
+
+            renderCart();
+            showToast(`Ditambahkan ke keranjang`, "success");
+        }
+
+        function updateCartQty(variantId, change) {
+            const item = cart.find(i => i.variantId === variantId);
+            if (!item) return;
+
+            const newQty = item.qty + change;
+            if (newQty <= 0) {
+                cart = cart.filter(i => i.variantId !== variantId);
+            } else if (newQty > item.maxStock) {
+                showToast(`Mencapai batas stok maksimum (${item.maxStock})`, "error");
+            } else {
+                item.qty = newQty;
+                item.subtotal = item.qty * item.sellPrice;
+            }
+            renderCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const totalItemsEl = document.getElementById('cart-total-items');
+            const totalPriceEl = document.getElementById('cart-total-price');
+
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs italic">Keranjang masih kosong</div>`;
+                totalItemsEl.innerText = "0 Unit";
+                totalPriceEl.innerText = "Rp 0";
+                return;
+            }
+
+            let totalQty = 0;
+            let totalPrice = 0;
+
+            container.innerHTML = cart.map(item => {
+                totalQty += item.qty;
+                totalPrice += item.subtotal;
+                return `
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+                        <div class="flex-1 pr-2 min-w-0">
+                            <h5 class="font-bold text-slate-800 truncate leading-snug">${item.productName}</h5>
+                            <p class="text-[10px] text-slate-500">Uk: ${item.size} | @${formatRp(item.sellPrice)}</p>
+                        </div>
+                        <div class="flex items-center space-x-2 shrink-0">
+                            <div class="flex items-center border border-slate-300 rounded-lg bg-white overflow-hidden">
+                                <button onclick="updateCartQty('${item.variantId}', -1)" class="px-2 py-0.5 hover:bg-slate-100 font-bold text-slate-600 active:bg-slate-200">-</button>
+                                <span class="px-2 font-bold text-[11px]">${item.qty}</span>
+                                <button onclick="updateCartQty('${item.variantId}', 1)" class="px-2 py-0.5 hover:bg-slate-100 font-bold text-slate-600 active:bg-slate-200">+</button>
+                            </div>
+                            <span class="font-black text-slate-900 text-[11px] min-w-[65px] text-right">${formatRp(item.subtotal)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalItemsEl.innerText = `${totalQty} Unit`;
+            totalPriceEl.innerText = formatRp(totalPrice);
+        }
+
+        function processCheckout() {
+            if (cart.length === 0) {
+                showToast("Keranjang belanja masih kosong", "error");
+                return;
+            }
+
+            const saleDate = document.getElementById('pos-date').value;
+            const paymentMethod = document.getElementById('pos-payment-method').value;
+
+            const totalAmount = cart.reduce((sum, i) => sum + i.subtotal, 0);
+            const totalCost = cart.reduce((sum, i) => sum + (i.costPrice * i.qty), 0);
+
+            const newSale = {
+                id: `TRX-${Date.now().toString().slice(-8)}`,
+                date: saleDate,
+                paymentMethod: paymentMethod,
+                items: [...cart],
+                totalAmount: totalAmount,
+                totalCost: totalCost
+            };
+
+            cart.forEach(cartItem => {
+                const product = products.find(p => p.id === cartItem.productId);
+                if (product) {
+                    const variant = product.variants.find(v => v.id === cartItem.variantId);
+                    if (variant) {
+                        variant.stock -= cartItem.qty;
+                    }
+                }
+            });
+
+            sales.unshift(newSale);
+            saveState();
+
+            const lastSaleId = newSale.id;
+            clearCart();
+            renderPOSProducts();
+            showToast("Transaksi Berhasil Disimpan!", "success");
+            showReceiptModal(lastSaleId);
+        }
+
+        function renderProductsList() {
+            const container = document.getElementById('products-list-container');
+            if (products.length === 0) {
+                container.innerHTML = `<div class="col-span-1 sm:col-span-3 text-center p-8 text-slate-400 text-xs">Belum ada produk. Tambahkan produk pertama Anda.</div>`;
+                return;
+            }
+
+            container.innerHTML = products.map(p => {
+                const totalStock = p.variants.reduce((sum, v) => sum + v.stock, 0);
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 uppercase tracking-wider">${p.category}</span>
+                                <div class="space-x-1">
+                                    <button onclick="editProduct('${p.id}')" class="text-slate-400 hover:text-brand-600 text-xs p-1.5"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick="deleteProduct('${p.id}')" class="text-slate-400 hover:text-rose-600 text-xs p-1.5"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm mt-2">${p.name}</h3>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">${p.brand}</p>
+                            <p class="text-brand-600 font-black text-sm sm:text-base mt-1">${formatRp(p.price)}</p>
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-2.5">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">Varian Ukuran & Stok</span>
+                                <span class="text-[10px] font-black text-slate-700">Total: ${totalStock} unit</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1 max-h-24 overflow-y-auto custom-scrollbar">
+                                ${p.variants.map(v => `
+                                    <span class="px-2 py-0.5 rounded-md border ${v.stock < 5 ? 'bg-rose-50 border-rose-200 text-rose-700' : 'bg-slate-50 border-slate-200 text-slate-700'} text-[10px] font-semibold">
+                                        Uk ${v.size}: <strong>${v.stock}</strong>
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        let variantCounter = 0;
+        function openProductModal(editId = null) {
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-product-id').value = '';
+            document.getElementById('variant-inputs-container').innerHTML = '';
+            variantCounter = 0;
+
+            if (editId) {
+                const p = products.find(item => item.id === editId);
+                document.getElementById('modal-product-title').innerText = "Edit Produk";
+                document.getElementById('edit-product-id').value = p.id;
+                document.getElementById('prod-name').value = p.name;
+                document.getElementById('prod-category').value = p.category;
+                document.getElementById('prod-brand').value = p.brand;
+                document.getElementById('prod-price').value = p.price;
+
+                p.variants.forEach(v => addVariantInputRow(v.size, v.stock, v.id, v.lastCost));
+            } else {
+                document.getElementById('modal-product-title').innerText = "Tambah Produk Baru";
+                addVariantInputRow('40', 0);
+                addVariantInputRow('41', 0);
+            }
+
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function addVariantInputRow(size = '', stock = 0, variantId = null, lastCost = 0) {
+            variantCounter++;
+            const container = document.getElementById('variant-inputs-container');
+            const rowId = `v-row-${variantCounter}`;
+
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.className = "flex items-center space-x-2";
+            div.innerHTML = `
+                <input type="hidden" class="var-id" value="${variantId || `VAR-${Date.now()}-${variantCounter}`}">
+                <input type="hidden" class="var-cost" value="${lastCost}">
+                <input type="text" placeholder="Ukuran (misal: 40)" value="${size}" required class="var-size w-1/2 px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 outline-none bg-slate-50">
+                <input type="number" placeholder="Stok Awal" min="0" value="${stock}" required class="var-stock w-1/2 px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 outline-none bg-slate-50">
+                <button type="button" onclick="removeVariantInputRow('${rowId}')" class="text-slate-400 hover:text-rose-600 text-xs px-1"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeVariantInputRow(rowId) {
+            const container = document.getElementById('variant-inputs-container');
+            if (container.children.length <= 1) {
+                showToast("Minimal harus ada 1 varian ukuran", "error");
+                return;
+            }
+            document.getElementById(rowId).remove();
+        }
+
+        function handleProductFormSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-product-id').value;
+            const name = document.getElementById('prod-name').value;
+            const category = document.getElementById('prod-category').value;
+            const brand = document.getElementById('prod-brand').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+
+            const variantRows = document.querySelectorAll('#variant-inputs-container > div');
+            const variants = Array.from(variantRows).map(row => ({
+                id: row.querySelector('.var-id').value,
+                size: row.querySelector('.var-size').value,
+                stock: parseInt(row.querySelector('.var-stock').value) || 0,
+                lastCost: parseFloat(row.querySelector('.var-cost').value) || 0
+            }));
+
+            if (editId) {
+                const index = products.findIndex(p => p.id === editId);
+                if (index > -1) {
+                    products[index] = { id: editId, name, category, brand, price, variants };
+                }
+            } else {
+                const newProd = {
+                    id: `PROD-${Date.now().toString().slice(-6)}`,
+                    name, category, brand, price, variants
+                };
+                products.push(newProd);
+            }
+
+            saveState();
+            closeProductModal();
+            renderProductsList();
+            showToast("Data Produk Berhasil Disimpan", "success");
+        }
+
+        function editProduct(id) {
+            openProductModal(id);
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Hapus produk ini beserta seluruh variannya?")) {
+                products = products.filter(p => p.id !== id);
+                saveState();
+                renderProductsList();
+                showToast("Produk berhasil dihapus", "info");
+            }
+        }
+
+        function populatePurchaseDropdowns() {
+            const prodSelect = document.getElementById('pur-product-id');
+            prodSelect.innerHTML = `<option value="">-- Pilih Produk --</option>` + 
+                products.map(p => `<option value="${p.id}">${p.name} (${p.brand})</option>`).join('');
+            
+            updatePurchaseVariantOptions();
+        }
+
+        function updatePurchaseVariantOptions() {
+            const prodId = document.getElementById('pur-product-id').value;
+            const varSelect = document.getElementById('pur-variant-id');
+
+            if (!prodId) {
+                varSelect.innerHTML = `<option value="">-- Pilih Ukuran Varian --</option>`;
+                return;
+            }
+
+            const product = products.find(p => p.id === prodId);
+            if (product) {
+                varSelect.innerHTML = `<option value="">-- Pilih Ukuran Varian --</option>` +
+                    product.variants.map(v => `<option value="${v.id}">Ukuran: ${v.size} (Stok saat ini: ${v.stock})</option>`).join('');
+            }
+        }
+
+        function calculatePurchaseTotal() {
+            const qty = parseFloat(document.getElementById('pur-qty').value) || 0;
+            const cost = parseFloat(document.getElementById('pur-cost').value) || 0;
+            const total = qty * cost;
+            document.getElementById('pur-total-display').innerText = formatRp(total);
+        }
+
+        function handlePurchaseSubmit(e) {
+            e.preventDefault();
+            const date = document.getElementById('pur-date').value;
+            const supplier = document.getElementById('pur-supplier').value;
+            const productId = document.getElementById('pur-product-id').value;
+            const variantId = document.getElementById('pur-variant-id').value;
+            const qty = parseInt(document.getElementById('pur-qty').value);
+            const costPrice = parseFloat(document.getElementById('pur-cost').value);
+
+            if (!productId || !variantId) {
+                showToast("Pilih produk dan varian dengan benar", "error");
+                return;
+            }
+
+            const total = qty * costPrice;
+
+            const newPur = {
+                id: `PUR-${Date.now().toString().slice(-6)}`,
+                date, supplier, productId, variantId, qty, costPrice, total
+            };
+
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                const variant = product.variants.find(v => v.id === variantId);
+                if (variant) {
+                    variant.stock += qty;
+                    variant.lastCost = costPrice;
+                }
+            }
+
+            purchases.unshift(newPur);
+            saveState();
+
+            document.getElementById('purchase-form').reset();
+            document.getElementById('pur-date').value = new Date().toISOString().split('T')[0];
+            calculatePurchaseTotal();
+            populatePurchaseDropdowns();
+            renderPurchasesHistory();
+
+            showToast("Restock Pembelian Berhasil & Stok Bertambah!", "success");
+        }
+
+        function renderPurchasesHistory() {
+            const tableBody = document.getElementById('purchase-history-table');
+            if (purchases.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-slate-400">Belum ada riwayat pembelian.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = purchases.map(p => {
+                const prod = products.find(item => item.id === p.productId);
+                const prodName = prod ? prod.name : 'Produk Dihapus';
+                let varSize = '-';
+                if (prod) {
+                    const v = prod.variants.find(varItem => varItem.id === p.variantId);
+                    if (v) varSize = v.size;
+                }
+
+                return `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="p-2.5 font-medium">${p.date}</td>
+                        <td class="p-2.5">${p.supplier}</td>
+                        <td class="p-2.5 font-bold text-slate-800">${prodName} <span class="text-slate-500 font-normal text-[11px]">(Uk: ${varSize})</span></td>
+                        <td class="p-2.5 text-center font-black text-emerald-600">+${p.qty}</td>
+                        <td class="p-2.5 text-right">${formatRp(p.costPrice)}</td>
+                        <td class="p-2.5 text-right font-black text-slate-900">${formatRp(p.total)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderInventoryTable() {
+            const search = document.getElementById('inventory-search').value.toLowerCase();
+            const tableBody = document.getElementById('inventory-table-body');
+
+            let rows = [];
+            products.forEach(p => {
+                p.variants.forEach(v => {
+                    if (p.name.toLowerCase().includes(search) || p.brand.toLowerCase().includes(search) || v.size.toLowerCase().includes(search)) {
+                        rows.push({
+                            productId: p.id,
+                            variantId: v.id,
+                            category: p.category,
+                            name: p.name,
+                            brand: p.brand,
+                            size: v.size,
+                            lastCost: v.lastCost || 0,
+                            sellPrice: p.price,
+                            stock: v.stock
+                        });
+                    }
+                });
+            });
+
+            if (rows.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" class="text-center p-4 text-slate-400">Stok varian tidak ditemukan.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = rows.map(r => {
+                let statusBadge = "";
+                let isLow = false;
+                if (r.stock === 0) {
+                    statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-900 text-white"><i class="fa-solid fa-xmark mr-1"></i> Habis</span>`;
+                    isLow = true;
+                } else if (r.stock < 5) {
+                    statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Menipis</span>`;
+                    isLow = true;
+                } else {
+                    statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800"><i class="fa-solid fa-check mr-1"></i> Aman</span>`;
+                }
+                
+                const actionBtn = isLow ? `<button onclick="quickRestock('${r.productId}', '${r.variantId}')" class="bg-brand-600 hover:bg-brand-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition active:scale-95"><i class="fa-solid fa-bolt mr-1"></i> Restock</button>` : '';
+
+                return `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-bold uppercase">${r.category}</span></td>
+                        <td class="p-3 font-bold text-slate-800">${r.name} <span class="text-slate-400 font-normal text-[10px]">(${r.brand})</span></td>
+                        <td class="p-3 text-center"><span class="font-bold text-slate-700">${r.size}</span></td>
+                        <td class="p-3 text-right text-slate-600">${formatRp(r.lastCost)}</td>
+                        <td class="p-3 text-right font-bold text-brand-600">${formatRp(r.sellPrice)}</td>
+                        <td class="p-3 text-center font-black text-sm ${isLow ? 'text-rose-600' : 'text-slate-800'}">${r.stock}</td>
+                        <td class="p-3 text-center">${statusBadge}</td>
+                        <td class="p-3 text-right">${actionBtn}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function quickRestock(productId, variantId) {
+            switchTab('purchases');
+            document.getElementById('pur-product-id').value = productId;
+            updatePurchaseVariantOptions();
+            document.getElementById('pur-variant-id').value = variantId;
+            showToast("Produk dipilih untuk restock", "info");
+        }
+
+        function showReceiptModal(saleId) {
+            const sale = sales.find(s => s.id === saleId);
+            if (!sale) return;
+
+            document.getElementById('rec-id').innerText = sale.id;
+            document.getElementById('rec-date').innerText = sale.date;
+            document.getElementById('rec-payment').innerText = sale.paymentMethod;
+
+            const recItemsContainer = document.getElementById('rec-items');
+            recItemsContainer.innerHTML = sale.items.map(item => `
+                <div class="space-y-0.5">
+                    <div class="font-bold text-slate-800">${item.productName}</div>
+                    <div class="flex justify-between text-[10px] text-slate-600">
+                        <span>Ukuran: ${item.size} (${item.qty}x ${formatRp(item.sellPrice)})</span>
+                        <span class="font-bold">${formatRp(item.subtotal)}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('rec-total').innerText = formatRp(sale.totalAmount);
+            document.getElementById('receipt-modal').classList.remove('hidden');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
