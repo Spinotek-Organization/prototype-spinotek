@@ -1,5 +1,18 @@
 [
   {
+    "slug": "tulungagung-sneakers",
+    "name": "Tulungagung Sneakers",
+    "description": "Prototype V1 Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": [],
+    "icon": "rocket",
+    "demo_url": null,
+    "repo_url": null,
+    "image": "https://raw.githubusercontent.com/Spinotek-Organization/prototype-spinotek/main/tulungagung-sneakers/card.png",
+    "added_at": "2026-09-18"
+  },
+  {
     "slug": "spbu-palangka-raya",
     "name": "SPBU Palangka Raya",
     "description": "Prototype V1 Sistem Pelaporan SPBU Palangka Raya berbasis kalkulasi totalisator dispenser, pencatatan kas, dan ekspor laporan.",
