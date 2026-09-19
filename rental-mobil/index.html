@@ -1,0 +1,2111 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Rental Mobil - Fleet Management System</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: { sans: ['Inter', 'sans-serif'] },
+                        colors: { navy: { 950: '#0f1729', 900: '#1a2332', 800: '#243044' } },
+                        screens: { xs: '475px' },
+                    },
+                },
+            };
+        </script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .cs::-webkit-scrollbar {
+                width: 5px;
+                height: 5px;
+            }
+            .cs::-webkit-scrollbar-track {
+                background: #f1f5f9;
+            }
+            .cs::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 4px;
+            }
+            .ns::-webkit-scrollbar {
+                display: none;
+            }
+            .ns {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .sidebar-item {
+                transition: all 0.2s;
+            }
+            .sidebar-item:hover {
+                background: rgba(255, 255, 255, 0.08);
+            }
+            .sidebar-item.active {
+                background: rgba(245, 158, 11, 0.12);
+                color: #f59e0b;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(6px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .fade-in {
+                animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            .status-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+            }
+            .photo-ph {
+                background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body class="bg-slate-100 text-slate-800 antialiased min-h-screen">
+        <!-- LOGIN -->
+        <section
+            id="page-login"
+            class="min-h-screen flex items-center justify-center relative overflow-hidden"
+            style="background: linear-gradient(135deg, #0f1729 0%, #1a2332 50%, #0f1729 100%)"
+        >
+            <div
+                class="absolute inset-0 opacity-30"
+                style="
+                    background:
+                        radial-gradient(
+                            ellipse at 30% 20%,
+                            rgba(245, 158, 11, 0.08) 0%,
+                            transparent 60%
+                        ),
+                        radial-gradient(
+                            ellipse at 70% 80%,
+                            rgba(59, 130, 246, 0.06) 0%,
+                            transparent 60%
+                        );
+                "
+            ></div>
+            <div class="relative z-10 w-full max-w-md px-4">
+                <div class="bg-white rounded-2xl shadow-2xl shadow-black/20 p-8 fade-in">
+                    <div class="text-center mb-8">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/20"
+                        >
+                            <i class="fa-solid fa-car-side text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-extrabold text-slate-800">Rental Mobil</h1>
+                        <p class="text-xs italic text-slate-400 mt-1">Fleet Management System</p>
+                    </div>
+                    <div
+                        id="login-error"
+                        class="hidden mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm font-medium"
+                    ></div>
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 block"
+                                >Email</label
+                            >
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                                ></i>
+                                <input
+                                    id="login-email"
+                                    type="email"
+                                    value="owner@rental.com"
+                                    class="w-full pl-10 pr-4 py-3 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition"
+                                    placeholder="email@contoh.com"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 block"
+                                >Password</label
+                            >
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                                ></i>
+                                <input
+                                    id="login-pass"
+                                    type="password"
+                                    value="password123"
+                                    class="w-full pl-10 pr-11 py-3 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition"
+                                    placeholder="Password"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="togglePass()"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                >
+                                    <i id="pass-eye" class="fa-solid fa-eye text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            id="login-btn"
+                            class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold text-sm shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 hover:from-amber-600 hover:to-amber-700 transition-all flex items-center justify-center gap-2"
+                        >
+                            <span id="login-btn-text"><i class="fa-solid fa-right-to-bracket"></i> Masuk</span>
+                            <span id="login-btn-loading" class="hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> Memproses...</span>
+                        </button>
+                    </form>
+                    <div class="mt-6 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                        <p
+                            class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2"
+                        >
+                            Demo Credentials
+                        </p>
+                        <div class="space-y-1.5 text-xs text-slate-500">
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-amber-500"></span>
+                                <span class="font-semibold">Owner:</span> owner@rental.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-blue-500"></span>
+                                <span class="font-semibold">Admin:</span> admin@rental.com
+                            </div>
+                            <div class="ml-4 text-slate-400">Password: password123</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center mt-6">
+                        <img src="assets/spinotek-logo.png" alt="Spinotek" class="h-8 mb-2 opacity-60">
+                        <p class="text-[10px] text-slate-300">Developed by Spinotek Corp</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- APP -->
+        <div id="app-wrapper" class="hidden">
+            <aside
+                id="sidebar"
+                class="fixed inset-y-0 left-0 z-40 w-[220px] bg-navy-950 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-xl shadow-slate-900/10"
+            >
+                <div class="px-4 py-5 border-b border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20"
+                        >
+                            <i class="fa-solid fa-car-side text-white text-sm"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <h1 class="text-white font-bold text-sm leading-tight truncate">
+                                Rental Mobil
+                            </h1>
+                            <p class="text-slate-500 text-[10px] font-medium italic">
+                                Fleet Management
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <nav class="flex-1 px-2.5 py-3 space-y-0.5 overflow-y-auto ns">
+                    <button
+                        onclick="go('dashboard')"
+                        id="nav-dashboard"
+                        class="sidebar-item active w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400"
+                    >
+                        <i class="fa-solid fa-gauge-high w-5 text-center text-[13px]"></i
+                        ><span>Dashboard</span>
+                    </button>
+                    <button
+                        onclick="go('armada')"
+                        id="nav-armada"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400"
+                    >
+                        <i class="fa-solid fa-car w-5 text-center text-[13px]"></i
+                        ><span>Armada</span>
+                    </button>
+                    <button
+                        onclick="go('pelanggan')"
+                        id="nav-pelanggan"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400"
+                    >
+                        <i class="fa-solid fa-users w-5 text-center text-[13px]"></i
+                        ><span>Pelanggan</span>
+                    </button>
+                    <button
+                        onclick="go('quotation')"
+                        id="nav-quotation"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400"
+                    >
+                        <i class="fa-solid fa-file-invoice w-5 text-center text-[13px]"></i
+                        ><span>Quotation</span>
+                    </button>
+                    <button
+                        onclick="go('booking')"
+                        id="nav-booking"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400"
+                    >
+                        <i class="fa-solid fa-calendar-check w-5 text-center text-[13px]"></i
+                        ><span>Booking</span>
+                    </button>
+                    <button
+                        onclick="go('invoice')"
+                        id="nav-invoice"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400"
+                    >
+                        <i class="fa-solid fa-receipt w-5 text-center text-[13px]"></i
+                        ><span>Invoice</span>
+                    </button>
+                    <button
+                        onclick="go('pembayaran')"
+                        id="nav-pembayaran"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400"
+                    >
+                        <i class="fa-solid fa-credit-card w-5 text-center text-[13px]"></i
+                        ><span>Pembayaran</span>
+                    </button>
+                    <div class="border-t border-white/5 my-2 mx-2"></div>
+                    <button
+                        onclick="go('biaya')"
+                        id="nav-biaya"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 owner-only"
+                    >
+                        <i class="fa-solid fa-wrench w-5 text-center text-[13px]"></i
+                        ><span>Biaya Ops</span>
+                    </button>
+                    <button
+                        onclick="go('laporan')"
+                        id="nav-laporan"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 owner-only"
+                    >
+                        <i class="fa-solid fa-chart-line w-5 text-center text-[13px]"></i
+                        ><span>Laporan</span>
+                    </button>
+                    <button
+                        onclick="go('users')"
+                        id="nav-users"
+                        class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 owner-only"
+                    >
+                        <i class="fa-solid fa-users-gear w-5 text-center text-[13px]"></i
+                        ><span>Manajemen User</span>
+                    </button>
+                </nav>
+                <div class="border-t border-white/5 mx-3"></div>
+                <div class="px-3 py-4 space-y-3">
+                    <img src="assets/spinotek-logo.png" alt="Spinotek" class="h-6 mx-auto opacity-40">
+                    <p class="text-[9px] text-slate-600 text-center leading-tight">
+                        &copy; 2026 Rental Mobil.<br />Developed by Spinotek Corp.
+                    </p>
+                </div>
+            </aside>
+            <div
+                id="sidebar-overlay"
+                onclick="closeSidebar()"
+                class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"
+            ></div>
+
+            <div class="flex-1 flex flex-col min-h-screen lg:ml-[220px]">
+                <header class="bg-white border-b border-slate-200/60 sticky top-0 z-20">
+                    <div class="flex items-center justify-between px-4 sm:px-6 h-14">
+                        <div class="flex items-center gap-3">
+                            <button
+                                onclick="openSidebar()"
+                                class="lg:hidden w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600"
+                            >
+                                <i class="fa-solid fa-bars text-sm"></i>
+                            </button>
+                            <div>
+                                <h2 id="page-title" class="font-bold text-slate-800 text-lg">
+                                    Dashboard
+                                </h2>
+                                <p
+                                    id="page-subtitle"
+                                    class="text-xs text-slate-400 font-medium italic"
+                                >
+                                    Fleet overview
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button
+                                onclick="resetData()"
+                                class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition border border-slate-200"
+                            >
+                                <i class="fa-solid fa-arrows-rotate"></i
+                                ><span class="hidden sm:inline">Reset</span>
+                            </button>
+                            <div
+                                class="hidden sm:flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200"
+                            >
+                                <i class="fa-regular fa-clock text-amber-500 text-sm"></i
+                                ><span
+                                    class="text-sm font-semibold text-slate-600"
+                                    id="clock"
+                                ></span>
+                            </div>
+                            <div class="hidden sm:flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                                <div id="header-avatar" class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-bold text-[10px]">OU</div>
+                                <div class="min-w-0">
+                                    <p id="header-user-name" class="text-xs font-semibold text-slate-700 truncate leading-tight">Owner Utama</p>
+                                    <p id="header-user-role" class="text-[10px] text-slate-400 leading-tight">Owner</p>
+                                </div>
+                                <button onclick="logout()" class="ml-1 text-slate-400 hover:text-rose-500 transition" title="Logout">
+                                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 overflow-y-auto cs">
+                    <div
+                        id="toast"
+                        class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
+                    >
+                        <div
+                            class="bg-navy-950 text-white pl-4 pr-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-navy-800"
+                        >
+                            <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i
+                            ><span id="toast-msg" class="text-sm font-medium"></span>
+                        </div>
+                    </div>
+                    <!-- DASHBOARD -->
+                    <section id="tab-dashboard" class="tab-content space-y-6">
+                        <div
+                            class="bg-gradient-to-br from-navy-950 via-navy-900 to-navy-950 rounded-2xl p-6 text-white relative overflow-hidden"
+                        >
+                            <div class="absolute top-0 right-0 w-64 h-64 opacity-5">
+                                <i class="fa-solid fa-car text-[250px] -rotate-12"></i>
+                            </div>
+                            <div class="relative z-10 flex flex-col md:flex-row items-center gap-6">
+                                <div class="w-40 h-28 rounded-xl photo-ph shrink-0 overflow-hidden">
+                                    <svg viewBox="0 0 160 112" class="w-full h-full text-slate-400">
+                                        <rect
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            rx="8"
+                                            x="10"
+                                            y="40"
+                                            width="140"
+                                            height="50"
+                                        />
+                                        <rect
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            rx="4"
+                                            x="30"
+                                            y="20"
+                                            width="50"
+                                            height="30"
+                                        />
+                                        <rect
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            rx="4"
+                                            x="90"
+                                            y="20"
+                                            width="40"
+                                            height="30"
+                                        />
+                                        <circle
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            cx="40"
+                                            cy="95"
+                                            r="10"
+                                        />
+                                        <circle
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            cx="120"
+                                            cy="95"
+                                            r="10"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-amber-400 text-xs font-bold uppercase tracking-wider mb-1"
+                                    >
+                                        Armada Terpopuler Bulan Ini
+                                    </p>
+                                    <p class="text-[10px] italic text-slate-400 mb-2">
+                                        Most Rented Vehicle This Month
+                                    </p>
+                                    <h3 class="text-2xl font-extrabold" id="hero-vehicle-name">
+                                        Toyota Innova Reborn 2.4
+                                    </h3>
+                                    <div
+                                        class="flex items-center gap-3 mt-2 text-sm text-slate-300"
+                                    >
+                                        <span
+                                            id="hero-vehicle-plate"
+                                            class="font-mono font-semibold"
+                                            >B 9012 GHI</span
+                                        >
+                                        <span>&middot;</span>
+                                        <span id="hero-vehicle-rentals">12 kali disewa</span>
+                                    </div>
+                                    <p
+                                        class="text-amber-400 font-bold mt-1"
+                                        id="hero-vehicle-price"
+                                    >
+                                        Rp 600.000/hari
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div
+                                class="bg-white p-4 rounded-2xl border border-slate-200/60 flex items-center justify-between hover:shadow-lg transition-all"
+                            >
+                                <div>
+                                    <p
+                                        class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                    >
+                                        Booking Aktif
+                                    </p>
+                                    <p class="text-[10px] font-normal italic text-slate-300">
+                                        Active Bookings
+                                    </p>
+                                    <h3
+                                        class="text-2xl font-extrabold text-slate-900 mt-1"
+                                        id="d-booking"
+                                    >
+                                        0
+                                    </h3>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"
+                                >
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-white p-4 rounded-2xl border border-slate-200/60 flex items-center justify-between hover:shadow-lg transition-all"
+                            >
+                                <div>
+                                    <p
+                                        class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                    >
+                                        Armada Tersedia
+                                    </p>
+                                    <p class="text-[10px] font-normal italic text-slate-300">
+                                        Available Fleet
+                                    </p>
+                                    <h3
+                                        class="text-2xl font-extrabold text-slate-900 mt-1"
+                                        id="d-available"
+                                    >
+                                        0
+                                    </h3>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0"
+                                >
+                                    <i class="fa-solid fa-car"></i>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-white p-4 rounded-2xl border border-slate-200/60 flex items-center justify-between hover:shadow-lg transition-all"
+                            >
+                                <div>
+                                    <p
+                                        class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                    >
+                                        Pendapatan Bulan
+                                    </p>
+                                    <p class="text-[10px] font-normal italic text-slate-300">
+                                        Monthly Revenue
+                                    </p>
+                                    <h3
+                                        class="text-2xl font-extrabold text-amber-600 mt-1"
+                                        id="d-revenue"
+                                    >
+                                        Rp 0
+                                    </h3>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0"
+                                >
+                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-white p-4 rounded-2xl border border-slate-200/60 flex items-center justify-between hover:shadow-lg transition-all"
+                            >
+                                <div>
+                                    <p
+                                        class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                    >
+                                        Estimasi Laba
+                                    </p>
+                                    <p class="text-[10px] font-normal italic text-slate-300">
+                                        Estimated Profit
+                                    </p>
+                                    <h3
+                                        class="text-2xl font-extrabold text-emerald-600 mt-1"
+                                        id="d-profit"
+                                    >
+                                        Rp 0
+                                    </h3>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0"
+                                >
+                                    <i class="fa-solid fa-coins"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div
+                                class="md:col-span-2 bg-white p-5 rounded-2xl border border-slate-200/60"
+                            >
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="font-bold text-slate-800">Pendapatan 7 Hari</h3>
+                                        <p class="text-[10px] italic text-slate-400">
+                                            Weekly Revenue
+                                        </p>
+                                    </div>
+                                    <span
+                                        class="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded-lg"
+                                        >Real-time</span
+                                    >
+                                </div>
+                                <div class="relative" style="height: 220px">
+                                    <canvas id="revenueChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200/60">
+                                <div class="mb-4">
+                                    <h3 class="font-bold text-slate-800">Status Armada</h3>
+                                    <p class="text-[10px] italic text-slate-400">Fleet Status</p>
+                                </div>
+                                <div
+                                    class="relative flex items-center justify-center"
+                                    style="height: 180px"
+                                >
+                                    <canvas id="statusChart"></canvas>
+                                </div>
+                                <div class="mt-3 space-y-1.5" id="status-legend"></div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200/60">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 class="font-bold text-slate-800">Booking Terbaru</h3>
+                                    <p class="text-[10px] italic text-slate-400">Recent Bookings</p>
+                                </div>
+                                <button
+                                    onclick="go('booking')"
+                                    class="text-xs font-semibold text-amber-600 hover:text-amber-700"
+                                >
+                                    Lihat Semua <i class="fa-solid fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-slate-100">
+                                            <th
+                                                class="text-left py-2 px-3 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                No
+                                            </th>
+                                            <th
+                                                class="text-left py-2 px-3 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Pelanggan
+                                            </th>
+                                            <th
+                                                class="text-left py-2 px-3 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Mobil
+                                            </th>
+                                            <th
+                                                class="text-left py-2 px-3 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Tanggal
+                                            </th>
+                                            <th
+                                                class="text-left py-2 px-3 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Status
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="d-recent-bookings"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ARMADA -->
+                    <section id="tab-armada" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="armada-count">6 unit kendaraan</p>
+                            <div class="flex gap-2 w-full sm:w-auto">
+                                <button
+                                    onclick="toggleArmadaView()"
+                                    id="armada-view-btn"
+                                    class="px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50"
+                                >
+                                    <i class="fa-solid fa-table-list mr-1"></i> Tabel
+                                </button>
+                                <button
+                                    onclick="openArmadaModal()"
+                                    class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                                >
+                                    <i class="fa-solid fa-plus mr-1"></i> Tambah Armada
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="relative flex-1">
+                                <i
+                                    class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                                ></i
+                                ><input
+                                    id="armada-search"
+                                    oninput="renderArmada()"
+                                    type="text"
+                                    placeholder="Cari nama atau plat..."
+                                    class="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                                />
+                            </div>
+                            <select
+                                id="armada-filter"
+                                onchange="renderArmada()"
+                                class="px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                            >
+                                <option value="">Semua Status</option>
+                                <option value="tersedia">Tersedia</option>
+                                <option value="disewa">Disewa</option>
+                                <option value="maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                        <div
+                            id="armada-grid"
+                            class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+                        ></div>
+                        <div
+                            id="armada-table-wrap"
+                            class="hidden bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Mobil
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Plat
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Tahun
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Kursi
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Harga/Hari
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Status
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="armada-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- PELANGGAN -->
+                    <section id="tab-pelanggan" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="pelanggan-count">0 pelanggan</p>
+                            <button
+                                onclick="openPelangganModal()"
+                                class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                            >
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah Pelanggan
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <i
+                                class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                            ></i
+                            ><input
+                                id="pelanggan-search"
+                                oninput="renderPelanggan()"
+                                type="text"
+                                placeholder="Cari nama atau HP..."
+                                class="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                            />
+                        </div>
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Nama
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                HP
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Alamat
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                KTP
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Sewa
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pelanggan-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- QUOTATION -->
+                    <section id="tab-quotation" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="quotation-count">0 quotation</p>
+                            <button
+                                onclick="openQuotationModal()"
+                                class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                            >
+                                <i class="fa-solid fa-plus mr-1"></i> Buat Quotation
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                No
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Pelanggan
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Mobil
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Tanggal
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Total
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Status
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="quotation-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- BOOKING -->
+                    <section id="tab-booking" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="booking-count">0 booking</p>
+                            <button
+                                onclick="openBookingModal()"
+                                class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                            >
+                                <i class="fa-solid fa-plus mr-1"></i> Buat Booking
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                No
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Pelanggan
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Mobil
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Tanggal
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Supir
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Status
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="booking-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- INVOICE -->
+                    <section id="tab-invoice" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="invoice-count">0 invoice</p>
+                            <button
+                                onclick="createInvoiceFromBooking()"
+                                class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                            >
+                                <i class="fa-solid fa-plus mr-1"></i> Buat Invoice
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                No
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Booking
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Total
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Terbayar
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Sisa
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Denda
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Status
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="invoice-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- PEMBAYARAN -->
+                    <section id="tab-pembayaran" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="pembayaran-count">0 pembayaran</p>
+                            <button
+                                onclick="openPembayaranModal()"
+                                class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                            >
+                                <i class="fa-solid fa-plus mr-1"></i> Catat Pembayaran
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                No
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Invoice
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Jumlah
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Tanggal
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                 Metode
+                                             </th>
+                                             <th
+                                                 class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                             >
+                                                 Status
+                                             </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pembayaran-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- BIAYA -->
+                    <section id="tab-biaya" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="biaya-count">0 biaya</p>
+                            <button
+                                onclick="openBiayaModal()"
+                                class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                            >
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah Biaya
+                            </button>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <select
+                                id="biaya-mobil-filter"
+                                onchange="renderBiaya()"
+                                class="px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                            >
+                                <option value="">Semua Mobil</option>
+                            </select>
+                            <select
+                                id="biaya-tipe-filter"
+                                onchange="renderBiaya()"
+                                class="px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                            >
+                                <option value="">Semua Tipe</option>
+                                <option value="bbm">BBM</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="pajak">Pajak</option>
+                                <option value="cuci">Cuci</option>
+                                <option value="parkir">Parkir</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Tanggal
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Mobil
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Tipe
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Jumlah
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Keterangan
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="biaya-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- LAPORAN -->
+                    <section id="tab-laporan" class="tab-content hidden space-y-6">
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-white p-4 rounded-2xl border border-slate-200/60">
+                                <p
+                                    class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                >
+                                    Total Pendapatan
+                                </p>
+                                <p class="text-[10px] italic text-slate-300">Total Revenue</p>
+                                <h3
+                                    class="text-xl font-extrabold text-amber-600 mt-1"
+                                    id="l-revenue"
+                                >
+                                    Rp 0
+                                </h3>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-slate-200/60">
+                                <p
+                                    class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                >
+                                    Total Biaya
+                                </p>
+                                <p class="text-[10px] italic text-slate-300">Operating Costs</p>
+                                <h3 class="text-xl font-extrabold text-rose-600 mt-1" id="l-cost">
+                                    Rp 0
+                                </h3>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-slate-200/60">
+                                <p
+                                    class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                >
+                                    Laba Bersih
+                                </p>
+                                <p class="text-[10px] italic text-slate-300">Net Profit</p>
+                                <h3
+                                    class="text-xl font-extrabold text-emerald-600 mt-1"
+                                    id="l-profit"
+                                >
+                                    Rp 0
+                                </h3>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-slate-200/60">
+                                <p
+                                    class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                >
+                                    Utilisasi Armada
+                                </p>
+                                <p class="text-[10px] italic text-slate-300">Fleet Utilization</p>
+                                <h3 class="text-xl font-extrabold text-blue-600 mt-1" id="l-util">
+                                    0%
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/60">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-filter text-slate-400 text-sm"></i>
+                                    <span class="text-xs font-bold text-slate-500 uppercase">Filter Periode</span>
+                                </div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <input id="lap-start" type="date" class="px-3 py-2 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none">
+                                    <span class="text-slate-400 text-sm">—</span>
+                                    <input id="lap-end" type="date" class="px-3 py-2 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none">
+                                    <select id="lap-mobil" class="px-3 py-2 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white">
+                                        <option value="">Semua Mobil</option>
+                                    </select>
+                                    <button onclick="applyLaporanFilter()" class="px-4 py-2 rounded-xl bg-amber-500 text-white text-xs font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"><i class="fa-solid fa-magnifying-glass mr-1"></i>Terapkan</button>
+                                    <button onclick="resetLaporanFilter()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">Reset</button>
+                                </div>
+                                <div class="flex items-center gap-2 sm:ml-auto">
+                                    <button onclick="exportLaporanCSV()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition"><i class="fa-solid fa-file-csv mr-1"></i>Export CSV</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200/60">
+                            <h3 class="font-bold text-slate-800 mb-4">
+                                Rincian per Mobil
+                                <span class="text-[10px] italic font-normal text-slate-400"
+                                    >Vehicle Detail</span
+                                >
+                            </h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Mobil
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Pendapatan
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Biaya
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Laba
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Utilisasi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="laporan-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- USERS -->
+                    <section id="tab-users" class="tab-content hidden space-y-5">
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                        >
+                            <p class="text-sm text-slate-500" id="users-count">0 user</p>
+                            <button
+                                onclick="openUserModal()"
+                                class="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition"
+                            >
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah User
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden"
+                        >
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100">
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Nama
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Email
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Role
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Status
+                                            </th>
+                                            <th
+                                                class="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
+                                            >
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="users-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- MODALS -->
+        <div
+            id="modal-armada"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/50" onclick="closeModal('modal-armada')"></div>
+            <div
+                class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto cs"
+            >
+                <div
+                    class="sticky top-0 bg-white border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800" id="armada-modal-title">
+                            Tambah Armada
+                        </h3>
+                        <p class="text-xs text-slate-400 italic">Add Vehicle</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-armada')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form onsubmit="saveArmada(event)" class="p-5 space-y-4">
+                    <input type="hidden" id="armada-edit-id" />
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Nama / Tipe Mobil</label
+                        ><input
+                            id="armada-name"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            placeholder="Toyota Avanza 1.5 G"
+                        />
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Nomor Polisi</label
+                            ><input
+                                id="armada-plate"
+                                required
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                                placeholder="B 1234 ABC"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Tahun</label
+                            ><input
+                                id="armada-year"
+                                type="number"
+                                required
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                                placeholder="2023"
+                            />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Kursi</label
+                            ><input
+                                id="armada-seats"
+                                type="number"
+                                required
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                                placeholder="7"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Harga/Hari (Rp)</label
+                            ><input
+                                id="armada-price"
+                                type="number"
+                                required
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                                placeholder="350000"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Status</label
+                        ><select
+                            id="armada-status"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        >
+                            <option value="tersedia">Tersedia</option>
+                            <option value="disewa">Disewa</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            type="button"
+                            onclick="closeModal('modal-armada')"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            Batal</button
+                        ><button
+                            type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div
+            id="modal-pelanggan"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/50" onclick="closeModal('modal-pelanggan')"></div>
+            <div
+                class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto cs"
+            >
+                <div
+                    class="sticky top-0 bg-white border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800" id="pelanggan-modal-title">
+                            Tambah Pelanggan
+                        </h3>
+                        <p class="text-xs text-slate-400 italic">Add Customer</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-pelanggan')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form onsubmit="savePelanggan(event)" class="p-5 space-y-4">
+                    <input type="hidden" id="pelanggan-edit-id" />
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Nama Lengkap</label
+                        ><input
+                            id="pelanggan-name"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >No. HP / WhatsApp</label
+                        ><input
+                            id="pelanggan-phone"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            placeholder="081234567890"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Alamat</label
+                        ><textarea
+                            id="pelanggan-address"
+                            rows="2"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none resize-none"
+                        ></textarea>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >No. KTP / SIM</label
+                        ><input
+                            id="pelanggan-idcard"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                        />
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            type="button"
+                            onclick="closeModal('modal-pelanggan')"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            Batal</button
+                        ><button
+                            type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div
+            id="modal-quotation"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/50" onclick="closeModal('modal-quotation')"></div>
+            <div
+                class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto cs"
+            >
+                <div
+                    class="sticky top-0 bg-white border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800">Buat Quotation</h3>
+                        <p class="text-xs text-slate-400 italic">Create Quotation</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-quotation')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form onsubmit="saveQuotation(event)" class="p-5 space-y-4">
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Pelanggan</label
+                        ><select
+                            id="qtn-pelanggan"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        ></select>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Mobil</label
+                        ><select
+                            id="qtn-mobil"
+                            required
+                            onchange="calcQtnTotal()"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        ></select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Tanggal Mulai</label
+                            ><input
+                                id="qtn-start"
+                                type="date"
+                                required
+                                onchange="calcQtnTotal()"
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Tanggal Selesai</label
+                            ><input
+                                id="qtn-end"
+                                type="date"
+                                required
+                                onchange="calcQtnTotal()"
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Supir</label
+                            >
+                            <div class="flex gap-3 mt-1">
+                                <label class="flex items-center gap-2 text-sm"
+                                    ><input type="radio" name="qtn-driver" value="0" checked />
+                                    Lepas Kunci</label
+                                ><label class="flex items-center gap-2 text-sm"
+                                    ><input type="radio" name="qtn-driver" value="1" />
+                                    +Supir</label
+                                >
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Berlaku Sampai</label
+                            ><input
+                                id="qtn-valid"
+                                type="date"
+                                required
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            />
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                        <p class="text-xs font-bold text-slate-400 uppercase">Total Estimasi</p>
+                        <p class="text-xl font-extrabold text-amber-600" id="qtn-total">Rp 0</p>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            type="button"
+                            onclick="closeModal('modal-quotation')"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            Batal</button
+                        ><button
+                            type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div
+            id="modal-booking"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/50" onclick="closeModal('modal-booking')"></div>
+            <div
+                class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto cs"
+            >
+                <div
+                    class="sticky top-0 bg-white border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800">Buat Booking</h3>
+                        <p class="text-xs text-slate-400 italic">Create Booking</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-booking')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form onsubmit="saveBooking(event)" class="p-5 space-y-4">
+                    <input type="hidden" id="bkg-edit-id" /><input type="hidden" id="bkg-qtn-id" />
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Pelanggan</label
+                        ><select
+                            id="bkg-pelanggan"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        ></select>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Mobil</label
+                        ><select
+                            id="bkg-mobil"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        ></select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Tanggal Mulai</label
+                            ><input
+                                id="bkg-start"
+                                type="date"
+                                required
+                                onchange="checkAvail()"
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Tanggal Selesai</label
+                            ><input
+                                id="bkg-end"
+                                type="date"
+                                required
+                                onchange="checkAvail()"
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            />
+                        </div>
+                    </div>
+                    <div id="avail-result" class="hidden text-sm font-medium rounded-xl p-3"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Lokasi Ambil</label
+                            ><input
+                                id="bkg-pickup"
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                                placeholder="Bandara / Hotel"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Lokasi Kembali</label
+                            ><input
+                                id="bkg-return"
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                                placeholder="Bandara / Hotel"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Supir</label
+                        >
+                        <div class="flex gap-3 mt-1">
+                            <label class="flex items-center gap-2 text-sm"
+                                ><input type="radio" name="bkg-driver" value="0" checked /> Lepas
+                                Kunci</label
+                            ><label class="flex items-center gap-2 text-sm"
+                                ><input type="radio" name="bkg-driver" value="1" /> +Supir</label
+                            >
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Status</label
+                        ><select
+                            id="bkg-status"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        >
+                            <option value="pending">Pending</option>
+                            <option value="dikonfirmasi">Dikonfirmasi</option>
+                            <option value="berjalan">Berjalan</option>
+                            <option value="selesai">Selesai</option>
+                            <option value="dibatalkan">Dibatalkan</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            type="button"
+                            onclick="closeModal('modal-booking')"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            Batal</button
+                        ><button
+                            type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div
+            id="modal-pembayaran"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div
+                class="absolute inset-0 bg-black/50"
+                onclick="closeModal('modal-pembayaran')"
+            ></div>
+            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                <div
+                    class="border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800">Catat Pembayaran</h3>
+                        <p class="text-xs text-slate-400 italic">Record Payment</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-pembayaran')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form onsubmit="savePembayaran(event)" class="p-5 space-y-4">
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Invoice</label
+                        ><select
+                            id="pay-invoice"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        ></select>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Jumlah Bayar (Rp)</label
+                        ><input
+                            id="pay-amount"
+                            type="number"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Tanggal Bayar</label
+                        ><input
+                            id="pay-date"
+                            type="date"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Metode Bayar</label
+                        ><select
+                            id="pay-method"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        >
+                            <option value="tunai">Tunai</option>
+                            <option value="transfer">Transfer Bank</option>
+                            <option value="qris">QRIS</option>
+                            <option value="kartu">Kartu Kredit</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            type="button"
+                            onclick="closeModal('modal-pembayaran')"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            Batal</button
+                        ><button
+                            type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div
+            id="modal-biaya"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/50" onclick="closeModal('modal-biaya')"></div>
+            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                <div
+                    class="border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800">Tambah Biaya</h3>
+                        <p class="text-xs text-slate-400 italic">Add Expense</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-biaya')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form onsubmit="saveBiaya(event)" class="p-5 space-y-4">
+                    <input type="hidden" id="biaya-edit-id" />
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Mobil</label
+                        ><select
+                            id="biaya-mobil"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        ></select>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Tipe Biaya</label
+                        ><select
+                            id="biaya-type"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        >
+                            <option value="bbm">BBM</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="pajak">Pajak</option>
+                            <option value="cuci">Cuci</option>
+                            <option value="parkir">Parkir</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Jumlah (Rp)</label
+                            ><input
+                                id="biaya-amount"
+                                type="number"
+                                required
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                                >Tanggal</label
+                            ><input
+                                id="biaya-date"
+                                type="date"
+                                required
+                                class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Keterangan</label
+                        ><textarea
+                            id="biaya-desc"
+                            rows="2"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none resize-none"
+                        ></textarea>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            type="button"
+                            onclick="closeModal('modal-biaya')"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            Batal</button
+                        ><button
+                            type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modal-user" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/50" onclick="closeModal('modal-user')"></div>
+            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                <div
+                    class="border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800" id="user-modal-title">Tambah User</h3>
+                        <p class="text-xs text-slate-400 italic">Add User</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-user')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form onsubmit="saveUser(event)" class="p-5 space-y-4">
+                    <input type="hidden" id="user-edit-id" />
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Nama</label
+                        ><input
+                            id="user-form-name"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Email</label
+                        ><input
+                            id="user-form-email"
+                            type="email"
+                            required
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Password</label
+                        ><input
+                            id="user-form-pass"
+                            type="password"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                            placeholder="Kosongkan jika tidak diubah"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block"
+                            >Role</label
+                        ><select
+                            id="user-form-role"
+                            class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white"
+                        >
+                            <option value="admin">Admin</option>
+                            <option value="owner">Owner</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            type="button"
+                            onclick="closeModal('modal-user')"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            Batal</button
+                        ><button
+                            type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 shadow-md shadow-amber-500/20"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div
+            id="modal-invoice-detail"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div
+                class="absolute inset-0 bg-black/50"
+                onclick="closeModal('modal-invoice-detail')"
+            ></div>
+            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                <div
+                    class="border-b border-slate-100 px-5 py-4 flex justify-between items-center rounded-t-2xl"
+                >
+                    <div>
+                        <h3 class="font-bold text-slate-800">Detail Invoice</h3>
+                        <p class="text-xs text-slate-400 italic">Invoice Detail</p>
+                    </div>
+                    <button
+                        onclick="closeModal('modal-invoice-detail')"
+                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="invoice-detail-body" class="p-5"></div>
+            </div>
+        </div>
+
+        <script src="app.js"></script>
+    </body>
+</html>

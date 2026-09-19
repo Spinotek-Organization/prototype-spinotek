@@ -1,0 +1,11 @@
+{
+    "name": "Rental Mobil",
+    "description": "Sistem Booking, Quotation & Invoice Rental Mobil — Fleet Management System dengan modul Dashboard, Armada, Pelanggan, Quotation, Booking, Invoice, Pembayaran, Biaya Operasional, Laporan, dan Manajemen User.",
+    "icon": "🚗",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
+    "demo_url": "https://demo.spinotek.com/rental-mobil",
+    "repo_url": null,
+    "added_at": "2026-09-19"
+}

@@ -1,5 +1,18 @@
 [
     {
+        "slug": "rental-mobil",
+        "name": "Rental Mobil",
+        "description": "Sistem Booking, Quotation & Invoice Rental Mobil — Fleet Management System dengan modul Dashboard, Armada, Pelanggan, Quotation, Booking, Invoice, Pembayaran, Biaya Operasional, Laporan, dan Manajemen User.",
+        "category": "Web App",
+        "status": "IN DEVELOPMENT",
+        "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
+        "icon": "🚗",
+        "demo_url": "https://demo.spinotek.com/rental-mobil",
+        "repo_url": null,
+        "image": "./rental-mobil/assets/card.png",
+        "added_at": "2026-09-19"
+    },
+    {
         "slug": "andi-sneakers",
         "name": "Andi Sneakers",
         "description": "Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
