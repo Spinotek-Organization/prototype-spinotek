@@ -1,0 +1,657 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Andi Sneakers - POS & Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{brand:{50:'#f0fdfa',100:'#ccfbf1',500:'#14b8a6',600:'#0d9488',700:'#0f766e'}},screens:{'xs':'475px'}}}}
+    </script>
+    <style>
+    body{font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+    .cs::-webkit-scrollbar{width:5px;height:5px}.cs::-webkit-scrollbar-track{background:#f1f5f9}.cs::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    .ns::-webkit-scrollbar{display:none}.ns{-ms-overflow-style:none;scrollbar-width:none}
+    @media print{body *{visibility:hidden}#printable-receipt,#printable-receipt *{visibility:visible}#printable-receipt{position:absolute;left:0;top:0;width:100%}}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeIn .25s cubic-bezier(.16,1,.3,1) forwards}
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+<header class="bg-slate-900 text-white sticky top-0 z-30 shadow-lg border-b border-slate-800">
+<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-14 sm:h-16">
+    <div class="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+        <div class="bg-brand-500 p-2 rounded-xl text-white font-black text-base sm:text-xl shrink-0 shadow-md shadow-brand-500/30"><i class="fa-solid fa-shoe-prints"></i></div>
+        <div class="min-w-0">
+            <h1 class="text-sm sm:text-lg font-bold leading-tight truncate tracking-tight">Andi Sneakers</h1>
+            <p class="text-[10px] sm:text-xs text-slate-400 truncate font-medium">Sistem Penjualan &amp; Inventory (Spinotek ERP)</p>
+        </div>
+    </div>
+    <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        <span class="text-xs font-semibold bg-slate-800/80 px-3 py-1.5 rounded-lg text-slate-300 hidden md:inline-flex items-center border border-slate-700/50">
+            <i class="fa-regular fa-calendar-alt mr-2 text-brand-500"></i><span id="clock"></span>
+        </span>
+        <button onclick="resetData()" class="text-2xs sm:text-xs bg-slate-800 hover:bg-rose-900/60 hover:text-rose-200 text-slate-300 px-2.5 sm:px-3 py-1.5 rounded-lg transition border border-slate-700/60 font-medium active:scale-95 flex items-center">
+            <i class="fa-solid fa-rotate-left mr-1.5 text-rose-400"></i>Reset
+        </button>
+    </div>
+</div>
+</div>
+</header>
+
+<nav class="bg-white border-b border-slate-200 sticky top-14 sm:top-16 z-20 shadow-sm">
+<div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+<div class="flex space-x-1 sm:space-x-2 overflow-x-auto ns py-2 scroll-smooth" style="-webkit-overflow-scrolling:touch">
+    <button onclick="go('dashboard')" id="nav-dashboard" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap transition bg-brand-50 text-brand-600 shadow-xs"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></button>
+    <button onclick="go('pos')" id="nav-pos" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-cash-register"></i><span>Penjualan (POS)</span></button>
+    <button onclick="go('products')" id="nav-products" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-boxes-stacked"></i><span>Katalog Produk</span></button>
+    <button onclick="go('purchases')" id="nav-purchases" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-truck-ramp-box"></i><span>Pembelian</span></button>
+    <button onclick="go('inventory')" id="nav-inventory" class="nav-btn px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center space-x-2 whitespace-nowrap text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-warehouse"></i><span>Inventory</span></button>
+</div>
+</div>
+</nav><main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-1 w-full">
+
+<div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 border border-slate-700 max-w-xs sm:max-w-md">
+    <i id="toast-icon" class="fa-solid fa-circle-info text-brand-500 text-lg shrink-0"></i>
+    <span id="toast-message" class="text-xs sm:text-sm font-medium"></span>
+</div>
+
+<!-- DASHBOARD -->
+<section id="tab-dashboard" class="tab-content space-y-4 sm:space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Penjualan Hari Ini</p><h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="d-today">Rp 0</h3><p class="text-xs text-slate-500 mt-0.5"><span id="d-today-count" class="font-bold text-brand-600">0</span> Transaksi</p></div>
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-money-bill-wave"></i></div>
+        </div>
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Omzet Bulan Ini</p><h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="d-month">Rp 0</h3><p class="text-xs text-slate-500 mt-0.5">Akumulasi omzet</p></div>
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Estimasi Keuntungan</p><h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="d-profit">Rp 0</h3><p class="text-xs text-slate-500 mt-0.5">Gross Profit</p></div>
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-coins"></i></div>
+        </div>
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Modal Terpakai</p><h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="d-cost">Rp 0</h3><p class="text-xs text-slate-500 mt-0.5">Akumulasi modal</p></div>
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-boxes-packing"></i></div>
+        </div>
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between sm:col-span-2 md:col-span-1">
+            <div><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Stok Menipis (&lt;5)</p><h3 class="text-xl sm:text-2xl font-black text-rose-600 mt-1" id="d-low">0 Varian</h3><p class="text-xs text-rose-500 font-semibold mt-0.5">Perlu Restock</p></div>
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="md:col-span-2 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base">Grafik Penjualan 7 Hari Terakhir</h3>
+                <span class="text-2xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded-md">Real-time</span>
+            </div>
+            <div class="flex-1 min-h-0 relative"><canvas id="salesChart"></canvas></div>
+        </div>
+        <div class="space-y-4 sm:space-y-6 md:col-span-2 lg:col-span-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-0">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center space-x-2"><i class="fa-solid fa-fire text-amber-500"></i><span>Produk Terlaris</span></h3>
+                <div id="top-list" class="space-y-2 cs max-h-44 overflow-y-auto pr-1"></div>
+            </div>
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center space-x-2"><i class="fa-solid fa-triangle-exclamation text-rose-500"></i><span>Stok Menipis</span></h3>
+                <div id="low-list" class="space-y-2 cs max-h-44 overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 border-b border-slate-100 pb-4">
+            <div><h3 class="font-bold text-slate-800 text-sm sm:text-base">Laporan Penjualan &amp; Transaksi</h3><p class="text-xs text-slate-500">Filter berdasarkan pencarian dan tanggal</p></div>
+            <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                <input type="text" id="r-search" oninput="filterReport()" placeholder="Cari ID/Produk..." class="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none w-full sm:w-44 bg-slate-50">
+                <div class="flex items-center space-x-1 w-full sm:w-auto">
+                    <input type="date" id="r-start" class="px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                    <span class="text-slate-400 text-xs">s/d</span>
+                    <input type="date" id="r-end" class="px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50">
+                </div>
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <button onclick="filterReport()" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-xl transition font-semibold"><i class="fa-solid fa-filter mr-1"></i>Filter</button>
+                    <button onclick="exportExcel()" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-xl transition font-semibold"><i class="fa-solid fa-file-excel mr-1"></i>Export</button>
+                </div>
+            </div>
+        </div>
+        <div class="overflow-x-auto cs">
+            <table class="w-full text-left text-xs border-collapse min-w-[640px]">
+                <thead><tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                    <th class="p-3">ID</th><th class="p-3">Tanggal</th><th class="p-3">Detail Produk</th><th class="p-3 text-center">Qty</th><th class="p-3">Bayar</th><th class="p-3 text-right">Total</th><th class="p-3 text-right">Aksi</th>
+                </tr></thead>
+                <tbody id="report-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- POS / PENJUALAN -->
+<section id="tab-pos" class="tab-content hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+        <div class="lg:col-span-7 xl:col-span-8 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base">Pilih Produk Transaksi</h3>
+                <div class="relative w-full sm:w-60"><i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i><input type="text" id="pos-search" oninput="renderPOS()" placeholder="Cari nama/brand..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+            </div>
+            <div class="flex space-x-1.5 overflow-x-auto ns pb-1 text-xs">
+                <button onclick="filterCat('All')" class="pos-cat px-3 py-1.5 rounded-xl font-bold bg-slate-900 text-white whitespace-nowrap">Semua</button>
+                <button onclick="filterCat('Sepatu')" class="pos-cat px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">Sepatu</button>
+                <button onclick="filterCat('Sandal')" class="pos-cat px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">Sandal</button>
+                <button onclick="filterCat('Aksesoris')" class="pos-cat px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">Aksesoris</button>
+            </div>
+            <div id="pos-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 cs max-h-[500px] sm:max-h-[550px] overflow-y-auto pr-1"></div>
+        </div>
+        <div class="lg:col-span-5 xl:col-span-4 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sticky top-32 lg:top-24">
+            <div>
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center space-x-2"><i class="fa-solid fa-shopping-cart text-brand-600"></i><span>Keranjang</span></h3>
+                    <button onclick="clearCart()" class="text-xs text-rose-600 hover:underline font-semibold">Kosongkan</button>
+                </div>
+                <div class="mb-3"><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Tanggal Transaksi</label><input type="date" id="pos-date" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium"></div>
+                <div id="cart-items" class="space-y-2.5 cs max-h-52 sm:max-h-64 overflow-y-auto mb-3 border-b border-slate-100 pb-3 pr-1"></div>
+            </div>
+            <div class="space-y-3 pt-1">
+                <div class="bg-slate-50 p-3.5 rounded-xl space-y-1.5 border border-slate-200/80">
+                    <div class="flex justify-between text-xs text-slate-600"><span>Total Item</span><span id="cart-qty" class="font-bold">0 Unit</span></div>
+                    <div class="flex justify-between text-base font-black text-slate-900 border-t border-slate-200/80 pt-1.5"><span>Total</span><span id="cart-total" class="text-brand-600">Rp 0</span></div>
+                </div>
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Metode Bayar</label>
+                    <select id="pos-pay" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none font-bold bg-slate-50"><option>Tunai</option><option>QRIS</option><option>Transfer Bank</option></select></div>
+                <button onclick="checkout()" class="w-full bg-brand-600 hover:bg-brand-700 active:scale-98 text-white font-bold py-3 rounded-xl transition shadow-md shadow-brand-500/20 text-xs sm:text-sm flex items-center justify-center space-x-2"><i class="fa-solid fa-check-circle text-sm"></i><span>Simpan Transaksi</span></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KATALOG PRODUK -->
+<section id="tab-products" class="tab-content hidden space-y-4 sm:space-y-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div><h2 class="text-lg sm:text-xl font-bold text-slate-800">Katalog Produk</h2><p class="text-xs text-slate-500">Kelola data produk, brand, model, harga &amp; varian</p></div>
+        <button onclick="openProductModal()" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white text-xs px-4 py-2.5 rounded-xl transition font-bold flex items-center justify-center space-x-2 shadow-xs active:scale-95"><i class="fa-solid fa-plus"></i><span>Tambah Produk</span></button>
+    </div>
+    <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</section>
+
+<!-- PEMBELIAN -->
+<section id="tab-purchases" class="tab-content hidden space-y-4 sm:space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+        <div class="lg:col-span-5 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+            <div class="border-b border-slate-100 pb-3"><h3 class="font-bold text-slate-800 text-sm sm:text-base">Input Pembelian (Restock)</h3><p class="text-xs text-slate-500">Stok bertambah otomatis setelah disimpan</p></div>
+            <form id="pur-form" onsubmit="submitPurchase(event)" class="space-y-3">
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Tanggal</label><input type="date" id="pur-date" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Supplier</label><input type="text" id="pur-sup" required placeholder="PT Mitra Footwear" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Produk</label><select id="pur-prod" onchange="purVarOpts()" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium"><option value="">-- Pilih --</option></select></div>
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Varian</label><select id="pur-var" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium"><option value="">-- Pilih --</option></select></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Qty</label><input type="number" id="pur-qty" min="1" value="1" required oninput="purCalc()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+                    <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Harga Beli/Unit</label><input type="number" id="pur-cost" min="0" required oninput="purCalc()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-center text-xs"><span class="text-slate-600 font-medium">Total:</span><span id="pur-total" class="font-black text-slate-900 text-sm">Rp 0</span></div>
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 active:scale-98 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-xs"><i class="fa-solid fa-plus-circle mr-1"></i>Simpan &amp; Tambah Stok</button>
+            </form>
+        </div>
+        <div class="lg:col-span-7 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+            <div class="border-b border-slate-100 pb-3"><h3 class="font-bold text-slate-800 text-sm sm:text-base">Riwayat Pembelian</h3><p class="text-xs text-slate-500">Catatan masuk barang &amp; riwayat modal</p></div>
+            <div class="overflow-x-auto cs">
+                <table class="w-full text-left text-xs border-collapse min-w-[550px]">
+                    <thead><tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                        <th class="p-2.5">Tanggal</th><th class="p-2.5">Supplier</th><th class="p-2.5">Produk &amp; Varian</th><th class="p-2.5 text-center">Qty</th><th class="p-2.5 text-right">Harga Beli</th><th class="p-2.5 text-right">Total</th>
+                    </tr></thead>
+                    <tbody id="pur-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INVENTORY -->
+<section id="tab-inventory" class="tab-content hidden space-y-4 sm:space-y-6">
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+            <div><h2 class="text-lg font-bold text-slate-800">Inventory &amp; Stok</h2><p class="text-xs text-slate-500">Monitoring real-time per varian</p></div>
+            <div class="relative w-full sm:w-64"><i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i><input type="text" id="stk-search" oninput="renderStock()" placeholder="Cari produk/varian..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+        </div>
+        <div class="overflow-x-auto cs">
+            <table class="w-full text-left text-xs border-collapse min-w-[700px]">
+                <thead><tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                    <th class="p-3">Kategori</th><th class="p-3">Produk &amp; Brand</th><th class="p-3 text-center">Ukuran</th><th class="p-3 text-right">Harga Modal</th><th class="p-3 text-right">Harga Jual</th><th class="p-3 text-center">Stok</th><th class="p-3 text-center">Status</th><th class="p-3 text-right">Aksi</th>
+                </tr></thead>
+                <tbody id="stk-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+</main>
+<!-- MODAL PRODUK -->
+<div id="product-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl relative max-h-[92vh] overflow-y-auto cs">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+            <h3 id="modal-title" class="font-bold text-slate-800 text-base sm:text-lg">Tambah Produk</h3>
+            <button onclick="closeModal('product-modal')" class="text-slate-400 hover:text-slate-600 text-lg w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="prod-form" onsubmit="submitProduct(event)" class="space-y-3.5">
+            <input type="hidden" id="pf-id">
+            <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Nama Produk</label><input type="text" id="pf-name" required placeholder="Contoh: Nike Air Max Pulse" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+            <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Kategori</label><select id="pf-cat" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50 font-medium"><option>Sepatu</option><option>Sandal</option><option>Aksesoris</option></select></div>
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Brand</label><input type="text" id="pf-brand" required placeholder="Nike" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Model</label><input type="text" id="pf-model" placeholder="Air Max Pulse" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+                <div><label class="block text-2xs font-bold text-slate-500 uppercase mb-1">Harga Jual (Rp)</label><input type="number" id="pf-price" min="0" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-slate-50"></div>
+            </div>
+            <div class="border-t border-slate-100 pt-3 space-y-2">
+                <div class="flex justify-between items-center">
+                    <label class="block text-xs font-bold text-slate-700">Varian Ukuran &amp; Stok</label>
+                    <button type="button" onclick="addVarRow()" class="text-xs text-brand-600 hover:underline font-bold"><i class="fa-solid fa-plus text-2xs mr-1"></i>Tambah</button>
+                </div>
+                <div id="var-rows" class="space-y-2"></div>
+            </div>
+            <div class="flex justify-end space-x-2 border-t border-slate-100 pt-3">
+                <button type="button" onclick="closeModal('product-modal')" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl font-semibold">Batal</button>
+                <button type="submit" class="px-4 py-2 text-xs bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-xs">Simpan Produk</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL STRUK -->
+<div id="receipt-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-xs sm:max-w-sm w-full p-5 space-y-4 shadow-2xl relative">
+        <div id="printable-receipt" class="space-y-3 text-slate-800 text-xs">
+            <div class="text-center border-b border-dashed border-slate-300 pb-3 flex flex-col items-center justify-center">
+                <div class="bg-brand-500 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg mb-2"><i class="fa-solid fa-shoe-prints"></i></div>
+                <h2 class="font-black text-sm uppercase tracking-wider">Andi Sneakers</h2>
+                <p class="text-[10px] font-bold text-slate-600">Spinotek ERP System</p>
+                <p class="text-[10px] text-slate-500">WA: 62 851-3654-9779</p>
+            </div>
+            <div class="space-y-1 text-[11px] border-b border-dashed border-slate-300 pb-2">
+                <div class="flex justify-between"><span>No Struk:</span><span id="rec-id" class="font-bold"></span></div>
+                <div class="flex justify-between"><span>Tanggal:</span><span id="rec-date"></span></div>
+                <div class="flex justify-between"><span>Metode:</span><span id="rec-pay"></span></div>
+            </div>
+            <div id="rec-items" class="space-y-2 border-b border-dashed border-slate-300 pb-3"></div>
+            <div class="space-y-1 font-bold text-xs">
+                <div class="flex justify-between text-sm font-black"><span>TOTAL:</span><span id="rec-total" class="text-slate-900"></span></div>
+            </div>
+            <div class="text-center text-[10px] text-slate-400 pt-1"><p>Terima Kasih Telah Berbelanja!</p><p>Barang yang sudah dibeli tidak dapat ditukar.</p></div>
+        </div>
+        <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+            <button onclick="closeModal('receipt-modal')" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg font-medium">Tutup</button>
+            <button onclick="window.print()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-900 text-white rounded-lg flex items-center space-x-1.5 font-bold"><i class="fa-solid fa-print"></i><span>Cetak</span></button>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-white border-t border-slate-200 mt-auto py-3">
+    <div class="max-w-7xl mx-auto px-4 text-center text-[11px] text-slate-400 font-medium">&copy; 2026 Andi Sneakers. Developed by Spinotek Corp.</div>
+</footer>
+<script>
+const DATA_VERSION=5;
+const INIT={
+products:[
+{id:"P001",name:"Nike Air Max Pulse",cat:"Sepatu",brand:"Nike",model:"Air Max Pulse",price:1899000,variants:[{vid:"V001-40",size:"40",stock:4,cost:1350000},{vid:"V001-41",size:"41",stock:7,cost:1350000},{vid:"V001-42",size:"42",stock:3,cost:1350000}]},
+{id:"P002",name:"Adidas Ultraboost Light",cat:"Sepatu",brand:"Adidas",model:"Ultraboost Light",price:2450000,variants:[{vid:"V002-40",size:"40",stock:5,cost:1800000},{vid:"V002-41",size:"41",stock:4,cost:1800000},{vid:"V002-42",size:"42",stock:2,cost:1800000}]},
+{id:"P003",name:"Sandal Comfort Slide",cat:"Sandal",brand:"Local",model:"Comfort Slide",price:350000,variants:[{vid:"V003-40",size:"40",stock:10,cost:180000},{vid:"V003-41",size:"41",stock:12,cost:180000},{vid:"V003-42",size:"42",stock:6,cost:180000}]},
+{id:"P004",name:"Converse Chuck 70s",cat:"Sepatu",brand:"Converse",model:"Chuck 70s",price:999000,variants:[{vid:"V004-39",size:"39",stock:2,cost:650000},{vid:"V004-40",size:"40",stock:5,cost:650000},{vid:"V004-41",size:"41",stock:1,cost:650000}]},
+{id:"P005",name:"Sneaker Protector Spray",cat:"Aksesoris",brand:"ShoeCare",model:"Protector Spray",price:85000,variants:[{vid:"V005-ALL",size:"All Size",stock:24,cost:45000}]},
+{id:"P006",name:"Sandal Eiger Adventure",cat:"Sandal",brand:"Eiger",model:"Adventure",price:425000,variants:[{vid:"V006-40",size:"40",stock:8,cost:250000},{vid:"V006-41",size:"41",stock:5,cost:250000},{vid:"V006-42",size:"42",stock:3,cost:250000}]},
+{id:"P007",name:"New Balance 550 White",cat:"Sepatu",brand:"New Balance",model:"550 White",price:1650000,variants:[{vid:"V007-40",size:"40",stock:6,cost:1100000},{vid:"V007-41",size:"41",stock:8,cost:1100000},{vid:"V007-42",size:"42",stock:4,cost:1100000}]},
+{id:"P008",name:"Puma RS-X Reinvention",cat:"Sepatu",brand:"Puma",model:"RS-X Reinvention",price:1350000,variants:[{vid:"V008-40",size:"40",stock:3,cost:900000},{vid:"V008-41",size:"41",stock:5,cost:900000},{vid:"V008-42",size:"42",stock:2,cost:900000}]},
+{id:"P009",name:"Sandal Swallow Futsal",cat:"Sandal",brand:"Swallow",model:"Futsal",price:45000,variants:[{vid:"V009-39",size:"39",stock:20,cost:22000},{vid:"V009-40",size:"40",stock:25,cost:22000},{vid:"V009-41",size:"41",stock:18,cost:22000},{vid:"V009-42",size:"42",stock:15,cost:22000}]},
+{id:"P010",name:"Tas Sneaker Organizer",cat:"Aksesoris",brand:"KickBags",model:"Organizer",price:175000,variants:[{vid:"V010-ALL",size:"All Size",stock:12,cost:95000}]},
+{id:"P011",name:"Vans Old Skool Classic",cat:"Sepatu",brand:"Vans",model:"Old Skool",price:1099000,variants:[{vid:"V011-39",size:"39",stock:4,cost:720000},{vid:"V011-40",size:"40",stock:6,cost:720000},{vid:"V011-41",size:"41",stock:3,cost:720000}]},
+{id:"P012",name:"Kaus Kaki Sneaker Pair",cat:"Aksesoris",brand:"SockHub",model:"Sneaker Pair",price:35000,variants:[{vid:"V012-ALL",size:"All Size",stock:40,cost:15000}]}
+],
+purchases:[
+{id:"PU001",date:"2026-09-01",sup:"PT Nike Distribution Indo",pid:"P001",vid:"V001-41",qty:15,cost:1350000,total:20250000},
+{id:"PU002",date:"2026-09-02",sup:"Grosir Sandal Bandung",pid:"P003",vid:"V003-41",qty:25,cost:180000,total:4500000},
+{id:"PU003",date:"2026-09-03",sup:"PT Adidas Indonesia",pid:"P002",vid:"V002-40",qty:10,cost:1800000,total:18000000},
+{id:"PU004",date:"2026-09-05",sup:"Supplier Lokal Malang",pid:"P009",vid:"V009-40",qty:50,cost:22000,total:1100000},
+{id:"PU005",date:"2026-09-07",sup:"Grosir Sepatu Import",pid:"P007",vid:"V007-41",qty:12,cost:1100000,total:13200000},
+{id:"PU006",date:"2026-09-08",sup:"ShoeCare Distributor",pid:"P005",vid:"V005-ALL",qty:30,cost:45000,total:1350000},
+{id:"PU007",date:"2026-09-10",sup:"Toko Aksesoris Online",pid:"P010",vid:"V010-ALL",qty:15,cost:95000,total:1425000},
+{id:"PU008",date:"2026-09-12",sup:"Grosir Vans Bandung",pid:"P011",vid:"V011-40",qty:10,cost:720000,total:7200000},
+{id:"PU009",date:"2026-09-14",sup:"PT Puma Indonesia",pid:"P008",vid:"V008-41",qty:8,cost:900000,total:7200000},
+{id:"PU010",date:"2026-09-16",sup:"Grosir Sandal Bandung",pid:"P006",vid:"V006-41",qty:10,cost:250000,total:2500000}
+],
+sales:[
+{id:"TX001",date:"2026-09-10",pay:"QRIS",items:[{pid:"P001",name:"Nike Air Max Pulse",vid:"V001-41",sz:"41",qty:1,sp:1899000,cp:1350000,sub:1899000},{pid:"P005",name:"Sneaker Protector Spray",vid:"V005-ALL",sz:"All Size",qty:2,sp:85000,cp:45000,sub:170000}],total:2069000,cost:1440000},
+{id:"TX002",date:"2026-09-11",pay:"Tunai",items:[{pid:"P003",name:"Sandal Comfort Slide",vid:"V003-41",sz:"41",qty:3,sp:350000,cp:180000,sub:1050000}],total:1050000,cost:540000},
+{id:"TX003",date:"2026-09-11",pay:"Transfer Bank",items:[{pid:"P002",name:"Adidas Ultraboost Light",vid:"V002-41",sz:"41",qty:1,sp:2450000,cp:1800000,sub:2450000},{pid:"P012",name:"Kaus Kaki Sneaker Pair",vid:"V012-ALL",sz:"All Size",qty:2,sp:35000,cp:15000,sub:70000}],total:2520000,cost:1830000},
+{id:"TX004",date:"2026-09-12",pay:"QRIS",items:[{pid:"P004",name:"Converse Chuck 70s",vid:"V004-40",sz:"40",qty:2,sp:999000,cp:650000,sub:1998000}],total:1998000,cost:1300000},
+{id:"TX005",date:"2026-09-12",pay:"Tunai",items:[{pid:"P009",name:"Sandal Swallow Futsal",vid:"V009-40",sz:"40",qty:5,sp:45000,cp:22000,sub:225000},{pid:"P012",name:"Kaus Kaki Sneaker Pair",vid:"V012-ALL",sz:"All Size",qty:3,sp:35000,cp:15000,sub:105000}],total:330000,cost:155000},
+{id:"TX006",date:"2026-09-13",pay:"QRIS",items:[{pid:"P007",name:"New Balance 550 White",vid:"V007-41",sz:"41",qty:1,sp:1650000,cp:1100000,sub:1650000},{pid:"P010",name:"Tas Sneaker Organizer",vid:"V010-ALL",sz:"All Size",qty:1,sp:175000,cp:95000,sub:175000}],total:1825000,cost:1195000},
+{id:"TX007",date:"2026-09-14",pay:"Transfer Bank",items:[{pid:"P011",name:"Vans Old Skool Classic",vid:"V011-40",sz:"40",qty:2,sp:1099000,cp:720000,sub:2198000}],total:2198000,cost:1440000},
+{id:"TX008",date:"2026-09-15",pay:"Tunai",items:[{pid:"P006",name:"Sandal Eiger Adventure",vid:"V006-40",sz:"40",qty:2,sp:425000,cp:250000,sub:850000},{pid:"P005",name:"Sneaker Protector Spray",vid:"V005-ALL",sz:"All Size",qty:1,sp:85000,cp:45000,sub:85000}],total:935000,cost:545000},
+{id:"TX009",date:"2026-09-16",pay:"QRIS",items:[{pid:"P008",name:"Puma RS-X Reinvention",vid:"V008-41",sz:"41",qty:1,sp:1350000,cp:900000,sub:1350000},{pid:"P012",name:"Kaus Kaki Sneaker Pair",vid:"V012-ALL",sz:"All Size",qty:4,sp:35000,cp:15000,sub:140000}],total:1490000,cost:960000},
+{id:"TX010",date:"2026-09-17",pay:"QRIS",items:[{pid:"P001",name:"Nike Air Max Pulse",vid:"V001-40",sz:"40",qty:1,sp:1899000,cp:1350000,sub:1899000},{pid:"P003",name:"Sandal Comfort Slide",vid:"V003-40",sz:"40",qty:2,sp:350000,cp:180000,sub:700000}],total:2599000,cost:1710000},
+{id:"TX011",date:"2026-09-17",pay:"Tunai",items:[{pid:"P004",name:"Converse Chuck 70s",vid:"V004-39",sz:"39",qty:1,sp:999000,cp:650000,sub:999000}],total:999000,cost:650000},
+{id:"TX012",date:"2026-09-17",pay:"Transfer Bank",items:[{pid:"P002",name:"Adidas Ultraboost Light",vid:"V002-40",sz:"40",qty:1,sp:2450000,cp:1800000,sub:2450000},{pid:"P010",name:"Tas Sneaker Organizer",vid:"V010-ALL",sz:"All Size",qty:2,sp:175000,cp:95000,sub:350000}],total:2800000,cost:1990000},
+{id:"TX013",date:"2026-09-18",pay:"QRIS",items:[{pid:"P007",name:"New Balance 550 White",vid:"V007-40",sz:"40",qty:1,sp:1650000,cp:1100000,sub:1650000},{pid:"P012",name:"Kaus Kaki Sneaker Pair",vid:"V012-ALL",sz:"All Size",qty:3,sp:35000,cp:15000,sub:105000}],total:1755000,cost:1145000},
+{id:"TX014",date:"2026-09-18",pay:"Tunai",items:[{pid:"P003",name:"Sandal Comfort Slide",vid:"V003-42",sz:"42",qty:2,sp:350000,cp:180000,sub:700000}],total:700000,cost:360000},
+{id:"TX015",date:"2026-09-19",pay:"QRIS",items:[{pid:"P001",name:"Nike Air Max Pulse",vid:"V001-42",sz:"42",qty:1,sp:1899000,cp:1350000,sub:1899000},{pid:"P005",name:"Sneaker Protector Spray",vid:"V005-ALL",sz:"All Size",qty:2,sp:85000,cp:45000,sub:170000}],total:2069000,cost:1440000},
+{id:"TX016",date:"2026-09-19",pay:"Transfer Bank",items:[{pid:"P011",name:"Vans Old Skool Classic",vid:"V011-39",sz:"39",qty:1,sp:1099000,cp:720000,sub:1099000}],total:1099000,cost:720000},
+{id:"TX017",date:"2026-09-19",pay:"Tunai",items:[{pid:"P009",name:"Sandal Swallow Futsal",vid:"V009-41",sz:"41",qty:4,sp:45000,cp:22000,sub:180000},{pid:"P010",name:"Tas Sneaker Organizer",vid:"V010-ALL",sz:"All Size",qty:1,sp:175000,cp:95000,sub:175000}],total:355000,cost:183000}
+]
+};
+
+let prods=[],purs=[],sales=[],cart=[],posCat='All',chartInst=null,varCnt=0;
+
+window.onload=function(){
+    load();updateClock();setInterval(updateClock,1000);
+    const t=new Date().toISOString().split('T')[0];
+    document.getElementById('pos-date').value=t;
+    document.getElementById('pur-date').value=t;
+    document.getElementById('r-start').value=firstOfMonth();
+    document.getElementById('r-end').value=t;
+    go('dashboard');
+};
+
+function load(){
+    const v=parseInt(localStorage.getItem('as_v')||'0');
+    if(v<DATA_VERSION){localStorage.clear();localStorage.setItem('as_v',DATA_VERSION);}
+    const a=localStorage.getItem('as_p'),b=localStorage.getItem('as_u'),c=localStorage.getItem('as_s');
+    prods=a?JSON.parse(a):INIT.products;
+    purs=b?JSON.parse(b):INIT.purchases;
+    sales=c?JSON.parse(c):INIT.sales;
+    save();
+}
+function save(){
+    localStorage.setItem('as_p',JSON.stringify(prods));
+    localStorage.setItem('as_u',JSON.stringify(purs));
+    localStorage.setItem('as_s',JSON.stringify(sales));
+    localStorage.setItem('as_v',DATA_VERSION);
+}
+function resetData(){
+    if(!confirm("Reset semua data?"))return;
+    localStorage.clear();load();location.reload();
+}
+function fmt(n){return'Rp '+Number(n).toLocaleString('id-ID');}
+function firstOfMonth(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1).toISOString().split('T')[0];}
+function updateClock(){document.getElementById('clock').innerText=new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'});}
+function toast(msg,type='ok'){
+    const t=document.getElementById('toast'),i=document.getElementById('toast-icon'),m=document.getElementById('toast-message');
+    m.innerText=msg;
+    if(type==='ok')i.className="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0";
+    else if(type==='err')i.className="fa-solid fa-circle-exclamation text-rose-400 text-lg shrink-0";
+    else i.className="fa-solid fa-circle-info text-brand-400 text-lg shrink-0";
+    t.classList.remove('translate-y-20','opacity-0');
+    setTimeout(()=>t.classList.add('translate-y-20','opacity-0'),2800);
+}
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
+function go(tab){
+    document.querySelectorAll('.tab-content').forEach(el=>{el.classList.add('hidden');el.classList.remove('fade-in');});
+    document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.remove('bg-brand-50','text-brand-600','shadow-xs');b.classList.add('text-slate-600');});
+    const t=document.getElementById('tab-'+tab);t.classList.remove('hidden');void t.offsetWidth;t.classList.add('fade-in');
+    const n=document.getElementById('nav-'+tab);n.classList.add('bg-brand-50','text-brand-600','shadow-xs');n.classList.remove('text-slate-600');
+    if(tab==='dashboard')renderDash();
+    if(tab==='pos')renderPOS();
+    if(tab==='products')renderCatalog();
+    if(tab==='purchases'){fillPurOpts();renderPurHistory();}
+    if(tab==='inventory')renderStock();
+}
+
+function renderDash(){
+    const today=new Date().toISOString().split('T')[0],cm=new Date().getMonth(),cy=new Date().getFullYear();
+    let tdS=0,tdC=0,moS=0,profit=0,costAll=0;
+    sales.forEach(s=>{
+        if(s.date===today){tdS+=s.total;tdC++;}
+        const d=new Date(s.date);if(d.getMonth()===cm&&d.getFullYear()===cy)moS+=s.total;
+        profit+=(s.total-(s.cost||0));
+    });
+    prods.forEach(p=>p.variants.forEach(v=>{costAll+=(v.stock*(v.cost||0));}));
+
+    document.getElementById('d-today').innerText=fmt(tdS);
+    document.getElementById('d-today-count').innerText=tdC;
+    document.getElementById('d-month').innerText=fmt(moS);
+    document.getElementById('d-profit').innerText=fmt(profit);
+    document.getElementById('d-cost').innerText=fmt(costAll);
+
+    let low=[];
+    prods.forEach(p=>p.variants.forEach(v=>{if(v.stock<5)low.push({n:p.name,b:p.brand,m:p.model||'',sz:v.size,s:v.stock});}));
+    document.getElementById('d-low').innerText=low.length+' Varian';
+
+    const lowList=document.getElementById('low-list');
+    lowList.innerHTML=low.length?low.map(i=>`<div class="flex items-center justify-between p-2 rounded-xl bg-rose-50 border border-rose-100 text-xs"><div class="min-w-0 pr-2"><p class="font-bold text-rose-900 truncate">${i.n}</p><p class="text-[10px] text-rose-600">${i.b} - Uk: ${i.sz}</p></div><span class="px-2 py-0.5 rounded-full bg-rose-200 text-rose-800 font-bold text-[10px] shrink-0">Sisa: ${i.s}</span></div>`).join(''):'<p class="text-xs text-slate-400 italic">Semua stok aman.</p>';
+
+    const topMap={};sales.forEach(s=>s.items.forEach(i=>{topMap[i.name]=(topMap[i.name]||0)+i.qty;}));
+    const topSorted=Object.entries(topMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const topList=document.getElementById('top-list');
+    topList.innerHTML=topSorted.length?topSorted.map(([n,q],i)=>`<div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100 text-xs"><div class="flex items-center space-x-2 min-w-0 pr-2"><span class="w-5 h-5 rounded-full bg-brand-100 text-brand-700 font-black flex items-center justify-center text-[10px] shrink-0">${i+1}</span><span class="font-semibold text-slate-700 truncate">${n}</span></div><span class="font-bold text-slate-900 shrink-0 text-[11px]">${q} Terjual</span></div>`).join(''):'<p class="text-xs text-slate-400 italic">Belum ada data.</p>';
+
+    renderChart();filterReport();
+}
+
+function renderChart(){
+    const ctx=document.getElementById('salesChart');
+    if(!ctx||typeof Chart==='undefined')return;
+    const labels=[],data=[];
+    for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const ds=d.toISOString().split('T')[0];labels.push(d.toLocaleDateString('id-ID',{weekday:'short',day:'numeric'}));data.push(sales.filter(s=>s.date===ds).reduce((a,s)=>a+s.total,0));}
+    if(chartInst)chartInst.destroy();
+    chartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Penjualan (Rp)',data,borderColor:'#14b8a6',borderWidth:2.5,backgroundColor:'rgba(20,184,166,0.08)',fill:true,tension:0.35,pointBackgroundColor:'#0d9488',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'Rp '+(v>=1e6?(v/1e6)+'Jt':v>=1e3?(v/1e3)+'k':v),font:{size:10}}},x:{ticks:{font:{size:10}}}}}});
+}
+
+function filterReport(){
+    const s=document.getElementById('r-start').value,e=document.getElementById('r-end').value,q=(document.getElementById('r-search').value||'').toLowerCase();
+    const f=sales.filter(x=>x.date>=s&&x.date<=e&&(q===''||x.id.toLowerCase().includes(q)||x.items.some(i=>i.name.toLowerCase().includes(q))));
+    const tb=document.getElementById('report-body');
+    if(!f.length){tb.innerHTML='<tr><td colspan="7" class="text-center p-4 text-slate-400">Tidak ada transaksi.</td></tr>';return;}
+    tb.innerHTML=f.map(x=>{
+        const items=x.items.map(i=>`${i.name} (${i.sz}) x${i.qty}`).join('<br>');
+        const tq=x.items.reduce((a,i)=>a+i.qty,0);
+        return`<tr class="hover:bg-slate-50 transition border-b border-slate-100"><td class="p-3 font-bold text-slate-800">${x.id}</td><td class="p-3 font-medium text-slate-600">${x.date}</td><td class="p-3 leading-snug">${items}</td><td class="p-3 text-center font-bold">${tq}</td><td class="p-3"><span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-bold">${x.pay}</span></td><td class="p-3 text-right font-black text-slate-900">${fmt(x.total)}</td><td class="p-3 text-right"><button onclick="showReceipt('${x.id}')" class="text-brand-600 hover:text-brand-800 font-bold text-[11px] bg-brand-50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-receipt mr-1"></i>Struk</button></td></tr>`;
+    }).join('');
+}
+
+function exportExcel(){
+    const s=document.getElementById('r-start').value,e=document.getElementById('r-end').value;
+    const f=sales.filter(x=>x.date>=s&&x.date<=e);
+    const rows=[['ID Transaksi','Tanggal','Detail Produk','Qty','Metode Bayar','Total (Rp)','Modal (Rp)','Profit (Rp)']];
+    f.forEach(x=>{
+        const items=x.items.map(i=>i.name+' ['+i.sz+'] x'+i.qty).join('; ');
+        const tq=x.items.reduce((a,i)=>a+i.qty,0);
+        rows.push([x.id,x.date,items,tq,x.pay,x.total,x.cost||0,x.total-(x.cost||0)]);
+    });
+    if(typeof XLSX!=='undefined'){
+        const ws=XLSX.utils.aoa_to_sheet(rows);
+        const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Laporan');
+        XLSX.writeFile(wb,'Laporan_Penjualan_'+s+'_sd_'+e+'.xlsx');
+    }else{
+        let csv='ID Transaksi,Tanggal,Detail Produk,Qty,Metode Bayar,Total,Modal,Profit\n';
+        rows.slice(1).forEach(r=>{csv+='"'+r.join('","')+'"\n';});
+        const l=document.createElement('a');l.href=encodeURI('data:text/csv;charset=utf-8,'+csv);l.download='Laporan_'+s+'_sd_'+e+'.csv';l.click();
+    }
+    toast('Export berhasil!','ok');
+}
+function filterCat(c){
+    posCat=c;
+    document.querySelectorAll('.pos-cat').forEach(b=>{
+        const match=c==='All'&&b.textContent==='Semua'||b.textContent===c;
+        if(match){b.className="pos-cat px-3 py-1.5 rounded-xl font-bold bg-slate-900 text-white whitespace-nowrap";}
+        else{b.className="pos-cat px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap";}
+    });
+    renderPOS();
+}
+
+function renderPOS(){
+    const q=(document.getElementById('pos-search').value||'').toLowerCase();
+    const grid=document.getElementById('pos-grid');
+    const filtered=prods.filter(p=>(posCat==='All'||p.cat===posCat)&&(p.name.toLowerCase().includes(q)||p.brand.toLowerCase().includes(q)));
+    if(!filtered.length){grid.innerHTML='<div class="col-span-2 text-center p-8 text-slate-400 text-xs">Produk tidak ditemukan</div>';return;}
+    grid.innerHTML=filtered.map(p=>`
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 flex flex-col justify-between space-y-2.5 hover:border-brand-400 transition shadow-2xs">
+            <div>
+                <div class="flex justify-between items-start"><span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-200/80 text-slate-700 uppercase">${p.cat}</span><span class="text-[10px] font-extrabold text-slate-400 uppercase">${p.brand}</span></div>
+                <h4 class="font-bold text-slate-800 text-xs mt-1.5 leading-snug">${p.name}</h4>
+                ${p.model?'<p class="text-[10px] text-slate-400 mt-0.5">'+p.model+'</p>':''}
+                <p class="text-brand-600 font-extrabold text-xs sm:text-sm mt-1">${fmt(p.price)}</p>
+            </div>
+            <div class="border-t border-slate-200/80 pt-2 space-y-1">
+                <label class="text-[10px] font-bold text-slate-400 uppercase">Pilih Ukuran:</label>
+                <div class="flex flex-wrap gap-1">
+                    ${p.variants.map(v=>`<button onclick="addToCart('${p.id}','${v.vid}')" ${v.stock<=0?'disabled':''} class="px-2 py-1 text-[11px] rounded-lg border ${v.stock<=0?'bg-slate-100 border-slate-200 text-slate-300 cursor-not-allowed':'bg-white border-slate-300 hover:bg-brand-50 hover:border-brand-500 hover:text-brand-600 font-bold active:scale-95'} transition">${v.size} (${v.stock})</button>`).join('')}
+                </div>
+            </div>
+        </div>`).join('');
+}
+
+function addToCart(pid,vid){
+    const p=prods.find(x=>x.id===pid),v=p.variants.find(x=>x.vid===vid);
+    if(v.stock<=0){toast('Stok habis!','err');return;}
+    const ex=cart.findIndex(i=>i.vid===vid);
+    if(ex>-1){if(cart[ex].qty+1>v.stock){toast('Stok tidak cukup. Sisa: '+v.stock,'err');return;}cart[ex].qty++;cart[ex].sub=cart[ex].qty*cart[ex].sp;}
+    else{cart.push({pid:p.id,name:p.name,vid:v.vid,sz:v.size,sp:p.price,cp:v.cost||0,qty:1,max:v.stock,sub:p.price});}
+    renderCart();toast('Ditambahkan ke keranjang','ok');
+}
+function updateCartQty(vid,ch){
+    const i=cart.find(x=>x.vid===vid);if(!i)return;
+    const n=i.qty+ch;
+    if(n<=0){cart=cart.filter(x=>x.vid!==vid);}
+    else if(n>i.max){toast('Mencapai batas stok ('+i.max+')','err');}
+    else{i.qty=n;i.sub=i.qty*i.sp;}
+    renderCart();
+}
+function clearCart(){cart=[];renderCart();}
+function renderCart(){
+    const c=document.getElementById('cart-items'),q=document.getElementById('cart-qty'),t=document.getElementById('cart-total');
+    if(!cart.length){c.innerHTML='<div class="text-center py-6 text-slate-400 text-xs italic">Keranjang kosong</div>';q.innerText='0 Unit';t.innerText='Rp 0';return;}
+    let tq=0,tt=0;
+    c.innerHTML=cart.map(i=>{tq+=i.qty;tt+=i.sub;return`<div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200/80 text-xs"><div class="flex-1 pr-2 min-w-0"><h5 class="font-bold text-slate-800 truncate leading-snug">${i.name}</h5><p class="text-[10px] text-slate-500">Uk: ${i.sz} | @${fmt(i.sp)}</p></div><div class="flex items-center space-x-2 shrink-0"><div class="flex items-center border border-slate-300 rounded-lg bg-white overflow-hidden"><button onclick="updateCartQty('${i.vid}',-1)" class="px-2 py-0.5 hover:bg-slate-100 font-bold text-slate-600">-</button><span class="px-2 font-bold text-[11px]">${i.qty}</span><button onclick="updateCartQty('${i.vid}',1)" class="px-2 py-0.5 hover:bg-slate-100 font-bold text-slate-600">+</button></div><span class="font-black text-slate-900 text-[11px] min-w-[65px] text-right">${fmt(i.sub)}</span></div></div>`;}).join('');
+    q.innerText=tq+' Unit';t.innerText=fmt(tt);
+}
+
+function checkout(){
+    if(!cart.length){toast('Keranjang kosong','err');return;}
+    const date=document.getElementById('pos-date').value,pay=document.getElementById('pos-pay').value;
+    const total=cart.reduce((a,i)=>a+i.sub,0),totalCost=cart.reduce((a,i)=>a+(i.cp*i.qty),0);
+    const sale={id:'TRX-'+Date.now().toString().slice(-8),date,pay,items:[...cart],total,cost:totalCost};
+    cart.forEach(ci=>{const p=prods.find(x=>x.id===ci.pid);if(p){const v=p.variants.find(x=>x.vid===ci.vid);if(v)v.stock-=ci.qty;}});
+    sales.unshift(sale);save();
+    clearCart();renderPOS();toast('Transaksi tersimpan!','ok');showReceipt(sale.id);
+}
+function renderCatalog(){
+    const el=document.getElementById('catalog-grid');
+    if(!prods.length){el.innerHTML='<div class="col-span-full text-center py-10 text-slate-400 text-xs">Belum ada produk</div>';return;}
+    el.innerHTML=prods.map(p=>{
+        const ts=p.variants.reduce((a,v)=>a+v.stock,0);
+        return`<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-3">
+            <div>
+                <div class="flex justify-between items-start"><span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 uppercase">${p.cat}</span><div class="space-x-1"><button onclick="editProd('${p.id}')" class="text-slate-400 hover:text-brand-600 text-xs p-1.5"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="delProd('${p.id}')" class="text-slate-400 hover:text-rose-600 text-xs p-1.5"><i class="fa-solid fa-trash"></i></button></div></div>
+                <h3 class="font-bold text-slate-800 text-sm mt-2">${p.name}</h3>
+                <p class="text-[10px] text-slate-400 font-bold uppercase">${p.brand}${p.model?' &middot; '+p.model:''}</p>
+                <p class="text-brand-600 font-black text-sm sm:text-base mt-1">${fmt(p.price)}</p>
+            </div>
+            <div class="border-t border-slate-100 pt-2.5">
+                <div class="flex justify-between items-center mb-1.5"><span class="text-[10px] font-bold text-slate-400 uppercase">Varian</span><span class="text-[10px] font-black text-slate-700">Total: ${ts} unit</span></div>
+                <div class="flex flex-wrap gap-1">${p.variants.map(v=>`<span class="px-2 py-0.5 rounded-md border ${v.stock<5?'bg-rose-50 border-rose-200 text-rose-700':'bg-slate-50 border-slate-200 text-slate-700'} text-[10px] font-semibold">Uk ${v.size}: <strong>${v.stock}</strong></span>`).join('')}</div>
+            </div>
+        </div>`;}).join('');
+}
+
+function openProductModal(eid=null){
+    document.getElementById('prod-form').reset();document.getElementById('pf-id').value='';document.getElementById('var-rows').innerHTML='';varCnt=0;
+    if(eid){
+        const p=prods.find(x=>x.id===eid);
+        document.getElementById('modal-title').innerText='Edit Produk';
+        document.getElementById('pf-id').value=p.id;
+        document.getElementById('pf-name').value=p.name;document.getElementById('pf-cat').value=p.cat;
+        document.getElementById('pf-brand').value=p.brand;document.getElementById('pf-model').value=p.model||'';document.getElementById('pf-price').value=p.price;
+        p.variants.forEach(v=>addVarRow(v.size,v.stock,v.vid,v.cost));
+    }else{
+        document.getElementById('modal-title').innerText='Tambah Produk';
+        addVarRow('40',0);addVarRow('41',0);
+    }
+    document.getElementById('product-modal').classList.remove('hidden');
+}
+function editProd(id){openProductModal(id);}
+function delProd(id){if(confirm('Hapus produk ini?')){prods=prods.filter(p=>p.id!==id);save();renderCatalog();toast('Produk dihapus','ok');}}
+
+function addVarRow(sz='',stk=0,vid=null,cost=0){
+    varCnt++;const c=document.getElementById('var-rows'),rid='vr-'+varCnt;
+    const d=document.createElement('div');d.id=rid;d.className='flex items-center space-x-2';
+    d.innerHTML=`<input type="hidden" class="vr-id" value="${vid||'VR-'+Date.now()+'-'+varCnt}"><input type="hidden" class="vr-cost" value="${cost}"><input type="text" placeholder="Ukuran" value="${sz}" required class="vr-sz w-1/2 px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 outline-none bg-slate-50"><input type="number" placeholder="Stok" min="0" value="${stk}" required class="vr-stk w-1/2 px-2.5 py-1.5 text-xs rounded-xl border border-slate-300 outline-none bg-slate-50"><button type="button" onclick="document.getElementById('${rid}').remove()" class="text-slate-400 hover:text-rose-600 text-xs px-1"><i class="fa-solid fa-trash"></i></button>`;
+    c.appendChild(d);
+}
+
+function submitProduct(e){
+    e.preventDefault();
+    const eid=document.getElementById('pf-id').value,name=document.getElementById('pf-name').value,cat=document.getElementById('pf-cat').value,brand=document.getElementById('pf-brand').value,model=document.getElementById('pf-model').value,price=parseFloat(document.getElementById('pf-price').value);
+    const rows=document.querySelectorAll('#var-rows > div');
+    const variants=Array.from(rows).map(r=>({vid:r.querySelector('.vr-id').value,size:r.querySelector('.vr-sz').value,stock:parseInt(r.querySelector('.vr-stk').value)||0,cost:parseFloat(r.querySelector('.vr-cost').value)||0}));
+    if(eid){const i=prods.findIndex(p=>p.id===eid);if(i>-1)prods[i]={id:eid,name,cat,brand,model,price,variants};}
+    else{prods.push({id:'P'+Date.now().toString().slice(-6),name,cat,brand,model,price,variants});}
+    save();closeModal('product-modal');renderCatalog();toast('Produk tersimpan','ok');
+}
+
+function fillPurOpts(){
+    document.getElementById('pur-prod').innerHTML='<option value="">-- Pilih --</option>'+prods.map(p=>`<option value="${p.id}">${p.name} (${p.brand})</option>`).join('');
+    purVarOpts();
+}
+function purVarOpts(){
+    const pid=document.getElementById('pur-prod').value,vs=document.getElementById('pur-var');
+    if(!pid){vs.innerHTML='<option value="">-- Pilih --</option>';return;}
+    const p=prods.find(x=>x.id===pid);
+    vs.innerHTML='<option value="">-- Pilih --</option>'+p.variants.map(v=>`<option value="${v.vid}">Uk ${v.size} (Stok: ${v.stock})</option>`).join('');
+}
+function purCalc(){const q=parseFloat(document.getElementById('pur-qty').value)||0,c=parseFloat(document.getElementById('pur-cost').value)||0;document.getElementById('pur-total').innerText=fmt(q*c);}
+
+function submitPurchase(e){
+    e.preventDefault();
+    const date=document.getElementById('pur-date').value,sup=document.getElementById('pur-sup').value,pid=document.getElementById('pur-prod').value,vid=document.getElementById('pur-var').value,qty=parseInt(document.getElementById('pur-qty').value),cost=parseFloat(document.getElementById('pur-cost').value);
+    if(!pid||!vid){toast('Pilih produk & varian','err');return;}
+    const total=qty*cost;
+    purs.unshift({id:'PU-'+Date.now().toString().slice(-6),date,sup,pid,vid,qty,cost,total});
+    const p=prods.find(x=>x.id===pid);if(p){const v=p.variants.find(x=>x.vid===vid);if(v){v.stock+=qty;v.cost=cost;}}
+    save();document.getElementById('pur-form').reset();document.getElementById('pur-date').value=new Date().toISOString().split('T')[0];purCalc();fillPurOpts();renderPurHistory();toast('Stok bertambah!','ok');
+}
+
+function renderPurHistory(){
+    const tb=document.getElementById('pur-body');
+    if(!purs.length){tb.innerHTML='<tr><td colspan="6" class="text-center p-4 text-slate-400">Belum ada riwayat.</td></tr>';return;}
+    tb.innerHTML=purs.map(p=>{
+        const prod=prods.find(x=>x.id===p.pid);const pn=prod?prod.name:'?';let vs='-';
+        if(prod){const v=prod.variants.find(x=>x.vid===p.vid);if(v)vs=v.size;}
+        return`<tr class="hover:bg-slate-50 transition border-b border-slate-100"><td class="p-2.5 font-medium">${p.date}</td><td class="p-2.5">${p.sup}</td><td class="p-2.5 font-bold text-slate-800">${pn} <span class="text-slate-500 font-normal text-[11px]">(Uk: ${vs})</span></td><td class="p-2.5 text-center font-black text-emerald-600">+${p.qty}</td><td class="p-2.5 text-right">${fmt(p.cost)}</td><td class="p-2.5 text-right font-black text-slate-900">${fmt(p.total)}</td></tr>`;
+    }).join('');
+}
+
+function renderStock(){
+    const q=(document.getElementById('stk-search').value||'').toLowerCase();
+    const tb=document.getElementById('stk-body');
+    let rows=[];
+    prods.forEach(p=>p.variants.forEach(v=>{
+        if(p.name.toLowerCase().includes(q)||p.brand.toLowerCase().includes(q)||v.size.toLowerCase().includes(q))
+            rows.push({pid:p.id,vid:v.vid,cat:p.cat,name:p.name,brand:p.brand,model:p.model||'',sz:v.size,cost:v.cost||0,price:p.price,stock:v.stock});
+    }));
+    if(!rows.length){tb.innerHTML='<tr><td colspan="8" class="text-center p-4 text-slate-400">Tidak ditemukan.</td></tr>';return;}
+    tb.innerHTML=rows.map(r=>{
+        let badge='',low=false;
+        if(r.stock===0){badge='<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-900 text-white"><i class="fa-solid fa-xmark mr-1"></i>Habis</span>';low=true;}
+        else if(r.stock<5){badge='<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Menipis</span>';low=true;}
+        else{badge='<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800"><i class="fa-solid fa-check mr-1"></i>Aman</span>';}
+        const btn=low?`<button onclick="quickRestock('${r.pid}','${r.vid}')" class="bg-brand-600 hover:bg-brand-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition"><i class="fa-solid fa-bolt mr-1"></i>Restock</button>`:'';
+        return`<tr class="hover:bg-slate-50 transition border-b border-slate-100"><td class="p-3"><span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-bold uppercase">${r.cat}</span></td><td class="p-3 font-bold text-slate-800">${r.name} <span class="text-slate-400 font-normal text-[10px]">(${r.brand}${r.model?' '+r.model:''})</span></td><td class="p-3 text-center"><span class="font-bold text-slate-700">${r.sz}</span></td><td class="p-3 text-right text-slate-600">${fmt(r.cost)}</td><td class="p-3 text-right font-bold text-brand-600">${fmt(r.price)}</td><td class="p-3 text-center font-black text-sm ${low?'text-rose-600':'text-slate-800'}">${r.stock}</td><td class="p-3 text-center">${badge}</td><td class="p-3 text-right">${btn}</td></tr>`;
+    }).join('');
+}
+function quickRestock(pid,vid){go('purchases');document.getElementById('pur-prod').value=pid;purVarOpts();document.getElementById('pur-var').value=vid;toast('Siap restock','info');}
+
+function showReceipt(sid){
+    const s=sales.find(x=>x.id===sid);if(!s)return;
+    document.getElementById('rec-id').innerText=s.id;document.getElementById('rec-date').innerText=s.date;document.getElementById('rec-pay').innerText=s.pay;
+    document.getElementById('rec-items').innerHTML=s.items.map(i=>`<div class="space-y-0.5"><div class="font-bold text-slate-800">${i.name}</div><div class="flex justify-between text-[10px] text-slate-600"><span>Uk: ${i.sz} (${i.qty}x ${fmt(i.sp)})</span><span class="font-bold">${fmt(i.sub)}</span></div></div>`).join('');
+    document.getElementById('rec-total').innerText=fmt(s.total);document.getElementById('receipt-modal').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

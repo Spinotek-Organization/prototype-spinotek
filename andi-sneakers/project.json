@@ -1,0 +1,11 @@
+{
+    "name": "Andi Sneakers",
+    "description": "Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
+    "icon": "👟",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": ["html", "css", "javascript", "tailwindcss"],
+    "demo_url": null,
+    "repo_url": null,
+    "added_at": "2026-09-19"
+}

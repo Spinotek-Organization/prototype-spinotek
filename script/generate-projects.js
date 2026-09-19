@@ -27,7 +27,7 @@ const EXCLUDED = new Set([
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}`;
 
 function buildImageUrl(slug) {
-  return `${RAW_BASE}/${slug}/card.png`;
+  return `./${slug}/card.png`;
 }
 
 function readProjects() {
