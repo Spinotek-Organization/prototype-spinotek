@@ -1,93 +1,119 @@
 [
-    {
-        "slug": "rental-mobil",
-        "name": "Rental Mobil",
-        "description": "Sistem Booking, Quotation & Invoice Rental Mobil — Fleet Management System dengan modul Dashboard, Armada, Pelanggan, Quotation, Booking, Invoice, Pembayaran, Biaya Operasional, Laporan, dan Manajemen User.",
-        "category": "Web App",
-        "status": "IN DEVELOPMENT",
-        "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
-        "icon": "🚗",
-        "demo_url": "https://demo.spinotek.com/rental-mobil",
-        "repo_url": null,
-        "image": "./rental-mobil/card.png",
-        "added_at": "2026-09-19"
-    },
-    {
-        "slug": "andi-sneakers",
-        "name": "Andi Sneakers",
-        "description": "Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
-        "category": "Web App",
-        "status": "IN DEVELOPMENT",
-        "tech": ["html", "css", "javascript", "tailwindcss"],
-        "icon": "👟",
-        "demo_url": "https://demo.spinotek.com/andi-sneakers",
-        "repo_url": "https://github.com/Spinotek-Organization/prototype-spinotek/tree/main/andi-sneakers",
-        "image": "./andi-sneakers/card.png",
-        "added_at": "2026-09-19"
-    },
-    {
-        "slug": "tulungagung-sneakers",
-        "name": "Tulungagung Sneakers",
-        "description": "Prototype V1 Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
-        "category": "Web App",
-        "status": "IN DEVELOPMENT",
-        "tech": [],
-        "icon": "rocket",
-        "demo_url": null,
-        "repo_url": null,
-        "image": "./tulungagung-sneakers/card.png",
-        "added_at": "2026-09-19"
-    },
-    {
-        "slug": "spbu-palangka-raya",
-        "name": "SPBU Palangka Raya",
-        "description": "Prototype V1 Sistem Pelaporan SPBU Palangka Raya berbasis kalkulasi totalisator dispenser, pencatatan kas, dan ekspor laporan.",
-        "category": "Dashboard",
-        "status": "COMPLETED",
-        "tech": ["html", "css", "javascript", "tailwindcss"],
-        "icon": "⛽",
-        "demo_url": "https://demo.spinotek.com/spbu-palangka-raya",
-        "repo_url": "https://github.com/Shadow-A2234/spbu-prototype",
-        "image": "./spbu-palangka-raya/card.png",
-        "added_at": "2026-09-16"
-    },
-    {
-        "slug": "dlu",
-        "name": "DLU",
-        "description": "",
-        "category": "Web App",
-        "status": "COMPLETED",
-        "tech": ["html", "javascript", "tailwindcss"],
-        "icon": "https://dlu.co.id/wp-content/uploads/2025/04/logodluheight-150x150.png",
-        "demo_url": "https://demo.spinotek.com/dlu",
-        "repo_url": null,
-        "image": "./dlu/card.png",
-        "added_at": "2026-03-08"
-    },
-    {
-        "slug": "lpk-talenta",
-        "name": "LPK Talenta",
-        "description": "LPK Talenta adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
-        "category": "Web App",
-        "status": "COMPLETED",
-        "tech": ["javascript", "tailwindcss"],
-        "icon": "https://talentaacademy.id/wp-content/uploads/2023/04/WhatsApp-Image-2023-04-02-at-09.53.42.jpeg",
-        "demo_url": "https://demo.spinotek.com/lpk-talenta",
-        "repo_url": null,
-        "image": "./lpk-talenta/card.png",
-        "added_at": "2026-02-23"
-    },
-    {
-        "slug": "pandora-wedding-planner",
-        "name": "Pandora Wedding Planner",
-        "description": "Pandora Wedding Planner adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
-        "category": "Web App",
-        "status": "COMPLETED",
-        "tech": ["javascript", "tailwindcss"],
-        "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReM2Jpgqb3HMEKbGWHSd38PIGGSw6dlRIMbg&s",
-        "demo_url": "https://demo.spinotek.com/pandora-wedding-planner",
-        "repo_url": null,
-        "image": "./pandora-wedding-planner/card.png",
-        "added_at": "2026-02-23"
-    }
+  {
+    "slug": "andi-sneakers",
+    "name": "Andi Sneakers",
+    "description": "Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": [
+      "html",
+      "css",
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "👟",
+    "demo_url": "https://demo.spinotek.com/andi-sneakers/",
+    "repo_url": "https://github.com/Spinotek-Organization/prototype-spinotek/tree/main/andi-sneakers",
+    "image": "./andi-sneakers/card.png",
+    "added_at": "2026-09-19"
+  },
+  {
+    "slug": "rental-mobil",
+    "name": "Rental Mobil",
+    "description": "Sistem Booking, Quotation & Invoice Rental Mobil — Fleet Management System dengan modul Dashboard, Armada, Pelanggan, Quotation, Booking, Invoice, Pembayaran, Biaya Operasional, Laporan, dan Manajemen User.",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": [
+      "html",
+      "css",
+      "javascript",
+      "tailwindcss",
+      "chart.js"
+    ],
+    "icon": "🚗",
+    "demo_url": "https://demo.spinotek.com/rental-mobil",
+    "repo_url": null,
+    "image": "./rental-mobil/card.png",
+    "added_at": "2026-09-19"
+  },
+  {
+    "slug": "tulungagung-sneakers",
+    "name": "Tulungagung Sneakers",
+    "description": "Prototype V1 Sistem Penjualan & Inventory Toko Sandal dan Sepatu meliputi Modul Produk, Pembelian, Stok, Penjualan, serta Dashboard Laporan.",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": [],
+    "icon": "rocket",
+    "demo_url": null,
+    "repo_url": null,
+    "image": "./tulungagung-sneakers/card.png",
+    "added_at": "2026-09-19"
+  },
+  {
+    "slug": "spbu-palangka-raya",
+    "name": "SPBU Palangka Raya",
+    "description": "Prototype V1 Sistem Pelaporan SPBU Palangka Raya berbasis kalkulasi totalisator dispenser, pencatatan kas, dan ekspor laporan.",
+    "category": "Dashboard",
+    "status": "COMPLETED",
+    "tech": [
+      "html",
+      "css",
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "⛽",
+    "demo_url": "https://demo.spinotek.com/spbu-palangka-raya",
+    "repo_url": "https://github.com/Shadow-A2234/spbu-prototype",
+    "image": "./spbu-palangka-raya/card.png",
+    "added_at": "2026-09-16"
+  },
+  {
+    "slug": "dlu",
+    "name": "DLU",
+    "description": "",
+    "category": "Web App",
+    "status": "COMPLETED",
+    "tech": [
+      "html",
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "https://dlu.co.id/wp-content/uploads/2025/04/logodluheight-150x150.png",
+    "demo_url": "https://demo.spinotek.com/dlu",
+    "repo_url": null,
+    "image": "./dlu/card.png",
+    "added_at": "2026-03-08"
+  },
+  {
+    "slug": "lpk-talenta",
+    "name": "LPK Talenta",
+    "description": "LPK Talenta adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
+    "category": "Web App",
+    "status": "COMPLETED",
+    "tech": [
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "https://talentaacademy.id/wp-content/uploads/2023/04/WhatsApp-Image-2023-04-02-at-09.53.42.jpeg",
+    "demo_url": "https://demo.spinotek.com/lpk-talenta",
+    "repo_url": null,
+    "image": "./lpk-talenta/card.png",
+    "added_at": "2026-02-23"
+  },
+  {
+    "slug": "pandora-wedding-planner",
+    "name": "Pandora Wedding Planner",
+    "description": "Pandora Wedding Planner adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
+    "category": "Web App",
+    "status": "COMPLETED",
+    "tech": [
+      "javascript",
+      "tailwindcss"
+    ],
+    "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReM2Jpgqb3HMEKbGWHSd38PIGGSw6dlRIMbg&s",
+    "demo_url": "https://demo.spinotek.com/pandora-wedding-planner/",
+    "repo_url": null,
+    "image": "./pandora-wedding-planner/card.png",
+    "added_at": "2026-02-23"
+  }
 ]
