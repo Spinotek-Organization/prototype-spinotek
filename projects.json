@@ -9,7 +9,7 @@
         "icon": "🚗",
         "demo_url": "https://demo.spinotek.com/rental-mobil",
         "repo_url": null,
-        "image": "./rental-mobil/assets/card.png",
+        "image": "./rental-mobil/card.png",
         "added_at": "2026-09-19"
     },
     {
@@ -22,7 +22,7 @@
         "icon": "👟",
         "demo_url": "https://demo.spinotek.com/andi-sneakers",
         "repo_url": "https://github.com/Spinotek-Organization/prototype-spinotek/tree/main/andi-sneakers",
-        "image": "./andi-sneakers/assets/card.png",
+        "image": "./andi-sneakers/card.png",
         "added_at": "2026-09-19"
     },
     {
