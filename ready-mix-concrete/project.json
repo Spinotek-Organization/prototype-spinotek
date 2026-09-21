@@ -1,0 +1,11 @@
+{
+    "name": "Ready-Mix Concrete",
+    "description": "Sistem Produksi & Distribusi Ready-Mix Concrete — Manajemen order, mix design, batching, armada, QC, stok, invoicing, dan laporan.",
+    "icon": "🏗️",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
+    "demo_url": "https://demo.spinotek.com/ready-mix-concrete",
+    "repo_url": null,
+    "added_at": "2026-09-21"
+}

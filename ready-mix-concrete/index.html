@@ -1,0 +1,2223 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ready Mix Concrete - Sistem Produksi &amp; Distribusi</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: { sans: ['Inter', 'sans-serif'] },
+                        colors: {
+                            primary: {
+                                DEFAULT: '#1E3A5F',
+                                light: '#3B6B91',
+                                50: '#EBF0F5',
+                                100: '#D6E1EB',
+                            },
+                            accent: { DEFAULT: '#F28C28', light: '#F5A54D' },
+                            bg: '#F5F7FA',
+                            charcoal: '#1F2933',
+                            muted: '#7B8794',
+                            bordercl: '#D9E0E6',
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+            .cs::-webkit-scrollbar {
+                width: 5px;
+                height: 5px;
+            }
+            .cs::-webkit-scrollbar-track {
+                background: #f5f7fa;
+            }
+            .cs::-webkit-scrollbar-thumb {
+                background: #d9e0e6;
+                border-radius: 4px;
+            }
+            .ns {
+                ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .ns::-webkit-scrollbar {
+                display: none;
+            }
+            .sidebar-item {
+                transition: all 0.2s;
+            }
+            .sidebar-item:hover {
+                background: rgba(255, 255, 255, 0.08);
+            }
+            .sidebar-item.active {
+                background: rgba(242, 140, 40, 0.15) !important;
+                color: #f28c28 !important;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(6px);
+                }
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+            .fade-in {
+                animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            .status-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+            .modal-overlay {
+                background: rgba(31, 41, 51, 0.5);
+                backdrop-filter: blur(4px);
+            }
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .toast {
+                padding: 12px 20px;
+                border-radius: 12px;
+                color: white;
+                font-size: 13px;
+                font-weight: 600;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+                animation: toastIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .toast-success { background: #059669; }
+            .toast-error { background: #DC2626; }
+            .toast-info { background: #1E3A5F; }
+            @keyframes toastIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            select,
+            input,
+            textarea {
+                font-family: 'Inter', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-bg text-charcoal antialiased min-h-screen">
+        <div id="toast-container" class="toast-container"></div>
+        <!-- LOGIN -->
+        <section
+            id="page-login"
+            class="min-h-screen flex items-center justify-center relative overflow-hidden"
+            style="background: linear-gradient(135deg, #1e3a5f 0%, #3b6b91 50%, #1e3a5f 100%)"
+        >
+            <div
+                class="absolute inset-0 opacity-30"
+                style="
+                    background:
+                        radial-gradient(
+                            ellipse at 30% 20%,
+                            rgba(242, 140, 40, 0.1) 0%,
+                            transparent 60%
+                        ),
+                        radial-gradient(
+                            ellipse at 70% 80%,
+                            rgba(59, 107, 145, 0.08) 0%,
+                            transparent 60%
+                        );
+                "
+            ></div>
+            <div class="relative z-10 w-full max-w-md px-4">
+                <div class="bg-white rounded-2xl shadow-2xl p-8 fade-in">
+                    <div class="text-center mb-8">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center mx-auto mb-4 shadow-lg"
+                        >
+                            <i class="fa-solid fa-industry text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-extrabold text-charcoal">Ready Mix Concrete</h1>
+                        <p class="text-xs italic text-muted mt-1">
+                            Sistem Produksi &amp; Distribusi
+                        </p>
+                    </div>
+                    <div
+                        id="login-error"
+                        class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-medium"
+                    ></div>
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-muted uppercase tracking-wider mb-1.5 block"
+                                >Email</label
+                            >
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-sm"
+                                ></i>
+                                <input
+                                    id="login-email"
+                                    type="email"
+                                    value="owner@rmc.com"
+                                    class="w-full pl-10 pr-4 py-3 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition"
+                                    placeholder="email@contoh.com"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-muted uppercase tracking-wider mb-1.5 block"
+                                >Password</label
+                            >
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-sm"
+                                ></i>
+                                <input
+                                    id="login-pass"
+                                    type="password"
+                                    value="password123"
+                                    class="w-full pl-10 pr-11 py-3 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition"
+                                    placeholder="Password"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="togglePass()"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal"
+                                >
+                                    <i id="pass-eye" class="fa-solid fa-eye text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            class="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-primary-light text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                        >
+                            <i class="fa-solid fa-right-to-bracket"></i> Masuk
+                        </button>
+                    </form>
+                    <div class="mt-6 p-3 rounded-xl bg-bg border border-bordercl">
+                        <p class="text-[10px] font-bold text-muted uppercase tracking-wider mb-2">
+                            Demo Credentials
+                        </p>
+                        <div class="space-y-1 text-xs text-muted">
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-primary"></span
+                                ><b class="text-charcoal">Owner:</b> owner@rmc.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-blue-500"></span
+                                ><b class="text-charcoal">Sales:</b> sales@rmc.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-green-500"></span
+                                ><b class="text-charcoal">Admin Prod:</b> admin@rmc.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-purple-500"></span
+                                ><b class="text-charcoal">Dispatcher:</b> dispatcher@rmc.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-yellow-500"></span
+                                ><b class="text-charcoal">Driver:</b> driver@rmc.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-pink-500"></span
+                                ><b class="text-charcoal">QC Lab:</b> qc@rmc.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-accent"></span
+                                ><b class="text-charcoal">Finance:</b> finance@rmc.com
+                            </div>
+                            <div class="ml-4 text-muted">Password: password123</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center mt-6">
+                        <img
+                            src="assets/spinotek-logo.png"
+                            alt="Spinotek"
+                            class="h-8 mb-2 opacity-60"
+                            onerror="this.style.display = 'none'"
+                        />
+                        <p class="text-[10px] text-muted">Developed by Spinotek Corp</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- APP -->
+        <div id="app-wrapper" class="hidden">
+            <aside
+                id="sidebar"
+                class="fixed inset-y-0 left-0 z-40 w-[240px] bg-primary flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-xl"
+            >
+                <div class="px-4 py-5 border-b border-white/10">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-accent flex items-center justify-center shrink-0"
+                        >
+                            <i class="fa-solid fa-industry text-white text-sm"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <h1 class="text-white font-bold text-sm leading-tight truncate">
+                                Ready Mix Concrete
+                            </h1>
+                            <p class="text-white/50 text-[10px] font-medium italic">
+                                Production &amp; Distribution
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <nav
+                    class="flex-1 px-2.5 py-3 space-y-0.5 overflow-y-auto ns cs"
+                    id="sidebar-nav"
+                ></nav>
+                <div class="border-t border-white/10 mx-3"></div>
+                <div class="px-3 py-3 text-center">
+                    <div class="bg-black/20 rounded-xl p-3 inline-block">
+                        <img
+                            src="assets/spinotek-logo.png"
+                            alt="Spinotek"
+                            class="h-6 mx-auto opacity-70"
+                            onerror="this.style.display = 'none'"
+                        />
+                    </div>
+                    <p class="text-[9px] text-white/40 leading-tight mt-2">
+                        &copy; 2026 Ready-Mix Concrete.<br />Developed by Spinotek Corp.
+                    </p>
+                </div>
+            </aside>
+            <div
+                id="sidebar-overlay"
+                onclick="closeSidebar()"
+                class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"
+            ></div>
+            <div class="flex-1 flex flex-col min-h-screen lg:ml-[240px]">
+                <header class="bg-white border-b border-bordercl sticky top-0 z-20">
+                    <div class="flex items-center justify-between px-4 sm:px-6 h-14">
+                        <div class="flex items-center gap-3">
+                            <button
+                                onclick="openSidebar()"
+                                class="lg:hidden w-9 h-9 rounded-xl bg-bg flex items-center justify-center text-muted"
+                            >
+                                <i class="fa-solid fa-bars text-sm"></i>
+                            </button>
+                            <div>
+                                <h2 id="page-title" class="font-bold text-charcoal text-lg">
+                                    Dashboard
+                                </h2>
+                                <p id="page-subtitle" class="text-xs text-muted font-medium italic">
+                                    Overview
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="text-right hidden sm:block">
+                                <p
+                                    id="header-user-name"
+                                    class="text-sm font-semibold text-charcoal leading-tight"
+                                >
+                                    Admin
+                                </p>
+                                <p
+                                    id="header-user-role"
+                                    class="text-[10px] text-muted leading-tight"
+                                >
+                                    Owner
+                                </p>
+                            </div>
+                            <div
+                                id="header-avatar"
+                                class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-sm shadow-md"
+                            >
+                                O
+                            </div>
+                            <button
+                                onclick="handleLogout()"
+                                class="w-9 h-9 rounded-xl bg-bg flex items-center justify-center text-muted hover:text-red-500 hover:bg-red-50 transition"
+                                title="Logout"
+                            >
+                                <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+                <main class="flex-1 p-4 sm:p-6" id="main-content"></main>
+            </div>
+        </div>
+
+        <!-- MODAL -->
+        <div
+            id="modal-backdrop"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 modal-overlay" onclick="closeModal()"></div>
+            <div
+                id="modal-container"
+                class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto cs"
+            ></div>
+        </div>
+
+        <script>
+            const USERS = [
+                {
+                    id: 1,
+                    nama: 'Pak Budi',
+                    email: 'owner@rmc.com',
+                    pass: 'password123',
+                    role: 'owner',
+                    label: 'Owner / Management',
+                },
+                {
+                    id: 2,
+                    nama: 'Rina Sales',
+                    email: 'sales@rmc.com',
+                    pass: 'password123',
+                    role: 'sales',
+                    label: 'Sales / Marketing',
+                },
+                {
+                    id: 3,
+                    nama: 'Joko Operator',
+                    email: 'admin@rmc.com',
+                    pass: 'password123',
+                    role: 'admin-produksi',
+                    label: 'Admin Produksi',
+                },
+                {
+                    id: 4,
+                    nama: 'Andi Dispatch',
+                    email: 'dispatcher@rmc.com',
+                    pass: 'password123',
+                    role: 'dispatcher',
+                    label: 'Dispatcher',
+                },
+                {
+                    id: 5,
+                    nama: 'Mas Eko',
+                    email: 'driver@rmc.com',
+                    pass: 'password123',
+                    role: 'driver',
+                    label: 'Driver',
+                },
+                {
+                    id: 6,
+                    nama: 'Siti QC',
+                    email: 'qc@rmc.com',
+                    pass: 'password123',
+                    role: 'qc',
+                    label: 'QC Laboratorium',
+                },
+                {
+                    id: 7,
+                    nama: 'Dewi Finance',
+                    email: 'finance@rmc.com',
+                    pass: 'password123',
+                    role: 'finance',
+                    label: 'Finance',
+                },
+            ];
+            let currentUser = null;
+            let pelanggan = [
+                {
+                    id: 1,
+                    nama: 'PT Jaya Konstruksi',
+                    kontak: 'Pak Hendra',
+                    telp: '081234567890',
+                    alamat: 'Jl. Pasteur No. 45, Bandung',
+                    proyek: 'Gedung Perkantoran Pasteur',
+                    lokasi: 'Jl. Pasteur, Bandung',
+                },
+                {
+                    id: 2,
+                    nama: 'CV Bangun Mitra',
+                    kontak: 'Pak Rudi',
+                    telp: '085678901234',
+                    alamat: 'Jl. Buah Batu No. 120, Bandung',
+                    proyek: 'Ruko Buah Batu',
+                    lokasi: 'Jl. Buah Batu, Bandung',
+                },
+                {
+                    id: 3,
+                    nama: 'PT Wika Realty',
+                    kontak: 'Bu Ani',
+                    telp: '087890123456',
+                    alamat: 'Jl. Gatot Subroto No. 88',
+                    proyek: 'Apartemen Cileunyi',
+                    lokasi: 'Cileunyi, Bandung',
+                },
+                {
+                    id: 4,
+                    nama: 'PT Adhi Karya',
+                    kontak: 'Pak Dodi',
+                    telp: '082345678901',
+                    alamat: 'Jl. Soekarno-Hatta No. 500',
+                    proyek: 'Jalan Tol Soreang',
+                    lokasi: 'Soreang, Bandung',
+                },
+            ];
+            let mixDesign = [
+                {
+                    id: 1,
+                    kode: 'K-225',
+                    semen: 370,
+                    pasir: 680,
+                    split: 1050,
+                    air: 195,
+                    additive: 0,
+                    slump: '12-16',
+                    catatan: 'Mutu standar struktur ringan',
+                },
+                {
+                    id: 2,
+                    kode: 'K-300',
+                    semen: 420,
+                    pasir: 640,
+                    split: 1020,
+                    air: 190,
+                    additive: 1.5,
+                    slump: '12-18',
+                    catatan: 'Mutu menengah',
+                },
+                {
+                    id: 3,
+                    kode: 'K-350',
+                    semen: 460,
+                    pasir: 610,
+                    split: 1000,
+                    air: 185,
+                    additive: 2,
+                    slump: '15-20',
+                    catatan: 'Mutu tinggi, struktur utama',
+                },
+                {
+                    id: 4,
+                    kode: "fc'25",
+                    semen: 400,
+                    pasir: 660,
+                    split: 1030,
+                    air: 190,
+                    additive: 1,
+                    slump: '12-16',
+                    catatan: 'Equivalent K-250',
+                },
+                {
+                    id: 5,
+                    kode: "fc'30",
+                    semen: 440,
+                    pasir: 630,
+                    split: 1010,
+                    air: 188,
+                    additive: 1.8,
+                    slump: '14-18',
+                    catatan: 'Equivalent K-300',
+                },
+            ];
+            let quotation = [
+                {
+                    id: 1,
+                    no: 'QT-2026-001',
+                    pelangganId: 1,
+                    mutu: 'K-300',
+                    harga: 850000,
+                    termin: 'Net 30 Hari',
+                    berlaku: '2026-10-15',
+                    status: 'Diterima',
+                },
+                {
+                    id: 2,
+                    no: 'QT-2026-002',
+                    pelangganId: 2,
+                    mutu: 'K-225',
+                    harga: 780000,
+                    termin: 'Net 14 Hari',
+                    berlaku: '2026-10-20',
+                    status: 'Menunggu',
+                },
+                {
+                    id: 3,
+                    no: 'QT-2026-003',
+                    pelangganId: 3,
+                    mutu: "fc'30",
+                    harga: 900000,
+                    termin: 'Per Termin Proyek',
+                    berlaku: '2026-11-01',
+                    status: 'Diterima',
+                },
+            ];
+            let orders = [
+                {
+                    id: 1,
+                    no: 'DO-2026-001',
+                    pelangganId: 1,
+                    proyek: 'Gedung Perkantoran Pasteur',
+                    mutu: 'K-300',
+                    volume: 120,
+                    tanggal: '2026-09-22',
+                    jam: '07:00',
+                    lokasi: 'Jl. Pasteur, Bandung',
+                    catatan: 'Pakai concrete pump',
+                    status: 'Dikonfirmasi',
+                },
+                {
+                    id: 2,
+                    no: 'DO-2026-002',
+                    pelangganId: 2,
+                    proyek: 'Ruko Buah Batu',
+                    mutu: 'K-225',
+                    volume: 80,
+                    tanggal: '2026-09-23',
+                    jam: '08:00',
+                    lokasi: 'Jl. Buah Batu, Bandung',
+                    catatan: '',
+                    status: 'Menunggu',
+                },
+                {
+                    id: 3,
+                    no: 'DO-2026-003',
+                    pelangganId: 3,
+                    proyek: 'Apartemen Cileunyi',
+                    mutu: "fc'30",
+                    volume: 200,
+                    tanggal: '2026-09-24',
+                    jam: '06:30',
+                    lokasi: 'Cileunyi, Bandung',
+                    catatan: '2 truck sekaligus',
+                    status: 'Dikonfirmasi',
+                },
+                {
+                    id: 4,
+                    no: 'DO-2026-004',
+                    pelangganId: 1,
+                    proyek: 'Gedung Perkantoran Pasteur',
+                    mutu: 'K-300',
+                    volume: 60,
+                    tanggal: '2026-09-25',
+                    jam: '09:00',
+                    lokasi: 'Jl. Pasteur, Bandung',
+                    catatan: '',
+                    status: 'Selesai',
+                },
+                {
+                    id: 5,
+                    no: 'DO-2026-005',
+                    pelangganId: 4,
+                    proyek: 'Jalan Tol Soreang',
+                    mutu: 'K-225',
+                    volume: 150,
+                    tanggal: '2026-09-26',
+                    jam: '07:30',
+                    lokasi: 'Soreang, Bandung',
+                    catatan: 'Voluminous pour',
+                    status: 'Menunggu',
+                },
+            ];
+            let jadwal = [
+                {
+                    id: 1,
+                    orderId: 1,
+                    truckId: 1,
+                    driverId: 1,
+                    tempuh: 25,
+                    batching: '2026-09-22 06:00',
+                    status: 'Terjadwal',
+                },
+                {
+                    id: 2,
+                    orderId: 3,
+                    truckId: 2,
+                    driverId: 2,
+                    tempuh: 40,
+                    batching: '2026-09-24 05:30',
+                    status: 'Terjadwal',
+                },
+                {
+                    id: 3,
+                    orderId: 4,
+                    truckId: 1,
+                    driverId: 1,
+                    tempuh: 25,
+                    batching: '2026-09-25 08:00',
+                    status: 'Selesai',
+                },
+            ];
+            let batching = [
+                {
+                    id: 1,
+                    orderId: 4,
+                    mixId: 2,
+                    volume: 62,
+                    mulai: '2026-09-25 08:05',
+                    selesai: '2026-09-25 08:35',
+                    operator: 'Joko',
+                    catatan: 'Volume aktual +2 m³ dari order',
+                },
+            ];
+            let trucks = [
+                { id: 1, nopol: 'D 9001 RMC', kapasitas: 7, status: 'Tersedia', km: 45230, maintenanceBerikutnya: '2026-10-15' },
+                { id: 2, nopol: 'D 9002 RMC', kapasitas: 7, status: 'On Delivery', km: 28150, maintenanceBerikutnya: '2026-11-01' },
+                { id: 3, nopol: 'D 9003 RMC', kapasitas: 8, status: 'Tersedia', km: 62340, maintenanceBerikutnya: '2026-09-30' },
+                { id: 4, nopol: 'D 9004 RMC', kapasitas: 6, status: 'Maintenance', km: 78920, maintenanceBerikutnya: '2026-09-25' },
+            ];
+            let riwayatPerjalanan = [
+                { id: 1, truckId: 1, tanggal: '2026-09-20', order: 'DO-2026-003', tujuan: 'Jl. Pasteur, Bandung', km: 45, status: 'Selesai' },
+                { id: 2, truckId: 1, tanggal: '2026-09-18', order: 'DO-2026-001', tujuan: 'Jl. Buah Batu, Bandung', km: 32, status: 'Selesai' },
+                { id: 3, truckId: 2, tanggal: '2026-09-21', order: 'DO-2026-004', tujuan: 'Soreang, Bandung', km: 52, status: 'Dalam Perjalanan' },
+                { id: 4, truckId: 3, tanggal: '2026-09-19', order: 'DO-2026-002', tujuan: 'Cileunyi, Bandung', km: 38, status: 'Selesai' },
+                { id: 5, truckId: 3, tanggal: '2026-09-15', order: 'DO-2026-005', tujuan: 'Jl. Gatot Subroto', km: 28, status: 'Selesai' },
+            ];
+            let drivers = [
+                { id: 1, nama: 'Mas Eko', telp: '08111222333', status: 'Tersedia' },
+                { id: 2, nama: 'Pak Surya', telp: '08222333444', status: 'On Delivery' },
+                { id: 3, nama: 'Mas Dimas', telp: '08333444555', status: 'Tersedia' },
+            ];
+            let slumpTests = [
+                { id: 1, orderId: 4, lokasi: 'Jl. Pasteur', slump: 16, status: 'Lolos' },
+            ];
+            let kuatTekan = [
+                {
+                    id: 1,
+                    sample: 'Kubus 15cm #1',
+                    mutu: 'K-300',
+                    umur: '28 Hari',
+                    nilai: 32.5,
+                    status: 'Lolos',
+                },
+                {
+                    id: 2,
+                    sample: 'Kubus 15cm #2',
+                    mutu: 'K-300',
+                    umur: '28 Hari',
+                    nilai: 31.8,
+                    status: 'Lolos',
+                },
+            ];
+            let materials = [
+                { id: 1, nama: 'Semen Portland', stok: 45000, minimum: 10000, satuan: 'kg' },
+                { id: 2, nama: 'Pasir Beton', stok: 80000, minimum: 20000, satuan: 'kg' },
+                { id: 3, nama: 'Split 1-2 cm', stok: 120000, minimum: 30000, satuan: 'kg' },
+                { id: 4, nama: 'Split 2-3 cm', stok: 95000, minimum: 25000, satuan: 'kg' },
+                { id: 5, nama: 'Air Bersih', stok: 50000, minimum: 15000, satuan: 'liter' },
+                { id: 6, nama: 'Superplasticizer', stok: 2500, minimum: 500, satuan: 'kg' },
+            ];
+            let stokMasukLog = [
+                { id: 1, materialId: 1, jumlah: 10000, satuan: 'kg', tanggal: '2026-09-20', keterangan: 'Pembelian dari Semen Indonesia' },
+                { id: 2, materialId: 2, jumlah: 15000, satuan: 'kg', tanggal: '2026-09-21', keterangan: 'Pembelian dari CV Sumber Pasir' },
+                { id: 3, materialId: 3, jumlah: 20000, satuan: 'kg', tanggal: '2026-09-22', keterangan: 'Pembelian dari PT Batu Mulia' },
+            ];
+            let invoices = [
+                {
+                    id: 1,
+                    no: 'INV-2026-001',
+                    orderId: 4,
+                    pelangganId: 1,
+                    proyek: 'Gedung Perkantoran Pasteur',
+                    volume: 62,
+                    harga: 850000,
+                    jatuh: '2026-10-25',
+                    status: 'Belum Bayar',
+                    dibayar: 0,
+                },
+            ];
+            let riwayatPembayaran = [
+                { id: 1, invoiceId: 1, tanggal: '2026-09-28', jumlah: 25000000, metode: 'Transfer Bank', keterangan: 'DP 30%' },
+            ];
+            let nextId = (arr) => (arr.length ? Math.max(...arr.map((a) => a.id)) + 1 : 1);
+            let getPel = (id) => pelanggan.find((p) => p.id === id) || {};
+            let getMix = (id) => mixDesign.find((m) => m.id === id) || {};
+            let getTruck = (id) => trucks.find((t) => t.id === id) || {};
+            let getDriver = (id) => drivers.find((d) => d.id === id) || {};
+            let fmtRp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID');
+            let fmtRpShort = (n) => {
+                if (n >= 1000000000) return 'Rp ' + (n / 1000000000).toFixed(1) + ' M';
+                if (n >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1) + ' Jt';
+                if (n >= 1000) return 'Rp ' + (n / 1000).toFixed(0) + ' rb';
+                return 'Rp ' + n.toLocaleString('id-ID');
+            };
+
+            const NAV_ITEMS = [
+                {
+                    id: 'dashboard',
+                    icon: 'fa-chart-pie',
+                    label: 'Dashboard',
+                    roles: [
+                        'owner',
+                        'sales',
+                        'admin-produksi',
+                        'dispatcher',
+                        'driver',
+                        'qc',
+                        'finance',
+                    ],
+                },
+                {
+                    id: 'pelanggan',
+                    icon: 'fa-users',
+                    label: 'Pelanggan & Proyek',
+                    roles: ['owner', 'sales'],
+                },
+                {
+                    id: 'mixdesign',
+                    icon: 'fa-flask',
+                    label: 'Mix Design',
+                    roles: ['owner', 'admin-produksi'],
+                },
+                {
+                    id: 'quotation',
+                    icon: 'fa-file-invoice',
+                    label: 'Quotation',
+                    roles: ['owner', 'sales'],
+                },
+                {
+                    id: 'order',
+                    icon: 'fa-clipboard-list',
+                    label: 'Order & DO',
+                    roles: ['owner', 'sales'],
+                },
+                {
+                    id: 'penjadwalan',
+                    icon: 'fa-calendar-check',
+                    label: 'Penjadwalan',
+                    roles: ['owner', 'dispatcher'],
+                },
+                {
+                    id: 'batching',
+                    icon: 'fa-industry',
+                    label: 'Batching / Produksi',
+                    roles: ['owner', 'admin-produksi'],
+                },
+                {
+                    id: 'armada',
+                    icon: 'fa-truck',
+                    label: 'Armada & Driver',
+                    roles: ['owner', 'dispatcher', 'driver'],
+                },
+                { id: 'qc', icon: 'fa-vial', label: 'Quality Control', roles: ['owner', 'qc'] },
+                {
+                    id: 'stok',
+                    icon: 'fa-boxes-stacked',
+                    label: 'Bahan Baku & Stok',
+                    roles: ['owner', 'admin-produksi'],
+                },
+                {
+                    id: 'invoice',
+                    icon: 'fa-receipt',
+                    label: 'Invoicing & Piutang',
+                    roles: ['owner', 'finance'],
+                },
+                {
+                    id: 'laporan',
+                    icon: 'fa-chart-line',
+                    label: 'Laporan',
+                    roles: ['owner', 'finance'],
+                },
+                { id: 'users', icon: 'fa-users-gear', label: 'Manajemen User', roles: ['owner'] },
+            ];
+            const TAB_TITLES = {
+                dashboard: ['Dashboard', 'Overview'],
+                pelanggan: ['Pelanggan & Proyek', 'Data pelanggan dan proyek'],
+                mixdesign: ['Mix Design', 'Formula beton per mutu'],
+                quotation: ['Quotation', 'Penawaran harga'],
+                order: ['Order & DO', 'Delivery Order'],
+                penjadwalan: ['Penjadwalan', 'Jadwal batching & armada'],
+                batching: ['Batching / Produksi', 'Catatan produksi'],
+                armada: ['Armada & Driver', 'Truck mixer & driver'],
+                qc: ['Quality Control', 'Uji slump & kuat tekan'],
+                stok: ['Bahan Baku & Stok', 'Material & inventori'],
+                invoice: ['Invoicing & Piutang', 'Invoice & piutang'],
+                laporan: ['Laporan', 'Laporan produksi, pengiriman, keuangan'],
+                users: ['Manajemen User', 'Kelola akun pengguna'],
+            };
+
+            function statusBadge(s) {
+                const m = {
+                    Dikonfirmasi: 'bg-blue-50 text-blue-600',
+                    Menunggu: 'bg-amber-50 text-amber-600',
+                    Selesai: 'bg-emerald-50 text-emerald-600',
+                    Diterima: 'bg-emerald-50 text-emerald-600',
+                    Ditolak: 'bg-red-50 text-red-600',
+                    'Belum Bayar': 'bg-amber-50 text-amber-600',
+                    Lunas: 'bg-emerald-50 text-emerald-600',
+                    Tersedia: 'bg-emerald-50 text-emerald-600',
+                    'On Delivery': 'bg-blue-50 text-blue-600',
+                    Maintenance: 'bg-red-50 text-red-600',
+                    Terjadwal: 'bg-purple-50 text-purple-600',
+                    Lolos: 'bg-emerald-50 text-emerald-600',
+                    Gagal: 'bg-red-50 text-red-600',
+                    Kritis: 'bg-red-50 text-red-600',
+                    Aman: 'bg-emerald-50 text-emerald-600',
+                };
+                return (
+                    '<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ' +
+                    (m[s] || 'bg-slate-100 text-slate-500') +
+                    '">' +
+                    s +
+                    '</span>'
+                );
+            }
+
+            function handleLogin(e) {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value.trim();
+                const pass = document.getElementById('login-pass').value;
+                const user = USERS.find((u) => u.email === email && u.pass === pass);
+                const err = document.getElementById('login-error');
+                if (!user) {
+                    err.textContent = 'Email atau password salah.';
+                    err.classList.remove('hidden');
+                    return;
+                }
+                err.classList.add('hidden');
+                currentUser = user;
+                document.getElementById('page-login').classList.add('hidden');
+                const aw = document.getElementById('app-wrapper');
+                aw.classList.remove('hidden');
+                aw.classList.add('flex');
+                document.getElementById('header-user-name').textContent = user.nama;
+                document.getElementById('header-user-role').textContent = user.label;
+                document.getElementById('header-avatar').textContent = user.nama.charAt(0);
+                buildSidebar();
+                go('dashboard');
+            }
+            function handleLogout() {
+                currentUser = null;
+                document.getElementById('page-login').classList.remove('hidden');
+                const aw = document.getElementById('app-wrapper');
+                aw.classList.add('hidden');
+                aw.classList.remove('flex');
+            }
+            function togglePass() {
+                const inp = document.getElementById('login-pass'),
+                    eye = document.getElementById('pass-eye');
+                if (inp.type === 'password') {
+                    inp.type = 'text';
+                    eye.className = 'fa-solid fa-eye-slash text-sm';
+                } else {
+                    inp.type = 'password';
+                    eye.className = 'fa-solid fa-eye text-sm';
+                }
+            }
+            function buildSidebar() {
+                const nav = document.getElementById('sidebar-nav');
+                let h = '';
+                NAV_ITEMS.forEach((item) => {
+                    if (!item.roles.includes(currentUser.role)) return;
+                    h +=
+                        '<button onclick="go(\'' +
+                        item.id +
+                        '\')" id="nav-' +
+                        item.id +
+                        '" class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60"><i class="fa-solid ' +
+                        item.icon +
+                        ' w-5 text-center text-[13px]"></i><span>' +
+                        item.label +
+                        '</span></button>';
+                });
+                nav.innerHTML = h;
+            }
+            function openSidebar() {
+                document.getElementById('sidebar').classList.remove('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.remove('hidden');
+            }
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }
+
+            let activeTab = 'dashboard';
+            let charts = {};
+            function go(tab) {
+                activeTab = tab;
+                document
+                    .querySelectorAll('.sidebar-item')
+                    .forEach((el) => el.classList.remove('active'));
+                const nb = document.getElementById('nav-' + tab);
+                if (nb) nb.classList.add('active');
+                const [title, sub] = TAB_TITLES[tab] || [tab, ''];
+                document.getElementById('page-title').textContent = title;
+                document.getElementById('page-subtitle').textContent = sub;
+                closeSidebar();
+                renderTab(tab);
+            }
+
+            function renderTab(tab) {
+                const mc = document.getElementById('main-content');
+                mc.innerHTML = '';
+                mc.classList.remove('fade-in');
+                void mc.offsetWidth;
+                mc.classList.add('fade-in');
+                Object.values(charts).forEach((c) => {
+                    if (c && c.destroy) c.destroy();
+                });
+                charts = {};
+                switch (tab) {
+                    case 'dashboard':
+                        renderDashboard(mc);
+                        break;
+                    case 'pelanggan':
+                        renderPelanggan(mc);
+                        break;
+                    case 'mixdesign':
+                        renderMixDesign(mc);
+                        break;
+                    case 'quotation':
+                        renderQuotation(mc);
+                        break;
+                    case 'order':
+                        renderOrder(mc);
+                        break;
+                    case 'penjadwalan':
+                        renderPenjadwalan(mc);
+                        break;
+                    case 'batching':
+                        renderBatching(mc);
+                        break;
+                    case 'armada':
+                        renderArmada(mc);
+                        break;
+                    case 'qc':
+                        renderQC(mc);
+                        break;
+                    case 'stok':
+                        renderStok(mc);
+                        break;
+                    case 'invoice':
+                        renderInvoice(mc);
+                        break;
+                    case 'laporan':
+                        renderLaporan(mc);
+                        break;
+                    case 'users':
+                        renderUsers(mc);
+                        break;
+                }
+            }
+
+            function renderDashboard(mc) {
+                const totalOrder = orders.filter((o) => o.status !== 'Selesai').length;
+                const armadaReady = trucks.filter((t) => t.status === 'Tersedia').length;
+                const stokKritis = materials.filter((m) => m.stok <= m.minimum).length;
+                const today = new Date().toISOString().slice(0, 10);
+                const volProduksi = batching.filter(b => b.mulai && b.mulai.startsWith(today)).reduce((s, b) => s + (b.volume || 0), 0);
+                const pengirimanHariIni = jadwal.filter(j => j.status === 'Dalam Perjalanan' || j.status === 'Selesai').length;
+                const piutangJt = invoices.filter(i => i.status !== 'Lunas').reduce((s, i) => s + ((i.volume * i.harga) - i.dibayar), 0);
+                mc.innerHTML =
+                    '<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-4 mb-6">' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center"><i class="fa-solid fa-cubes text-primary"></i></div><span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Hari Ini</span></div><p class="text-2xl font-extrabold text-charcoal">' + (volProduksi || 0) + ' m&sup3;</p><p class="text-xs text-muted mt-1">Volume Produksi</p></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center"><i class="fa-solid fa-clipboard-list text-accent"></i></div><span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Aktif</span></div><p class="text-2xl font-extrabold text-charcoal">' +
+                    totalOrder +
+                    '</p><p class="text-xs text-muted mt-1">Order Berjalan</p></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center"><i class="fa-solid fa-truck text-blue-500"></i></div><span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">' +
+                    trucks.length +
+                    ' unit</span></div><p class="text-2xl font-extrabold text-charcoal">' +
+                    armadaReady +
+                    '</p><p class="text-xs text-muted mt-1">Armada Tersedia</p></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl ' +
+                    (stokKritis > 0 ? 'bg-red-500/10' : 'bg-emerald-500/10') +
+                    ' flex items-center justify-center"><i class="fa-solid fa-boxes-stacked ' +
+                    (stokKritis > 0 ? 'text-red-500' : 'text-emerald-500') +
+                    '"></i></div>' +
+                    (stokKritis > 0
+                        ? '<span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Kritis!</span>'
+                        : '<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Aman</span>') +
+                    '</div><p class="text-2xl font-extrabold text-charcoal">' +
+                    stokKritis +
+                    '</p><p class="text-xs text-muted mt-1">Stok Kritis</p></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center"><i class="fa-solid fa-truck-fast text-green-500"></i></div><span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Hari Ini</span></div><p class="text-2xl font-extrabold text-charcoal">' + pengirimanHariIni + ' truck</p><p class="text-xs text-muted mt-1">Pengiriman Hari Ini</p></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center"><i class="fa-solid fa-file-invoice-dollar text-red-500"></i></div><span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Jatuh Tempo</span></div><p class="text-2xl font-extrabold text-charcoal">' + fmtRpShort(piutangJt) + '</p><p class="text-xs text-muted mt-1">Piutang Jatuh Tempo</p></div>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">' +
+                    '<div class="lg:col-span-2 bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-1">Produksi Mingguan</h3><p class="text-xs text-muted mb-4">Volume produksi (m&sup3;) per hari</p><div class="relative" style="height:260px"><canvas id="chart-produksi"></canvas></div></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-1">Piutang vs Terbayar</h3><p class="text-xs text-muted mb-4">Status pembayaran (juta Rp)</p><div class="relative flex items-center justify-center" style="height:260px"><canvas id="chart-piutang"></canvas></div></div>' +
+                    '</div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-4"><div><h3 class="font-bold text-charcoal">Order Terbaru</h3><p class="text-xs text-muted">5 order paling baru</p></div><button onclick="go(\'order\')" class="text-xs font-semibold text-primary hover:text-primary-light transition">Lihat Semua &rarr;</button></div>' +
+                    '<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Order</th><th class="pb-3 pr-4">Pelanggan</th><th class="pb-3 pr-4">Mutu</th><th class="pb-3 pr-4">Volume</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Tanggal</th></tr></thead><tbody>' +
+                    orders
+                        .slice(0, 5)
+                        .map((o) => {
+                            const p = getPel(o.pelangganId);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                o.no +
+                                '</td><td class="py-3 pr-4">' +
+                                (p.nama || '-') +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' +
+                                o.mutu +
+                                '</span></td><td class="py-3 pr-4">' +
+                                o.volume +
+                                ' m&sup3;</td><td class="py-3 pr-4">' +
+                                statusBadge(o.status) +
+                                '</td><td class="py-3">' +
+                                o.tanggal +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div></div>';
+
+                setTimeout(() => {
+                    const c1 = document.getElementById('chart-produksi');
+                    if (c1)
+                        charts.prod = new Chart(c1.getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                                datasets: [
+                                    {
+                                        label: 'm³',
+                                        data: [45, 52, 38, 62, 55, 30, 0],
+                                        backgroundColor: '#1E3A5F',
+                                        borderRadius: 8,
+                                        borderSkipped: false,
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { color: '#F5F7FA' } },
+                                    x: { grid: { display: false } },
+                                },
+                            },
+                        });
+                    const c2 = document.getElementById('chart-piutang');
+                    if (c2)
+                        charts.piutang = new Chart(c2.getContext('2d'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Terbayar', 'Berjalan', 'Jatuh Tempo'],
+                                datasets: [
+                                    {
+                                        data: [658, 180, 54],
+                                        backgroundColor: ['#10B981', '#3B82F6', '#F28C28'],
+                                        borderWidth: 0,
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                cutout: '70%',
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            padding: 16,
+                                            usePointStyle: true,
+                                            font: { size: 11 },
+                                        },
+                                    },
+                                },
+                            },
+                        });
+                }, 100);
+            }
+
+            function renderPelanggan(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Data pelanggan dan proyek yang sedang berjalan.</p><button onclick="openModal(\'pelanggan\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Tambah</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Nama</th><th class="pb-3 pr-4">Kontak</th><th class="pb-3 pr-4">Alamat</th><th class="pb-3 pr-4">Proyek</th><th class="pb-3 pr-4">Lokasi</th><th class="pb-3 pr-4">Jml Order</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    pelanggan
+                        .map(
+                            (p) =>
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                p.nama +
+                                '</td><td class="py-3 pr-4">' +
+                                p.kontak +
+                                '<br><span class="text-xs text-muted">' +
+                                p.telp +
+                                '</span></td><td class="py-3 pr-4 text-xs">' +
+                                p.alamat +
+                                '</td><td class="py-3 pr-4 font-medium">' +
+                                p.proyek +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                p.lokasi +
+                                '</td><td class="py-3 pr-4 font-bold text-primary">' +
+                                orders.filter(o => o.pelangganId === p.id).length +
+                                '</td><td class="py-3"><button onclick="showPelangganDetail(' + p.id + ')" class="text-primary hover:text-primary-light text-xs font-semibold mr-2"><i class="fa-solid fa-eye mr-1"></i>Detail</button><button class="text-muted hover:text-charcoal text-xs font-semibold"><i class="fa-solid fa-pen mr-1"></i>Edit</button></td></tr>',
+                        )
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function showPelangganDetail(id) {
+                const p = getPel(id);
+                const orderList = orders.filter(o => o.pelangganId === id);
+                const backdrop = document.createElement('div');
+                backdrop.className = 'fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4';
+                backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+                backdrop.innerHTML =
+                    '<div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 fade-in">' +
+                    '<div class="flex items-center justify-between mb-4"><h3 class="font-bold text-charcoal text-lg">Detail Pelanggan</h3><button onclick="this.closest(\'.fixed\').remove()" class="text-muted hover:text-red-500"><i class="fa-solid fa-xmark text-lg"></i></button></div>' +
+                    '<div class="space-y-2 text-sm mb-4"><p><b class="text-muted">Nama:</b> ' + p.nama + '</p><p><b class="text-muted">Kontak:</b> ' + p.kontak + '</p><p><b class="text-muted">Telp:</b> ' + p.telp + '</p><p><b class="text-muted">Alamat:</b> ' + p.alamat + '</p><p><b class="text-muted">Proyek:</b> ' + p.proyek + '</p></div>' +
+                    '<h4 class="font-bold text-sm text-charcoal mb-2">Riwayat Order (' + orderList.length + ' order)</h4>' +
+                    (orderList.length > 0
+                        ? '<div class="overflow-x-auto"><table class="w-full text-xs"><thead><tr class="border-b border-bordercl text-left text-muted uppercase tracking-wider"><th class="pb-2 pr-3">No. Order</th><th class="pb-2 pr-3">Mutu</th><th class="pb-2 pr-3">Volume</th><th class="pb-2">Status</th></tr></thead><tbody>' +
+                          orderList.map(o =>
+                              '<tr class="border-b border-bordercl last:border-0"><td class="py-2 pr-3 font-semibold">' + o.no + '</td><td class="py-2 pr-3">' + o.mutu + '</td><td class="py-2 pr-3">' + o.volume + ' m³</td><td class="py-2">' + statusBadge(o.status) + '</td></tr>'
+                          ).join('') +
+                          '</tbody></table></div>'
+                        : '<p class="text-xs text-muted">Belum ada order.</p>') +
+                    '</div>';
+                document.body.appendChild(backdrop);
+            }
+
+            function renderMixDesign(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Formula beton per mutu. Komposisi material per m&sup3;.</p><button onclick="openModal(\'mixdesign\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Mix Design</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Kode Mutu</th><th class="pb-3 pr-4">Semen (kg)</th><th class="pb-3 pr-4">Pasir (kg)</th><th class="pb-3 pr-4">Split (kg)</th><th class="pb-3 pr-4">Air (kg)</th><th class="pb-3 pr-4">Additive (kg)</th><th class="pb-3 pr-4">Target Slump</th><th class="pb-3">Catatan</th></tr></thead><tbody>' +
+                    mixDesign
+                        .map(
+                            (m) =>
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-bold text-primary">' +
+                                m.kode +
+                                '</td><td class="py-3 pr-4">' +
+                                m.semen +
+                                '</td><td class="py-3 pr-4">' +
+                                m.pasir +
+                                '</td><td class="py-3 pr-4">' +
+                                m.split +
+                                '</td><td class="py-3 pr-4">' +
+                                m.air +
+                                '</td><td class="py-3 pr-4">' +
+                                m.additive +
+                                '</td><td class="py-3 pr-4">' +
+                                m.slump +
+                                ' cm</td><td class="py-3 text-xs text-muted">' +
+                                m.catatan +
+                                '</td></tr>',
+                        )
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function renderQuotation(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Penawaran harga ke pelanggan per proyek.</p><button onclick="openModal(\'quotation\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Buat Penawaran</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Penawaran</th><th class="pb-3 pr-4">Pelanggan</th><th class="pb-3 pr-4">Mutu</th><th class="pb-3 pr-4">Harga/m&sup3;</th><th class="pb-3 pr-4">Termin</th><th class="pb-3 pr-4">Berlaku Hingga</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                    quotation
+                        .map((q) => {
+                            const p = getPel(q.pelangganId);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                q.no +
+                                '</td><td class="py-3 pr-4">' +
+                                (p.nama || '-') +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' +
+                                q.mutu +
+                                '</span></td><td class="py-3 pr-4">' +
+                                fmtRp(q.harga) +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                q.termin +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                q.berlaku +
+                                '</td><td class="py-3">' +
+                                statusBadge(q.status) +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function renderOrder(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Daftar pesanan dan Delivery Order.</p><button onclick="openModal(\'order\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Buat Order</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. DO</th><th class="pb-3 pr-4">Pelanggan</th><th class="pb-3 pr-4">Proyek</th><th class="pb-3 pr-4">Mutu</th><th class="pb-3 pr-4">Volume (m&sup3;)</th><th class="pb-3 pr-4">Jadwal</th><th class="pb-3 pr-4">Lokasi</th><th class="pb-3 pr-4">Catatan</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    orders
+                        .map((o) => {
+                            const p = getPel(o.pelangganId);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                o.no +
+                                '</td><td class="py-3 pr-4">' +
+                                (p.nama || '-') +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                o.proyek +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' +
+                                o.mutu +
+                                '</span></td><td class="py-3 pr-4">' +
+                                o.volume +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                o.tanggal +
+                                ' ' +
+                                o.jam +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                (o.lokasi || '-') +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                (o.catatan || '-') +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(o.status) +
+                                '</td><td class="py-3"><button class="text-primary hover:text-primary-light text-xs font-semibold"><i class="fa-solid fa-eye mr-1"></i>Detail</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function renderPenjadwalan(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Jadwal batching, alokasi truck mixer &amp; driver.</p><button onclick="openModal(\'jadwal\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Jadwal</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Order/DO</th><th class="pb-3 pr-4">Pelanggan</th><th class="pb-3 pr-4">Truck</th><th class="pb-3 pr-4">Driver</th><th class="pb-3 pr-4">Estimasi</th><th class="pb-3 pr-4">Jadwal Batching</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                    jadwal
+                        .map((j) => {
+                            const o = orders.find((x) => x.id === j.orderId) || {};
+                            const p = getPel(o.pelangganId);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                (o.no || '-') +
+                                '</td><td class="py-3 pr-4">' +
+                                (p.nama || '-') +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                (getTruck(j.truckId).nopol || '-') +
+                                '</td><td class="py-3 pr-4">' +
+                                (getDriver(j.driverId).nama || '-') +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                j.tempuh +
+                                ' mnt</td><td class="py-3 pr-4 text-xs">' +
+                                j.batching +
+                                '</td><td class="py-3">' +
+                                statusBadge(j.status) +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function renderBatching(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Catatan produksi batching per order.</p><button onclick="openModal(\'batching\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Input Batching</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Batching</th><th class="pb-3 pr-4">Order/DO</th><th class="pb-3 pr-4">Mix Design</th><th class="pb-3 pr-4">Volume (m&sup3;)</th><th class="pb-3 pr-4">Mulai</th><th class="pb-3 pr-4">Selesai</th><th class="pb-3 pr-4">Operator</th><th class="pb-3">Catatan</th></tr></thead><tbody>' +
+                    batching
+                        .map((b) => {
+                            const o = orders.find((x) => x.id === b.orderId) || {};
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">BAT-' +
+                                String(b.id).padStart(3, '0') +
+                                '</td><td class="py-3 pr-4">' +
+                                (o.no || '-') +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' +
+                                (getMix(b.mixId).kode || '-') +
+                                '</span></td><td class="py-3 pr-4">' +
+                                b.volume +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                b.mulai +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                b.selesai +
+                                '</td><td class="py-3 pr-4">' +
+                                b.operator +
+                                '</td><td class="py-3 text-xs text-muted">' +
+                                b.catatan +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function renderArmada(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Data truck mixer dan driver.</p><button onclick="openModal(\'armada\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Armada</button></div>' +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4"><i class="fa-solid fa-truck text-primary mr-2"></i>Truck Mixer</h3><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Nopol</th><th class="pb-3 pr-4">Kapasitas</th><th class="pb-3 pr-4">Km</th><th class="pb-3 pr-4">Maintenance</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    trucks
+                        .map(
+                            (t) =>
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                t.nopol +
+                                '</td><td class="py-3 pr-4">' +
+                                t.kapasitas +
+                                ' m&sup3;</td><td class="py-3 pr-4 text-xs">' +
+                                (t.km ? t.km.toLocaleString('id-ID') + ' km' : '-') +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                (t.maintenanceBerikutnya || '-') +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(t.status) +
+                                '</td><td class="py-3"><button onclick="showTruckHistory(' + t.id + ')" class="text-primary hover:text-primary-light text-xs font-semibold"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Riwayat</button></td></tr>',
+                        )
+                        .join('') +
+                    '</tbody></table></div></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4"><i class="fa-solid fa-user text-primary mr-2"></i>Driver</h3><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Nama</th><th class="pb-3 pr-4">No. Telp</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                    drivers
+                        .map(
+                            (d) =>
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                d.nama +
+                                '</td><td class="py-3 pr-4">' +
+                                d.telp +
+                                '</td><td class="py-3">' +
+                                statusBadge(d.status) +
+                                '</td></tr>',
+                        )
+                        .join('') +
+                    '</tbody></table></div></div>' +
+                    '</div>';
+            }
+
+            function showTruckHistory(truckId) {
+                const t = getTruck(truckId);
+                const trips = riwayatPerjalanan.filter(r => r.truckId === truckId);
+                const backdrop = document.createElement('div');
+                backdrop.className = 'fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4';
+                backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+                backdrop.innerHTML =
+                    '<div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 fade-in">' +
+                    '<div class="flex items-center justify-between mb-4"><h3 class="font-bold text-charcoal text-lg">Riwayat Perjalanan - ' + t.nopol + '</h3><button onclick="this.closest(\'.fixed\').remove()" class="text-muted hover:text-red-500"><i class="fa-solid fa-xmark text-lg"></i></button></div>' +
+                    '<div class="space-y-2 text-sm mb-4"><p><b class="text-muted">Kapasitas:</b> ' + t.kapasitas + ' m³</p><p><b class="text-muted">KM Total:</b> ' + (t.km ? t.km.toLocaleString('id-ID') + ' km' : '-') + '</p><p><b class="text-muted">Maintenance Berikutnya:</b> ' + (t.maintenanceBerikutnya || '-') + '</p></div>' +
+                    '<h4 class="font-bold text-sm text-charcoal mb-2">Riwayat Perjalanan</h4>' +
+                    (trips.length > 0
+                        ? '<div class="overflow-x-auto"><table class="w-full text-xs"><thead><tr class="border-b border-bordercl text-left text-muted uppercase tracking-wider"><th class="pb-2 pr-3">Tanggal</th><th class="pb-2 pr-3">Order</th><th class="pb-2 pr-3">Tujuan</th><th class="pb-2 pr-3">KM</th><th class="pb-2">Status</th></tr></thead><tbody>' +
+                          trips.map(r =>
+                              '<tr class="border-b border-bordercl last:border-0"><td class="py-2 pr-3">' + r.tanggal + '</td><td class="py-2 pr-3 font-semibold">' + r.order + '</td><td class="py-2 pr-3">' + r.tujuan + '</td><td class="py-2 pr-3">' + r.km + ' km</td><td class="py-2">' + statusBadge(r.status) + '</td></tr>'
+                          ).join('') +
+                          '</tbody></table></div>'
+                        : '<p class="text-xs text-muted">Belum ada riwayat perjalanan.</p>') +
+                    '</div>';
+                document.body.appendChild(backdrop);
+            }
+
+            function renderQC(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Hasil uji slump di lokasi dan uji kuat tekan di lab.</p><button onclick="openModal(\'qc\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Input QC</button></div>' +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4"><i class="fa-solid fa-vial text-accent mr-2"></i>Uji Slump</h3><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Order/DO</th><th class="pb-3 pr-4">Lokasi</th><th class="pb-3 pr-4">Slump (cm)</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                    slumpTests
+                        .map((s) => {
+                            const o = orders.find((x) => x.id === s.orderId) || {};
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                (o.no || '-') +
+                                '</td><td class="py-3 pr-4">' +
+                                s.lokasi +
+                                '</td><td class="py-3 pr-4">' +
+                                s.slump +
+                                '</td><td class="py-3">' +
+                                statusBadge(s.status) +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4"><i class="fa-solid fa-cube text-primary mr-2"></i>Uji Kuat Tekan</h3><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Sample</th><th class="pb-3 pr-4">Mutu</th><th class="pb-3 pr-4">Umur</th><th class="pb-3 pr-4">Kuat Tekan</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                    kuatTekan
+                        .map(
+                            (k) =>
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                k.sample +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' +
+                                k.mutu +
+                                '</span></td><td class="py-3 pr-4 text-xs">' +
+                                k.umur +
+                                '</td><td class="py-3 pr-4">' +
+                                k.nilai +
+                                ' MPa</td><td class="py-3">' +
+                                statusBadge(k.status) +
+                                '</td></tr>',
+                        )
+                        .join('') +
+                    '</tbody></table></div></div>' +
+                    '</div>';
+            }
+
+            function renderStok(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Stok material bahan baku. Stok berkurang otomatis saat batching.</p><button onclick="openModal(\'stok\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Stok Masuk</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Material</th><th class="pb-3 pr-4">Stok Tersedia</th><th class="pb-3 pr-4">Stok Minimum</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    materials
+                        .map((m) => {
+                            const kritis = m.stok <= m.minimum;
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                m.nama +
+                                '</td><td class="py-3 pr-4">' +
+                                m.stok.toLocaleString('id-ID') +
+                                ' ' +
+                                m.satuan +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                m.minimum.toLocaleString('id-ID') +
+                                ' ' +
+                                m.satuan +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(kritis ? 'Kritis' : 'Aman') +
+                                '</td><td class="py-3"><button class="text-primary hover:text-primary-light text-xs font-semibold"><i class="fa-solid fa-plus mr-1"></i>Tambah</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>' +
+                    '<div class="mt-5"><h3 class="font-bold text-charcoal mb-3"><i class="fa-solid fa-clock-rotate-left text-primary mr-2"></i>Riwayat Stok Masuk</h3><div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Material</th><th class="pb-3 pr-4">Jumlah</th><th class="pb-3">Keterangan</th></tr></thead><tbody>' +
+                    stokMasukLog
+                        .map((l) => {
+                            const m = materials.find(x => x.id === l.materialId) || {};
+                            return '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 text-xs">' + l.tanggal + '</td><td class="py-3 pr-4 font-semibold text-charcoal">' + (m.nama || '-') + '</td><td class="py-3 pr-4">' + l.jumlah.toLocaleString('id-ID') + ' ' + l.satuan + '</td><td class="py-3 text-xs">' + l.keterangan + '</td></tr>';
+                        })
+                        .join('') +
+                    '</tbody></table></div></div>';
+            }
+
+            function renderInvoice(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Invoice berdasarkan volume terkirim. Pemantauan piutang per pelanggan.</p><button onclick="openModal(\'invoice\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Buat Invoice</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Invoice</th><th class="pb-3 pr-4">Pelanggan</th><th class="pb-3 pr-4">Proyek</th><th class="pb-3 pr-4">Volume (m&sup3;)</th><th class="pb-3 pr-4">Harga/m&sup3;</th><th class="pb-3 pr-4">Total</th><th class="pb-3 pr-4">Dibayar</th><th class="pb-3 pr-4">Sisa</th><th class="pb-3 pr-4">Jatuh Tempo</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    invoices
+                        .map((i) => {
+                            const p = getPel(i.pelangganId);
+                            const total = i.volume * i.harga;
+                            const sisa = total - i.dibayar;
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                i.no +
+                                '</td><td class="py-3 pr-4">' +
+                                (p.nama || '-') +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                i.proyek +
+                                '</td><td class="py-3 pr-4">' +
+                                i.volume +
+                                '</td><td class="py-3 pr-4">' +
+                                fmtRp(i.harga) +
+                                '</td><td class="py-3 pr-4 font-bold text-charcoal">' +
+                                fmtRp(total) +
+                                '</td><td class="py-3 pr-4 text-green-600 font-semibold">' +
+                                fmtRp(i.dibayar) +
+                                '</td><td class="py-3 pr-4 text-red-600 font-semibold">' +
+                                fmtRp(sisa) +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                i.jatuh +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(i.status) +
+                                '</td><td class="py-3"><button onclick="showInvoiceDetail(' + i.id + ')" class="text-primary hover:text-primary-light text-xs font-semibold"><i class="fa-solid fa-eye mr-1"></i>Detail</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function showInvoiceDetail(invId) {
+                const i = invoices.find(x => x.id === invId);
+                if (!i) return;
+                const p = getPel(i.pelangganId);
+                const total = i.volume * i.harga;
+                const sisa = total - i.dibayar;
+                const payments = riwayatPembayaran.filter(r => r.invoiceId === invId);
+                const backdrop = document.createElement('div');
+                backdrop.className = 'fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4';
+                backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+                backdrop.innerHTML =
+                    '<div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 fade-in">' +
+                    '<div class="flex items-center justify-between mb-4"><h3 class="font-bold text-charcoal text-lg">Detail Invoice - ' + i.no + '</h3><button onclick="this.closest(\'.fixed\').remove()" class="text-muted hover:text-red-500"><i class="fa-solid fa-xmark text-lg"></i></button></div>' +
+                    '<div class="space-y-2 text-sm mb-4">' +
+                    '<p><b class="text-muted">Pelanggan:</b> ' + (p.nama || '-') + '</p>' +
+                    '<p><b class="text-muted">Proyek:</b> ' + i.proyek + '</p>' +
+                    '<p><b class="text-muted">Total:</b> ' + fmtRp(total) + '</p>' +
+                    '<p><b class="text-muted">Dibayar:</b> <span class="text-green-600 font-bold">' + fmtRp(i.dibayar) + '</span></p>' +
+                    '<p><b class="text-muted">Sisa Piutang:</b> <span class="text-red-600 font-bold">' + fmtRp(sisa) + '</span></p>' +
+                    '<p><b class="text-muted">Jatuh Tempo:</b> ' + i.jatuh + '</p></div>' +
+                    '<h4 class="font-bold text-sm text-charcoal mb-2">Riwayat Pembayaran</h4>' +
+                    (payments.length > 0
+                        ? '<div class="overflow-x-auto"><table class="w-full text-xs"><thead><tr class="border-b border-bordercl text-left text-muted uppercase tracking-wider"><th class="pb-2 pr-3">Tanggal</th><th class="pb-2 pr-3">Jumlah</th><th class="pb-2 pr-3">Metode</th><th class="pb-2">Keterangan</th></tr></thead><tbody>' +
+                          payments.map(r =>
+                              '<tr class="border-b border-bordercl last:border-0"><td class="py-2 pr-3">' + r.tanggal + '</td><td class="py-2 pr-3 font-bold text-green-600">' + fmtRp(r.jumlah) + '</td><td class="py-2 pr-3">' + r.metode + '</td><td class="py-2">' + r.keterangan + '</td></tr>'
+                          ).join('') +
+                          '</tbody></table></div>'
+                        : '<p class="text-xs text-muted">Belum ada pembayaran.</p>') +
+                    '</div>';
+                document.body.appendChild(backdrop);
+            }
+
+            function showRiwayatPembayaranPelanggan(pelangganId) {
+                const p = getPel(pelangganId);
+                const pelangganInvoices = invoices.filter(i => i.pelangganId === pelangganId);
+                const pelangganPayments = riwayatPembayaran.filter(r => {
+                    const inv = invoices.find(i => i.id === r.invoiceId);
+                    return inv && inv.pelangganId === pelangganId;
+                });
+                const totalTagihan = pelangganInvoices.reduce((s, i) => s + (i.volume * i.harga), 0);
+                const totalDibayar = pelangganInvoices.reduce((s, i) => s + i.dibayar, 0);
+                const backdrop = document.createElement('div');
+                backdrop.className = 'fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4';
+                backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+                backdrop.innerHTML =
+                    '<div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 fade-in">' +
+                    '<div class="flex items-center justify-between mb-4"><h3 class="font-bold text-charcoal text-lg">Riwayat Pembayaran - ' + (p.nama || '-') + '</h3><button onclick="this.closest(\'.fixed\').remove()" class="text-muted hover:text-red-500"><i class="fa-solid fa-xmark text-lg"></i></button></div>' +
+                    '<div class="grid grid-cols-2 gap-3 mb-4">' +
+                    '<div class="bg-primary/5 rounded-xl p-3 text-center"><p class="text-xs text-muted font-bold">Total Tagihan</p><p class="text-lg font-extrabold text-primary">' + fmtRp(totalTagihan) + '</p></div>' +
+                    '<div class="bg-emerald-50 rounded-xl p-3 text-center"><p class="text-xs text-muted font-bold">Total Dibayar</p><p class="text-lg font-extrabold text-emerald-600">' + fmtRp(totalDibayar) + '</p></div>' +
+                    '</div>' +
+                    '<h4 class="font-bold text-sm text-charcoal mb-2">Daftar Invoice</h4>' +
+                    (pelangganInvoices.length > 0
+                        ? '<div class="overflow-x-auto mb-4"><table class="w-full text-xs"><thead><tr class="border-b border-bordercl text-left text-muted uppercase tracking-wider"><th class="pb-2 pr-3">No.</th><th class="pb-2 pr-3">Total</th><th class="pb-2 pr-3">Dibayar</th><th class="pb-2">Status</th></tr></thead><tbody>' +
+                          pelangganInvoices.map(inv =>
+                              '<tr class="border-b border-bordercl last:border-0"><td class="py-2 pr-3 font-semibold">' + inv.no + '</td><td class="py-2 pr-3">' + fmtRp(inv.volume * inv.harga) + '</td><td class="py-2 pr-3 text-green-600">' + fmtRp(inv.dibayar) + '</td><td class="py-2">' + statusBadge(inv.status) + '</td></tr>'
+                          ).join('') +
+                          '</tbody></table></div>'
+                        : '<p class="text-xs text-muted mb-4">Belum ada invoice.</p>') +
+                    '<h4 class="font-bold text-sm text-charcoal mb-2">Riwayat Pembayaran</h4>' +
+                    (pelangganPayments.length > 0
+                        ? '<div class="overflow-x-auto"><table class="w-full text-xs"><thead><tr class="border-b border-bordercl text-left text-muted uppercase tracking-wider"><th class="pb-2 pr-3">Tanggal</th><th class="pb-2 pr-3">Jumlah</th><th class="pb-2 pr-3">Metode</th><th class="pb-2">Keterangan</th></tr></thead><tbody>' +
+                          pelangganPayments.map(r =>
+                              '<tr class="border-b border-bordercl last:border-0"><td class="py-2 pr-3">' + r.tanggal + '</td><td class="py-2 pr-3 font-bold text-green-600">' + fmtRp(r.jumlah) + '</td><td class="py-2 pr-3">' + r.metode + '</td><td class="py-2">' + r.keterangan + '</td></tr>'
+                          ).join('') +
+                          '</tbody></table></div>'
+                        : '<p class="text-xs text-muted">Belum ada pembayaran.</p>') +
+                    '</div>';
+                document.body.appendChild(backdrop);
+            }
+
+            function renderLaporan(mc) {
+                mc.innerHTML =
+                    '<div class="flex gap-2 mb-5 flex-wrap" id="laporan-tabs">' +
+                    '<button onclick="switchLaporanTab(\'produksi\')" class="laporan-btn px-4 py-2 rounded-xl text-sm font-semibold bg-primary text-white transition">Produksi</button>' +
+                    '<button onclick="switchLaporanTab(\'pengiriman\')" class="laporan-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white border border-bordercl text-muted hover:text-charcoal transition">Pengiriman</button>' +
+                    '<button onclick="switchLaporanTab(\'bahanbaku\')" class="laporan-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white border border-bordercl text-muted hover:text-charcoal transition">Bahan Baku</button>' +
+                    '<button onclick="switchLaporanTab(\'qc\')" class="laporan-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white border border-bordercl text-muted hover:text-charcoal transition">Quality Control</button>' +
+                    '<button onclick="switchLaporanTab(\'keuangan\')" class="laporan-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white border border-bordercl text-muted hover:text-charcoal transition">Keuangan</button>' +
+                    '</div><div id="laporan-body"></div>';
+                switchLaporanTab('produksi');
+            }
+
+            function switchLaporanTab(tab) {
+                document.querySelectorAll('.laporan-btn').forEach((b, i) => {
+                    const tabs = ['produksi', 'pengiriman', 'bahanbaku', 'qc', 'keuangan'];
+                    if (tabs[i] === tab) {
+                        b.className =
+                            'laporan-btn px-4 py-2 rounded-xl text-sm font-semibold bg-primary text-white transition';
+                    } else {
+                        b.className =
+                            'laporan-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white border border-bordercl text-muted hover:text-charcoal transition';
+                    }
+                });
+                const body = document.getElementById('laporan-body');
+                if (tab === 'produksi') {
+                    body.innerHTML =
+                        '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Produksi Bulan Ini</p><p class="text-3xl font-extrabold text-primary">1,245 m&sup3;</p></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Rata-rata/Hari</p><p class="text-3xl font-extrabold text-charcoal">41.5 m&sup3;</p></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Batching</p><p class="text-3xl font-extrabold text-accent">186</p></div>' +
+                        '</div><div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4">Produksi per Mutu Beton</h3><div class="relative" style="height:260px"><canvas id="chart-lap-prod"></canvas></div></div>';
+                    setTimeout(() => {
+                        const c = document.getElementById('chart-lap-prod');
+                        if (c)
+                            charts.lapProd = new Chart(c.getContext('2d'), {
+                                type: 'bar',
+                                data: {
+                                    labels: ['K-225', 'K-300', 'K-350', "fc'25", "fc'30"],
+                                    datasets: [
+                                        {
+                                            label: 'm³',
+                                            data: [320, 480, 210, 135, 100],
+                                            backgroundColor: [
+                                                '#1E3A5F',
+                                                '#3B6B91',
+                                                '#F28C28',
+                                                '#10B981',
+                                                '#8B5CF6',
+                                            ],
+                                            borderRadius: 8,
+                                            borderSkipped: false,
+                                        },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        y: { beginAtZero: true, grid: { color: '#F5F7FA' } },
+                                        x: { grid: { display: false } },
+                                    },
+                                },
+                            });
+                    }, 100);
+                } else if (tab === 'pengiriman') {
+                    body.innerHTML =
+                        '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Pengiriman</p><p class="text-3xl font-extrabold text-primary">152</p></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Volume Terkirim</p><p class="text-3xl font-extrabold text-charcoal">1,180 m&sup3;</p></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Utilisasi Armada</p><p class="text-3xl font-extrabold text-accent">78%</p></div>' +
+                        '</div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4">Pengiriman per Pelanggan</h3><div class="relative" style="height:260px"><canvas id="chart-lap-kirim"></canvas></div></div>';
+                    setTimeout(() => {
+                        const c = document.getElementById('chart-lap-kirim');
+                        if (c)
+                            charts.lapKirim = new Chart(c.getContext('2d'), {
+                                type: 'bar',
+                                data: {
+                                    labels: [
+                                        'PT Jaya Konstruksi',
+                                        'CV Bangun Mitra',
+                                        'PT Wika Realty',
+                                        'PT Adhi Karya',
+                                    ],
+                                    datasets: [
+                                        {
+                                            label: 'm³',
+                                            data: [420, 280, 350, 130],
+                                            backgroundColor: '#1E3A5F',
+                                            borderRadius: 8,
+                                            borderSkipped: false,
+                                        },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        y: { beginAtZero: true, grid: { color: '#F5F7FA' } },
+                                        x: { grid: { display: false } },
+                                    },
+                                },
+                            });
+                    }, 100);
+                } else if (tab === 'bahanbaku') {
+                    body.innerHTML =
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 mb-4"><h3 class="font-bold text-charcoal mb-4">Pemakaian Bahan Baku</h3><div class="relative" style="height:260px"><canvas id="chart-lap-bb"></canvas></div></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Material</th><th class="pb-3 pr-4">Stok Saat Ini</th><th class="pb-3 pr-4">Satuan</th><th class="pb-3 pr-4">Minimum</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                        materials.map(m => {
+                            const kritis = m.stok <= m.minimum;
+                            return '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' + m.nama + '</td><td class="py-3 pr-4">' + m.stok.toLocaleString('id-ID') + '</td><td class="py-3 pr-4">' + m.satuan + '</td><td class="py-3 pr-4">' + m.minimum.toLocaleString('id-ID') + '</td><td class="py-3">' + statusBadge(kritis ? 'Kritis' : 'Aman') + '</td></tr>';
+                        }).join('') +
+                        '</tbody></table></div>';
+                    setTimeout(() => {
+                        const c = document.getElementById('chart-lap-bb');
+                        if (c)
+                            charts.lapBB = new Chart(c.getContext('2d'), {
+                                type: 'bar',
+                                data: {
+                                    labels: materials.map(m => m.nama.split(' ')[0]),
+                                    datasets: [
+                                        { label: 'Stok Saat Ini', data: materials.map(m => m.stok), backgroundColor: '#1E3A5F', borderRadius: 8, borderSkipped: false },
+                                        { label: 'Minimum', data: materials.map(m => m.minimum), backgroundColor: '#DC2626', borderRadius: 8, borderSkipped: false },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } } },
+                                    scales: { y: { beginAtZero: true, grid: { color: '#F5F7FA' } }, x: { grid: { display: false } } },
+                                },
+                            });
+                    }, 100);
+                } else if (tab === 'qc') {
+                    body.innerHTML =
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 mb-4"><h3 class="font-bold text-charcoal mb-4">Rekap Uji Slump & Kuat Tekan</h3><div class="relative" style="height:260px"><canvas id="chart-lap-qc"></canvas></div></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Sample</th><th class="pb-3 pr-4">Mutu</th><th class="pb-3 pr-4">Umur</th><th class="pb-3 pr-4">Nilai (MPa)</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                        kuatTekan.map(k => {
+                            return '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' + k.sample + '</td><td class="py-3 pr-4">' + k.mutu + '</td><td class="py-3 pr-4">' + k.umur + '</td><td class="py-3 pr-4 font-bold">' + k.nilai + '</td><td class="py-3">' + statusBadge(k.status) + '</td></tr>';
+                        }).join('') +
+                        '</tbody></table></div>';
+                    setTimeout(() => {
+                        const c = document.getElementById('chart-lap-qc');
+                        if (c)
+                            charts.lapQC = new Chart(c.getContext('2d'), {
+                                type: 'bar',
+                                data: {
+                                    labels: slumpTests.map(s => 'Slump #' + s.id),
+                                    datasets: [
+                                        { label: 'Slump (cm)', data: slumpTests.map(s => s.slump), backgroundColor: '#F28C28', borderRadius: 8, borderSkipped: false },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: { y: { beginAtZero: true, grid: { color: '#F5F7FA' } }, x: { grid: { display: false } } },
+                                },
+                            });
+                    }, 100);
+                } else {
+                    body.innerHTML =
+                        '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Omzet</p><p class="text-3xl font-extrabold text-primary">Rp 892 Jt</p></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Piutang Beredar</p><p class="text-3xl font-extrabold text-accent">Rp 234 Jt</p></div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Terkumpul</p><p class="text-3xl font-extrabold text-emerald-600">Rp 658 Jt</p></div>' +
+                        '</div>' +
+                        '<div class="bg-white rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4">Omzet vs Piutang per Bulan</h3><div class="relative" style="height:260px"><canvas id="chart-lap-keu"></canvas></div></div>';
+                    setTimeout(() => {
+                        const c = document.getElementById('chart-lap-keu');
+                        if (c)
+                            charts.lapKeu = new Chart(c.getContext('2d'), {
+                                type: 'line',
+                                data: {
+                                    labels: ['Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                                    datasets: [
+                                        {
+                                            label: 'Omzet (Jt Rp)',
+                                            data: [120, 135, 148, 0, 0, 0],
+                                            borderColor: '#1E3A5F',
+                                            backgroundColor: 'rgba(30,58,95,.1)',
+                                            fill: true,
+                                            tension: 0.3,
+                                        },
+                                        {
+                                            label: 'Piutang (Jt Rp)',
+                                            data: [25, 30, 22, 0, 0, 0],
+                                            borderColor: '#F28C28',
+                                            backgroundColor: 'rgba(242,140,40,.1)',
+                                            fill: true,
+                                            tension: 0.3,
+                                        },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom',
+                                            labels: { usePointStyle: true, font: { size: 11 } },
+                                        },
+                                    },
+                                    scales: {
+                                        y: { beginAtZero: true, grid: { color: '#F5F7FA' } },
+                                        x: { grid: { display: false } },
+                                    },
+                                },
+                            });
+                    }, 100);
+                }
+            }
+
+            function renderUsers(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Kelola akun pengguna dan hak akses.</p><button onclick="openModal(\'user\')" class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-accent-light transition"><i class="fa-solid fa-plus mr-1"></i> Tambah User</button></div>' +
+                    '<div class="bg-white rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Nama</th><th class="pb-3 pr-4">Email</th><th class="pb-3 pr-4">Role</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    USERS.map(
+                        (u) =>
+                            '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                            u.nama +
+                            '</td><td class="py-3 pr-4 text-xs">' +
+                            u.email +
+                            '</td><td class="py-3 pr-4">' +
+                            statusBadge(u.label) +
+                            '</td><td class="py-3"><button class="text-primary hover:text-primary-light text-xs font-semibold"><i class="fa-solid fa-pen mr-1"></i>Edit</button></td></tr>',
+                    ).join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ── MODAL SYSTEM ── */
+            function openModal(type) {
+                const bg = document.getElementById('modal-backdrop');
+                const ct = document.getElementById('modal-container');
+                bg.classList.remove('hidden');
+                let h = '';
+                switch (type) {
+                    case 'pelanggan':
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Pelanggan</h3><p class="text-xs text-muted italic">Add Customer</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'pelanggan\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Nama Perusahaan</label><input id="f-nama" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Kontak</label><input id="f-kontak" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Telp</label><input id="f-telp" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Alamat</label><textarea id="f-alamat" rows="2" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"></textarea></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Nama Proyek</label><input id="f-proyek" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Lokasi Proyek</label><input id="f-lokasi" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'mixdesign':
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Mix Design</h3><p class="text-xs text-muted italic">Add Mix Design</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'mixdesign\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Kode / Nama Mutu</label><input id="f-kode" placeholder="contoh: K-225" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div class="grid grid-cols-3 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Semen (kg)</label><input id="f-semen" type="number" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Pasir (kg)</label><input id="f-pasir" type="number" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Split (kg)</label><input id="f-split" type="number" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="grid grid-cols-3 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Air (kg)</label><input id="f-air" type="number" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Additive (kg)</label><input id="f-additive" type="number" value="0" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Slump (cm)</label><input id="f-slump" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Catatan</label><textarea id="f-catatan" rows="2" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"></textarea></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'quotation':
+                        let pelOpts = pelanggan
+                            .map((p) => '<option value="' + p.id + '">' + p.nama + '</option>')
+                            .join('');
+                        let mutOpts = mixDesign
+                            .map((m) => '<option value="' + m.kode + '">' + m.kode + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Buat Penawaran</h3><p class="text-xs text-muted italic">Create Quotation</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'quotation\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Pelanggan</label><select id="f-pelanggan" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            pelOpts +
+                            '</select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Mutu Beton</label><select id="f-mutu" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            mutOpts +
+                            '</select></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Harga per m&sup3; (Rp)</label><input id="f-harga" type="number" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Termin</label><select id="f-termin" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white"><option>Cash</option><option>Net 14 Hari</option><option selected>Net 30 Hari</option><option>Per Termin Proyek</option></select></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Berlaku Hingga</label><input id="f-berlaku" type="date" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'order':
+                        let po = pelanggan
+                            .map((p) => '<option value="' + p.id + '">' + p.nama + '</option>')
+                            .join('');
+                        let mm = mixDesign
+                            .map((m) => '<option value="' + m.kode + '">' + m.kode + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Buat Order / DO</h3><p class="text-xs text-muted italic">Create Delivery Order</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'order\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Pelanggan</label><select id="f-pelanggan" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            po +
+                            '</select></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Proyek</label><input id="f-proyek" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Mutu</label><select id="f-mutu" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            mm +
+                            '</select></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Volume (m&sup3;)</label><input id="f-volume" type="number" step="0.5" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Tanggal</label><input id="f-tanggal" type="date" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Jam</label><input id="f-jam" type="time" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Lokasi</label><input id="f-lokasi" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Catatan</label><textarea id="f-catatan" rows="2" placeholder="contoh: pakai concrete pump" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"></textarea></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'jadwal':
+                        let jo = orders
+                            .filter((o) => o.status !== 'Selesai')
+                            .map(
+                                (o) =>
+                                    '<option value="' +
+                                    o.id +
+                                    '">' +
+                                    o.no +
+                                    ' - ' +
+                                    getPel(o.pelangganId).nama +
+                                    '</option>',
+                            )
+                            .join('');
+                        let jt = trucks
+                            .filter((t) => t.status === 'Tersedia')
+                            .map(
+                                (t) =>
+                                    '<option value="' +
+                                    t.id +
+                                    '">' +
+                                    t.nopol +
+                                    ' (' +
+                                    t.kapasitas +
+                                    ' m&sup3;)</option>',
+                            )
+                            .join('');
+                        let jd = drivers
+                            .filter((d) => d.status === 'Tersedia')
+                            .map((d) => '<option value="' + d.id + '">' + d.nama + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Jadwal</h3><p class="text-xs text-muted italic">Add Schedule</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'jadwal\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Order / DO</label><select id="f-orderId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            jo +
+                            '</select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Truck</label><select id="f-truckId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            jt +
+                            '</select></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Driver</label><select id="f-driverId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            jd +
+                            '</select></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Jadwal Batching</label><input id="f-batching" type="datetime-local" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Estimasi (mnt)</label><input id="f-tempuh" type="number" value="30" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'batching':
+                        let bo = orders
+                            .filter((o) => o.status !== 'Selesai')
+                            .map((o) => '<option value="' + o.id + '">' + o.no + '</option>')
+                            .join('');
+                        let bm = mixDesign
+                            .map((m) => '<option value="' + m.id + '">' + m.kode + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Input Batching</h3><p class="text-xs text-muted italic">Record Batching</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'batching\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Order / DO</label><select id="f-orderId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            bo +
+                            '</select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Mix Design</label><select id="f-mixId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            bm +
+                            '</select></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Volume Aktual (m&sup3;)</label><input id="f-volume" type="number" step="0.5" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Mulai</label><input id="f-mulai" type="datetime-local" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Selesai</label><input id="f-selesai" type="datetime-local" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Operator</label><input id="f-operator" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Catatan</label><textarea id="f-catatan" rows="2" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"></textarea></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'armada':
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Armada</h3><p class="text-xs text-muted italic">Add Fleet</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'armada\',event)" class="p-5 space-y-4">' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">No. Polisi</label><input id="f-nopol" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Kapasitas (m&sup3;)</label><input id="f-kapasitas" type="number" step="0.5" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'qc':
+                        let qo = orders
+                            .map((o) => '<option value="' + o.id + '">' + o.no + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Input QC</h3><p class="text-xs text-muted italic">Record Quality Control</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'qc\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Order / DO</label><select id="f-orderId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            qo +
+                            '</select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Slump (cm)</label><input id="f-slump" type="number" step="0.5" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Lokasi Uji</label><input id="f-lokasi" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Kuat Tekan (MPa)</label><input id="f-kuat" type="number" step="0.1" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Umur Pengujian</label><select id="f-umur" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white"><option>7 Hari</option><option>14 Hari</option><option>28 Hari</option></select></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'stok':
+                        let sm = materials
+                            .map((m) => '<option value="' + m.id + '">' + m.nama + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Stok Masuk</h3><p class="text-xs text-muted italic">Stock Entry</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'stok\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Material</label><select id="f-materialId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            sm +
+                            '</select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Jumlah (kg)</label><input id="f-jumlah" type="number" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Supplier</label><input id="f-supplier" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'invoice':
+                        let io = orders
+                            .filter((o) => o.status === 'Selesai')
+                            .map(
+                                (o) =>
+                                    '<option value="' +
+                                    o.id +
+                                    '">' +
+                                    o.no +
+                                    ' - ' +
+                                    getPel(o.pelangganId).nama +
+                                    '</option>',
+                            )
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Buat Invoice</h3><p class="text-xs text-muted italic">Create Invoice</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'invoice\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Order / DO</label><select id="f-orderId" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">' +
+                            io +
+                            '</select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Volume Terkirim (m&sup3;)</label><input id="f-volume" type="number" step="0.5" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div><div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Harga/m&sup3; (Rp)</label><input id="f-harga" type="number" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Jatuh Tempo</label><input id="f-jatuh" type="date" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                    case 'user':
+                        h =
+                            '<div class="sticky top-0 bg-white border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah User</h3><p class="text-xs text-muted italic">Add User</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'user\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Nama</label><input id="f-nama" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Email</label><input id="f-email" type="email" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Password</label><input id="f-pass" type="password" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" placeholder="Kosongkan jika tidak diubah"></div>' +
+                            '<div><label class="text-xs font-bold text-muted uppercase tracking-wider mb-1 block">Role</label><select id="f-role" class="w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white"><option value="owner">Owner / Management</option><option value="sales">Sales / Marketing</option><option value="admin-produksi">Admin Produksi</option><option value="dispatcher">Dispatcher</option><option value="driver">Driver</option><option value="qc">QC Laboratorium</option><option value="finance">Finance</option></select></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light shadow-md">Simpan</button></div>' +
+                            '</form>';
+                        break;
+                }
+                ct.innerHTML = h;
+            }
+
+            function closeModal() {
+                document.getElementById('modal-backdrop').classList.add('hidden');
+            }
+
+            function saveData(type, e) {
+                e.preventDefault();
+                switch (type) {
+                    case 'pelanggan':
+                        pelanggan.push({
+                            id: nextId(pelanggan),
+                            nama: v('f-nama'),
+                            kontak: v('f-kontak'),
+                            telp: v('f-telp'),
+                            alamat: v('f-alamat'),
+                            proyek: v('f-proyek'),
+                            lokasi: v('f-lokasi'),
+                        });
+                        break;
+                    case 'mixdesign':
+                        mixDesign.push({
+                            id: nextId(mixDesign),
+                            kode: v('f-kode'),
+                            semen: Number(v('f-semen')),
+                            pasir: Number(v('f-pasir')),
+                            split: Number(v('f-split')),
+                            air: Number(v('f-air')),
+                            additive: Number(v('f-additive')),
+                            slump: v('f-slump'),
+                            catatan: v('f-catatan'),
+                        });
+                        break;
+                    case 'quotation':
+                        quotation.push({
+                            id: nextId(quotation),
+                            no: 'QT-2026-' + String(nextId(quotation)).padStart(3, '0'),
+                            pelangganId: Number(v('f-pelanggan')),
+                            mutu: v('f-mutu'),
+                            harga: Number(v('f-harga')),
+                            termin: v('f-termin'),
+                            berlaku: v('f-berlaku'),
+                            status: 'Menunggu',
+                        });
+                        break;
+                    case 'order':
+                        orders.push({
+                            id: nextId(orders),
+                            no: 'DO-2026-' + String(nextId(orders)).padStart(3, '0'),
+                            pelangganId: Number(v('f-pelanggan')),
+                            proyek: v('f-proyek'),
+                            mutu: v('f-mutu'),
+                            volume: Number(v('f-volume')),
+                            tanggal: v('f-tanggal'),
+                            jam: v('f-jam'),
+                            lokasi: v('f-lokasi'),
+                            catatan: v('f-catatan'),
+                            status: 'Menunggu',
+                        });
+                        break;
+                    case 'jadwal':
+                        jadwal.push({
+                            id: nextId(jadwal),
+                            orderId: Number(v('f-orderId')),
+                            truckId: Number(v('f-truckId')),
+                            driverId: Number(v('f-driverId')),
+                            tempuh: Number(v('f-tempuh')),
+                            batching: v('f-batching').replace('T', ' '),
+                            status: 'Terjadwal',
+                        });
+                        break;
+                    case 'batching':
+                        const bMixId = Number(v('f-mixId'));
+                        const bVol = Number(v('f-volume'));
+                        const bMd = getMix(bMixId);
+                        batching.push({
+                            id: nextId(batching),
+                            orderId: Number(v('f-orderId')),
+                            mixId: bMixId,
+                            volume: bVol,
+                            mulai: v('f-mulai').replace('T', ' '),
+                            selesai: v('f-selesai').replace('T', ' '),
+                            operator: v('f-operator'),
+                            catatan: v('f-catatan'),
+                        });
+                        if (bMd.semen) materials[0].stok = Math.max(0, materials[0].stok - bMd.semen * bVol);
+                        if (bMd.pasir) materials[1].stok = Math.max(0, materials[1].stok - bMd.pasir * bVol);
+                        if (bMd.split) { materials[2].stok = Math.max(0, materials[2].stok - bMd.split * bVol); materials[3].stok = Math.max(0, materials[3].stok - bMd.split * 0.4 * bVol); }
+                        if (bMd.air) materials[4].stok = Math.max(0, materials[4].stok - bMd.air * bVol);
+                        if (bMd.additive) materials[5].stok = Math.max(0, materials[5].stok - bMd.additive * bVol);
+                        showToast('Stok material berkurang otomatis untuk ' + bVol + ' m³');
+                        break;
+                    case 'armada':
+                        trucks.push({
+                            id: nextId(trucks),
+                            nopol: v('f-nopol'),
+                            kapasitas: Number(v('f-kapasitas')),
+                            status: 'Tersedia',
+                        });
+                        break;
+                    case 'qc':
+                        slumpTests.push({
+                            id: nextId(slumpTests),
+                            orderId: Number(v('f-orderId')),
+                            lokasi: v('f-lokasi'),
+                            slump: Number(v('f-slump')),
+                            status: 'Lolos',
+                        });
+                        if (v('f-kuat'))
+                            kuatTekan.push({
+                                id: nextId(kuatTekan),
+                                sample: 'Sample #' + nextId(kuatTekan),
+                                mutu: 'K-300',
+                                umur: v('f-umur'),
+                                nilai: Number(v('f-kuat')),
+                                status: Number(v('f-kuat')) >= 25 ? 'Lolos' : 'Gagal',
+                            });
+                        break;
+                    case 'stok':
+                        const mat = materials.find((m) => m.id === Number(v('f-materialId')));
+                        if (mat) {
+                            const jumlah = Number(v('f-jumlah'));
+                            mat.stok += jumlah;
+                            stokMasukLog.push({ id: nextId(stokMasukLog), materialId: mat.id, jumlah: jumlah, satuan: mat.satuan, tanggal: new Date().toISOString().slice(0, 10), keterangan: 'Stok masuk manual' });
+                        }
+                        break;
+                    case 'invoice':
+                        invoices.push({
+                            id: nextId(invoices),
+                            no: 'INV-2026-' + String(nextId(invoices)).padStart(3, '0'),
+                            orderId: Number(v('f-orderId')),
+                            pelangganId:
+                                orders.find((o) => o.id === Number(v('f-orderId')))?.pelangganId ||
+                                1,
+                            proyek:
+                                orders.find((o) => o.id === Number(v('f-orderId')))?.proyek || '-',
+                            volume: Number(v('f-volume')),
+                            harga: Number(v('f-harga')),
+                            jatuh: v('f-jatuh'),
+                            status: 'Belum Bayar',
+                        });
+                        break;
+                    case 'user':
+                        const rl = {
+                            owner: 'Owner / Management',
+                            sales: 'Sales / Marketing',
+                            'admin-produksi': 'Admin Produksi',
+                            dispatcher: 'Dispatcher',
+                            driver: 'Driver',
+                            qc: 'QC Laboratorium',
+                            finance: 'Finance',
+                        };
+                        USERS.push({
+                            id: nextId(USERS),
+                            nama: v('f-nama'),
+                            email: v('f-email'),
+                            pass: v('f-pass') || 'password123',
+                            role: v('f-role'),
+                            label: rl[v('f-role')] || v('f-role'),
+                        });
+                        break;
+                }
+                closeModal();
+                renderTab(activeTab);
+            }
+
+            function v(id) {
+                const el = document.getElementById(id);
+                return el ? el.value : '';
+            }
+
+            function showToast(msg, type) {
+                type = type || 'success';
+                const c = document.getElementById('toast-container');
+                const t = document.createElement('div');
+                t.className = 'toast toast-' + type;
+                const icon = type === 'success' ? 'fa-solid fa-circle-check' : type === 'error' ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-info';
+                t.innerHTML = '<i class="' + icon + '"></i> ' + msg;
+                c.appendChild(t);
+                setTimeout(() => {
+                    t.style.animation = 'toastIn 0.3s ease reverse forwards';
+                    setTimeout(() => t.remove(), 300);
+                }, 3000);
+            }
+        </script>
+    </body>
+</html>

@@ -1,5 +1,18 @@
 [
     {
+        "slug": "ready-mix-concrete",
+        "name": "Ready-Mix Concrete",
+        "description": "Sistem Produksi & Distribusi Ready-Mix Concrete — Manajemen order, mix design, batching, armada, QC, stok, invoicing, dan laporan.",
+        "category": "Web App",
+        "status": "IN DEVELOPMENT",
+        "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
+        "icon": "🏗️",
+        "demo_url": "https://demo.spinotek.com/ready-mix-concrete",
+        "repo_url": null,
+        "image": "./ready-mix-concrete/card.png",
+        "added_at": "2026-09-21"
+    },
+    {
         "slug": "rental-mobil",
         "name": "Rental Mobil",
         "description": "Sistem Booking, Quotation & Invoice Rental Mobil — Fleet Management System dengan modul Dashboard, Armada, Pelanggan, Quotation, Booking, Invoice, Pembayaran, Biaya Operasional, Laporan, dan Manajemen User.",
