@@ -1,5 +1,18 @@
 [
     {
+        "slug": "penerbitan-distributor-buku",
+        "name": "Penerbitan & Distributor Buku",
+        "description": "Sistem Penerbitan, Distribusi & Keuangan Buku — Manajemen naskah, produksi, produk, relasi, barang datang, penjualan, retur, kuitansi, stok, kas, laporan, dan user.",
+        "category": "Web App",
+        "status": "IN DEVELOPMENT",
+        "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
+        "icon": "📚",
+        "demo_url": "https://demo.spinotek.com/penerbitan-distributor-buku",
+        "repo_url": null,
+        "image": "./penerbitan-distributor-buku/card.png",
+        "added_at": "2026-09-22"
+    },
+    {
         "slug": "ready-mix-concrete",
         "name": "Ready-Mix Concrete",
         "description": "Sistem Produksi & Distribusi Ready-Mix Concrete — Manajemen order, mix design, batching, armada, QC, stok, invoicing, dan laporan.",

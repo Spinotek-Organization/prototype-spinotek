@@ -1,0 +1,11 @@
+{
+    "name": "Penerbitan & Distributor Buku",
+    "description": "Sistem Penerbitan, Distribusi & Keuangan Buku — Manajemen naskah, produksi, produk, relasi, barang datang, penjualan, retur, kuitansi, stok, kas, laporan, dan user.",
+    "icon": "📚",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
+    "demo_url": "https://demo.spinotek.com/penerbitan-distributor-buku",
+    "repo_url": null,
+    "added_at": "2026-09-22"
+}

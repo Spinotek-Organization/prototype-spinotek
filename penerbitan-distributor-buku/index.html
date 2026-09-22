@@ -1,0 +1,3170 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Penerbitan &amp; Distributor Buku - Sistem Manajemen</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: { sans: ['Inter', 'sans-serif'] },
+                        colors: {
+                            primary: {
+                                DEFAULT: '#4A2545',
+                                dark: '#321A30',
+                                light: '#6B3A66',
+                                50: '#F7F3EE',
+                                100: '#E7E0D8',
+                            },
+                            accent: { DEFAULT: '#C08457', light: '#D49B6E' },
+                            bg: '#F7F3EE',
+                            surface: '#FFFDFC',
+                            charcoal: '#292524',
+                            muted: '#78716C',
+                            bordercl: '#E7E0D8',
+                            success: '#2F855A',
+                            warning: '#D97706',
+                            danger: '#DC2626',
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .cs::-webkit-scrollbar {
+                width: 5px;
+                height: 5px;
+            }
+            .cs::-webkit-scrollbar-track {
+                background: #f7f3ee;
+            }
+            .cs::-webkit-scrollbar-thumb {
+                background: #e7e0d8;
+                border-radius: 4px;
+            }
+            .ns::-webkit-scrollbar {
+                display: none;
+            }
+            .ns {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .sidebar-item {
+                transition: all 0.2s;
+            }
+            .sidebar-item:hover {
+                background: rgba(255, 255, 255, 0.08);
+            }
+            .sidebar-item.active {
+                background: rgba(192, 132, 87, 0.15);
+                color: #c08457;
+            }
+            .modal-overlay {
+                background: rgba(41, 37, 36, 0.5);
+                backdrop-filter: blur(4px);
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(6px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .fade-in {
+                animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            .status-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .toast {
+                padding: 12px 20px;
+                border-radius: 12px;
+                color: white;
+                font-size: 13px;
+                font-weight: 600;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                animation: toastIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .toast-success {
+                background: #2f855a;
+            }
+            .toast-error {
+                background: #dc2626;
+            }
+            .toast-info {
+                background: #4a2545;
+            }
+            @keyframes toastIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            select,
+            input,
+            textarea {
+                font-family: 'Inter', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-bg text-charcoal antialiased min-h-screen">
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- ═══ LOGIN ═══ -->
+        <section
+            id="page-login"
+            class="min-h-screen flex items-center justify-center relative overflow-hidden"
+            style="background: linear-gradient(135deg, #321a30 0%, #4a2545 50%, #321a30 100%)"
+        >
+            <div
+                class="absolute inset-0 opacity-30"
+                style="
+                    background:
+                        radial-gradient(
+                            ellipse at 30% 20%,
+                            rgba(192, 132, 87, 0.12) 0%,
+                            transparent 60%
+                        ),
+                        radial-gradient(
+                            ellipse at 70% 80%,
+                            rgba(107, 58, 102, 0.08) 0%,
+                            transparent 60%
+                        );
+                "
+            ></div>
+            <div class="relative z-10 w-full max-w-md px-4">
+                <div class="bg-surface rounded-2xl shadow-2xl p-8 fade-in">
+                    <div class="text-center mb-8">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center mx-auto mb-4 shadow-lg"
+                        >
+                            <i class="fa-solid fa-book-open text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-extrabold text-charcoal">
+                            Penerbit &amp; Distributor Buku
+                        </h1>
+                        <p class="text-xs text-muted mt-1">CV Mitra Sukses Makmur</p>
+                    </div>
+                    <div
+                        id="login-error"
+                        class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-medium"
+                    ></div>
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label
+                                class="text-xs font-bold text-muted uppercase tracking-wider mb-1.5 block"
+                                >Email</label
+                            >
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-sm"
+                                ></i>
+                                <input
+                                    id="login-email"
+                                    type="email"
+                                    value="owner@mitra.com"
+                                    class="w-full pl-10 pr-4 py-3 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition"
+                                    placeholder="email@contoh.com"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="text-xs font-bold text-muted uppercase tracking-wider mb-1.5 block"
+                                >Password</label
+                            >
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-sm"
+                                ></i>
+                                <input
+                                    id="login-pass"
+                                    type="password"
+                                    value="password123"
+                                    class="w-full pl-10 pr-11 py-3 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition"
+                                    placeholder="Password"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="togglePass()"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal"
+                                >
+                                    <i id="pass-eye" class="fa-solid fa-eye text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            class="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                        >
+                            <i class="fa-solid fa-right-to-bracket"></i> Masuk
+                        </button>
+                    </form>
+                    <div class="mt-6 p-3 rounded-xl bg-bg border border-bordercl">
+                        <p class="text-[10px] font-bold text-muted uppercase tracking-wider mb-2">
+                            Demo Credentials
+                        </p>
+                        <div class="space-y-1 text-xs text-muted">
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-primary"></span
+                                ><b class="text-charcoal">Owner:</b> owner@mitra.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-accent"></span
+                                ><b class="text-charcoal">Admin Prod:</b> produksi@mitra.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-success"></span
+                                ><b class="text-charcoal">Admin Gudang:</b> gudang@mitra.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-blue-500"></span
+                                ><b class="text-charcoal">Admin Sales:</b> sales@mitra.com
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-dot bg-warning"></span
+                                ><b class="text-charcoal">Keuangan:</b> kasir@mitra.com
+                            </div>
+                            <div class="ml-4 text-muted">Password: password123</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center mt-6">
+                        <img
+                            src="assets/spinotek-logo.png"
+                            alt="Spinotek"
+                            class="h-8 mb-2 opacity-60"
+                            onerror="this.style.display = 'none'"
+                        />
+                        <p class="text-[10px] text-muted">Developed by Spinotek Corp</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ APP ═══ -->
+        <div id="app-wrapper" class="hidden">
+            <aside
+                id="sidebar"
+                class="fixed inset-y-0 left-0 z-40 w-[240px] bg-primary-dark flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-xl"
+            >
+                <div class="px-4 py-5 border-b border-white/10">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-accent flex items-center justify-center shrink-0"
+                        >
+                            <i class="fa-solid fa-book-open text-white text-sm"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <h1 class="text-white font-bold text-sm leading-tight truncate">
+                                Penerbit Buku
+                            </h1>
+                            <p class="text-white/50 text-[10px] font-medium italic">
+                                CV Mitra Sukses Makmur
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <nav
+                    class="flex-1 px-2.5 py-3 space-y-0.5 overflow-y-auto ns cs"
+                    id="sidebar-nav"
+                ></nav>
+                <div class="border-t border-white/10 mx-3"></div>
+                <div class="px-3 py-3 text-center">
+                    <div class="bg-white/10 rounded-lg p-3 w-full">
+                        <img
+                            src="assets/spinotek-logo.png"
+                            alt="Spinotek"
+                            class="h-6 mx-auto bg-white rounded-lg p-1"
+                            onerror="this.style.display = 'none'"
+                        />
+                        <p class="text-[9px] text-white/60 leading-tight mt-2">
+                            &copy; 2026 CV Mitra Sukses Makmur.<br />Developed by Spinotek Corp.
+                        </p>
+                    </div>
+                </div>
+            </aside>
+            <div
+                id="sidebar-overlay"
+                onclick="closeSidebar()"
+                class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"
+            ></div>
+            <div class="flex-1 flex flex-col min-h-screen lg:ml-[240px]">
+                <header class="bg-surface border-b border-bordercl sticky top-0 z-20">
+                    <div class="flex items-center justify-between px-4 sm:px-6 h-14">
+                        <div class="flex items-center gap-3">
+                            <button
+                                onclick="openSidebar()"
+                                class="lg:hidden w-9 h-9 rounded-xl bg-bg flex items-center justify-center text-muted"
+                            >
+                                <i class="fa-solid fa-bars text-sm"></i>
+                            </button>
+                            <div>
+                                <h2 id="page-title" class="font-bold text-charcoal text-lg">
+                                    Dashboard
+                                </h2>
+                                <p id="page-subtitle" class="text-xs text-muted font-medium italic">
+                                    Overview
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="text-right hidden sm:block">
+                                <p
+                                    id="header-user-name"
+                                    class="text-sm font-semibold text-charcoal leading-tight"
+                                >
+                                    Admin
+                                </p>
+                                <p
+                                    id="header-user-role"
+                                    class="text-[10px] text-muted leading-tight"
+                                >
+                                    Owner
+                                </p>
+                            </div>
+                            <div
+                                id="header-avatar"
+                                class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-sm shadow-md"
+                            >
+                                O
+                            </div>
+                            <button
+                                onclick="handleLogout()"
+                                class="w-9 h-9 rounded-xl bg-bg flex items-center justify-center text-muted hover:text-danger hover:bg-red-50 transition"
+                                title="Logout"
+                            >
+                                <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+                <main class="flex-1 p-4 sm:p-6" id="main-content"></main>
+            </div>
+        </div>
+
+        <!-- ═══ MODAL ═══ -->
+        <div
+            id="modal-backdrop"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 modal-overlay" onclick="closeModal()"></div>
+            <div
+                id="modal-container"
+                class="relative bg-surface rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto cs"
+            ></div>
+        </div>
+
+        <script>
+            /* ═══ USERS ═══ */
+            const USERS = [
+                {
+                    id: 1,
+                    nama: 'Pak Heru',
+                    email: 'owner@mitra.com',
+                    pass: 'password123',
+                    role: 'owner',
+                    label: 'Owner / Direktur',
+                },
+                {
+                    id: 2,
+                    nama: 'Rina',
+                    email: 'produksi@mitra.com',
+                    pass: 'password123',
+                    role: 'admin-produksi',
+                    label: 'Admin Produksi/Naskah',
+                },
+                {
+                    id: 3,
+                    nama: 'Budi',
+                    email: 'gudang@mitra.com',
+                    pass: 'password123',
+                    role: 'admin-gudang',
+                    label: 'Admin Gudang/Stok',
+                },
+                {
+                    id: 4,
+                    nama: 'Sari',
+                    email: 'sales@mitra.com',
+                    pass: 'password123',
+                    role: 'admin-penjualan',
+                    label: 'Admin Penjualan/Distribusi',
+                },
+                {
+                    id: 5,
+                    nama: 'Dewi',
+                    email: 'kasir@mitra.com',
+                    pass: 'password123',
+                    role: 'keuangan',
+                    label: 'Keuangan/Kasir',
+                },
+            ];
+            let currentUser = null;
+
+            /* ═══ DATA ═══ */
+            let produk = [
+                {
+                    id: 1,
+                    judul: 'Laskar Pelangi',
+                    penulis: 'Andrea Hirata',
+                    kategori: 'Novel',
+                    isbn: '978-602-001-001-1',
+                    hargaJual: 85000,
+                    stok: 250,
+                    stokMinimum: 50,
+                    naskahId: null,
+                },
+                {
+                    id: 2,
+                    judul: 'Bumi',
+                    penulis: 'Tere Liye',
+                    kategori: 'Novel',
+                    isbn: '978-602-001-002-8',
+                    hargaJual: 79000,
+                    stok: 180,
+                    stokMinimum: 50,
+                    naskahId: null,
+                },
+                {
+                    id: 3,
+                    judul: 'Matematika Kelas 7',
+                    penulis: 'Tim Edukasi',
+                    kategori: 'Pelajaran',
+                    isbn: '978-602-001-003-5',
+                    hargaJual: 65000,
+                    stok: 500,
+                    stokMinimum: 100,
+                    naskahId: null,
+                },
+                {
+                    id: 4,
+                    judul: 'Ensiklopedia Anak: Sains',
+                    penulis: 'Tim Kreatif',
+                    kategori: 'Anak',
+                    isbn: '978-602-001-004-2',
+                    hargaJual: 120000,
+                    stok: 30,
+                    stokMinimum: 50,
+                    naskahId: null,
+                },
+                {
+                    id: 5,
+                    judul: 'Pemrograman Web Modern',
+                    penulis: 'Ahmad Fauzi',
+                    kategori: 'Teknologi',
+                    isbn: '978-602-001-005-9',
+                    hargaJual: 95000,
+                    stok: 120,
+                    stokMinimum: 30,
+                    naskahId: null,
+                },
+                {
+                    id: 6,
+                    judul: 'Sejarah Nusantara',
+                    penulis: 'Prof. Bambang',
+                    kategori: 'Sejarah',
+                    isbn: '978-602-001-006-6',
+                    hargaJual: 110000,
+                    stok: 75,
+                    stokMinimum: 30,
+                    naskahId: null,
+                },
+                {
+                    id: 7,
+                    judul: 'Resep Nusantara',
+                    penulis: 'Chef Rina',
+                    kategori: 'Kuliner',
+                    isbn: null,
+                    hargaJual: 88000,
+                    stok: 200,
+                    stokMinimum: 50,
+                    naskahId: null,
+                },
+                {
+                    id: 8,
+                    judul: 'Doa Sehari-hari',
+                    penulis: 'Ustadz Ahmad',
+                    kategori: 'Religi',
+                    isbn: null,
+                    hargaJual: 35000,
+                    stok: 15,
+                    stokMinimum: 30,
+                    naskahId: null,
+                },
+            ];
+
+            let naskah = [
+                {
+                    id: 1,
+                    judul: 'Petualangan Si Kancil',
+                    penulis: 'Pak Djoko',
+                    biayaNaskah: 5000000,
+                    biayaKertas: 12000000,
+                    biayaCetak: 8000000,
+                    status: 'Selesai Cetak',
+                    tanggalMasuk: '2026-07-10',
+                },
+                {
+                    id: 2,
+                    judul: 'Belajar Bahasa Inggris',
+                    penulis: 'Ibu Sari',
+                    biayaNaskah: 3000000,
+                    biayaKertas: 8000000,
+                    biayaCetak: 5000000,
+                    status: 'Proses Cetak',
+                    tanggalMasuk: '2026-08-15',
+                },
+                {
+                    id: 3,
+                    judul: 'Misteri Pantai Selatan',
+                    penulis: 'Rudi Hartono',
+                    biayaNaskah: 4000000,
+                    biayaKertas: 0,
+                    biayaCetak: 0,
+                    status: 'Naskah Diterima',
+                    tanggalMasuk: '2026-09-01',
+                },
+                {
+                    id: 4,
+                    judul: 'Puisi Nusantara',
+                    penulis: 'Kumpulan Puisi',
+                    biayaNaskah: 2000000,
+                    biayaKertas: 6000000,
+                    biayaCetak: 4500000,
+                    status: 'Selesai Cetak',
+                    tanggalMasuk: '2026-06-20',
+                },
+            ];
+
+            let relasi = [
+                {
+                    id: 1,
+                    nama: 'Toko Buku Gramedia',
+                    tipe: 'Toko Buku',
+                    kontak: 'Pak Hendra',
+                    telp: '0812-3456-7890',
+                    alamat: 'Jl. Sudirman No. 45, Jakarta',
+                    status: 'Aktif',
+                    catatan: 'Pelanggan tetap, bayar tempo 30 hari',
+                },
+                {
+                    id: 2,
+                    nama: 'Toko Buku Mizan',
+                    tipe: 'Toko Buku',
+                    kontak: 'Bu Ani',
+                    telp: '0856-7890-1234',
+                    alamat: 'Jl. Thamrin No. 12, Bandung',
+                    status: 'Aktif',
+                    catatan: 'Pesan rutin bulanan',
+                },
+                {
+                    id: 3,
+                    nama: 'Reseller Toko Online',
+                    tipe: 'Reseller',
+                    kontak: 'Mas Dimas',
+                    telp: '0878-9012-3456',
+                    alamat: 'Online (Shopee/Tokopedia)',
+                    status: 'Aktif',
+                    catatan: 'Fokus buku anak & novel',
+                },
+                {
+                    id: 4,
+                    nama: 'Distributor Daerah',
+                    tipe: 'Distributor',
+                    kontak: 'Pak Rudi',
+                    telp: '0823-4567-8901',
+                    alamat: 'Jl. Merdeka No. 88, Surabaya',
+                    status: 'Aktif',
+                    catatan: 'Pengiriman ke Jawa Timur',
+                },
+                {
+                    id: 5,
+                    nama: 'Perpustakaan Sekolah',
+                    tipe: 'Prospek',
+                    kontak: 'Ibu Ratna',
+                    telp: '0834-5678-9012',
+                    alamat: 'Jl. Pendidikan No. 5, Semarang',
+                    status: 'Prospek',
+                    catatan: 'Belum pernah pesan, minat buku pelajaran',
+                },
+            ];
+
+            let barangDatang = [
+                {
+                    id: 1,
+                    tanggal: '2026-09-05',
+                    produkId: 1,
+                    jumlah: 200,
+                    sumber: 'Percetakan Delta',
+                    catatan: 'Cetakan kedua',
+                },
+                {
+                    id: 2,
+                    tanggal: '2026-09-10',
+                    produkId: 3,
+                    jumlah: 500,
+                    sumber: 'Percetakan Sinar Abadi',
+                    catatan: 'Persediaan semester genap',
+                },
+                {
+                    id: 3,
+                    tanggal: '2026-09-18',
+                    produkId: 7,
+                    jumlah: 150,
+                    sumber: 'Percetakan Delta',
+                    catatan: '',
+                },
+            ];
+
+            let penjualan = [
+                {
+                    id: 1,
+                    noNota: 'NJ-2026-001',
+                    tanggal: '2026-09-02',
+                    relasiId: 1,
+                    items: [
+                        { produkId: 1, jumlah: 50, harga: 85000 },
+                        { produkId: 2, jumlah: 30, harga: 79000 },
+                    ],
+                    total: 6620000,
+                    status: 'Lunas',
+                },
+                {
+                    id: 2,
+                    noNota: 'NJ-2026-002',
+                    tanggal: '2026-09-08',
+                    relasiId: 2,
+                    items: [{ produkId: 3, jumlah: 100, harga: 65000 }],
+                    total: 6500000,
+                    status: 'Belum Bayar',
+                },
+                {
+                    id: 3,
+                    noNota: 'NJ-2026-003',
+                    tanggal: '2026-09-12',
+                    relasiId: 3,
+                    items: [
+                        { produkId: 1, jumlah: 20, harga: 85000 },
+                        { produkId: 5, jumlah: 15, harga: 95000 },
+                    ],
+                    total: 3125000,
+                    status: 'Lunas',
+                },
+                {
+                    id: 4,
+                    noNota: 'NJ-2026-004',
+                    tanggal: '2026-09-15',
+                    relasiId: 4,
+                    items: [
+                        { produkId: 6, jumlah: 40, harga: 110000 },
+                        { produkId: 8, jumlah: 100, harga: 35000 },
+                    ],
+                    total: 7900000,
+                    status: 'Sebagian',
+                },
+                {
+                    id: 5,
+                    noNota: 'NJ-2026-005',
+                    tanggal: '2026-09-20',
+                    relasiId: 1,
+                    items: [
+                        { produkId: 4, jumlah: 10, harga: 120000 },
+                        { produkId: 7, jumlah: 25, harga: 88000 },
+                    ],
+                    total: 3400000,
+                    status: 'Belum Bayar',
+                },
+            ];
+
+            let retur = [
+                {
+                    id: 1,
+                    noRetur: 'NR-2026-001',
+                    tanggal: '2026-09-10',
+                    notaJualId: 1,
+                    relasiId: 1,
+                    items: [{ produkId: 2, jumlah: 5, alasan: 'Buku rusak/cetakan cacat' }],
+                    total: 395000,
+                    status: 'Diterima',
+                },
+                {
+                    id: 2,
+                    noRetur: 'NR-2026-002',
+                    tanggal: '2026-09-18',
+                    notaJualId: 3,
+                    relasiId: 3,
+                    items: [{ produkId: 1, jumlah: 3, alasan: 'Salah kirim judul' }],
+                    total: 255000,
+                    status: 'Diterima',
+                },
+            ];
+
+            let kuitansi = [
+                {
+                    id: 1,
+                    noKuitansi: 'KW-2026-001',
+                    tanggal: '2026-09-05',
+                    notaJualId: 1,
+                    relasiId: 1,
+                    jumlahBayar: 6620000,
+                    metode: 'Transfer Bank',
+                    sisaTagihan: 0,
+                    keterangan: 'Pembayaran lunas NJ-2026-001',
+                },
+                {
+                    id: 2,
+                    noKuitansi: 'KW-2026-002',
+                    tanggal: '2026-09-14',
+                    notaJualId: 3,
+                    relasiId: 3,
+                    jumlahBayar: 3125000,
+                    metode: 'Transfer Bank',
+                    sisaTagihan: 0,
+                    keterangan: 'Pembayaran lunas NJ-2026-003',
+                },
+                {
+                    id: 3,
+                    noKuitansi: 'KW-2026-003',
+                    tanggal: '2026-09-16',
+                    notaJualId: 4,
+                    relasiId: 4,
+                    jumlahBayar: 4000000,
+                    metode: 'Tunai',
+                    sisaTagihan: 3900000,
+                    keterangan: 'DP pembayaran NJ-2026-004',
+                },
+            ];
+
+            let kas = [
+                {
+                    id: 1,
+                    tanggal: '2026-09-05',
+                    jenis: 'Masuk',
+                    kategori: 'Penjualan',
+                    jumlah: 6620000,
+                    keterangan: 'Pembayaran NJ-2026-001 dari Gramedia',
+                },
+                {
+                    id: 2,
+                    tanggal: '2026-09-06',
+                    jenis: 'Keluar',
+                    kategori: 'Biaya Naskah',
+                    jumlah: 5000000,
+                    keterangan: 'Fee naskah "Petualangan Si Kancil" ke Pak Djoko',
+                },
+                {
+                    id: 3,
+                    tanggal: '2026-09-08',
+                    jenis: 'Keluar',
+                    kategori: 'Biaya Kertas',
+                    jumlah: 12000000,
+                    keterangan: 'Pembelian kertas cetak - Percetakan Delta',
+                },
+                {
+                    id: 4,
+                    tanggal: '2026-09-10',
+                    jenis: 'Keluar',
+                    kategori: 'Biaya Cetak',
+                    jumlah: 8000000,
+                    keterangan: 'Biaya cetak "Petualangan Si Kancil" 500 eksemplar',
+                },
+                {
+                    id: 5,
+                    tanggal: '2026-09-12',
+                    jenis: 'Keluar',
+                    kategori: 'ATK',
+                    jumlah: 350000,
+                    keterangan: 'Pembelian ATK kantor',
+                },
+                {
+                    id: 6,
+                    tanggal: '2026-09-14',
+                    jenis: 'Masuk',
+                    kategori: 'Penjualan',
+                    jumlah: 3125000,
+                    keterangan: 'Pembayaran NJ-2026-003 dari Reseller',
+                },
+                {
+                    id: 7,
+                    tanggal: '2026-09-16',
+                    jenis: 'Keluar',
+                    kategori: 'Paket/Pengiriman',
+                    jumlah: 450000,
+                    keterangan: 'Ongkir ke Surabaya (Distributor Daerah)',
+                },
+                {
+                    id: 8,
+                    tanggal: '2026-09-16',
+                    jenis: 'Masuk',
+                    kategori: 'Penjualan',
+                    jumlah: 4000000,
+                    keterangan: 'DP NJ-2026-004 dari Distributor Daerah',
+                },
+                {
+                    id: 9,
+                    tanggal: '2026-09-18',
+                    jenis: 'Keluar',
+                    kategori: 'Akomodasi',
+                    jumlah: 280000,
+                    keterangan: 'Bensin kunjungan klien',
+                },
+                {
+                    id: 10,
+                    tanggal: '2026-09-20',
+                    jenis: 'Keluar',
+                    kategori: 'Biaya Kertas',
+                    jumlah: 8000000,
+                    keterangan: 'Pembelian kertas cetak "Belajar Bahasa Inggris"',
+                },
+            ];
+
+            /* ═══ HELPERS ═══ */
+            let nextId = (arr) => (arr.length ? Math.max(...arr.map((a) => a.id)) + 1 : 1);
+            let v = (id) => document.getElementById(id).value;
+            let fmtRp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID');
+            let fmtRpShort = (n) => {
+                if (n >= 1000000000) return 'Rp ' + (n / 1000000000).toFixed(1) + ' M';
+                if (n >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1) + ' Jt';
+                if (n >= 1000) return 'Rp ' + (n / 1000).toFixed(0) + ' rb';
+                return 'Rp ' + n.toLocaleString('id-ID');
+            };
+            let getProduk = (id) => produk.find((p) => p.id === id) || {};
+            let getRelasi = (id) => relasi.find((r) => r.id === id) || {};
+            let getNotaJual = (id) => penjualan.find((p) => p.id === id) || {};
+
+            function statusBadge(s) {
+                const m = {
+                    Lunas: 'bg-emerald-50 text-emerald-600',
+                    'Belum Bayar': 'bg-amber-50 text-amber-600',
+                    Sebagian: 'bg-blue-50 text-blue-600',
+                    Aktif: 'bg-emerald-50 text-emerald-600',
+                    Prospek: 'bg-purple-50 text-purple-600',
+                    Diterima: 'bg-emerald-50 text-emerald-600',
+                    Diproses: 'bg-blue-50 text-blue-600',
+                    Ditolak: 'bg-red-50 text-red-600',
+                    'Selesai Cetak': 'bg-emerald-50 text-emerald-600',
+                    'Proses Cetak': 'bg-blue-50 text-blue-600',
+                    'Naskah Diterima': 'bg-amber-50 text-amber-600',
+                    Menunggu: 'bg-amber-50 text-amber-600',
+                    'Stok Aman': 'bg-emerald-50 text-emerald-600',
+                    'Stok Menipis': 'bg-red-50 text-red-600',
+                };
+                return (
+                    '<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ' +
+                    (m[s] || 'bg-slate-100 text-slate-500') +
+                    '">' +
+                    s +
+                    '</span>'
+                );
+            }
+
+            function showToast(msg, type = 'success') {
+                const c = document.getElementById('toast-container');
+                const t = document.createElement('div');
+                t.className = 'toast toast-' + type;
+                t.innerHTML =
+                    '<i class="fa-solid fa-' +
+                    (type === 'success'
+                        ? 'check-circle'
+                        : type === 'error'
+                          ? 'exclamation-circle'
+                          : 'info-circle') +
+                    '"></i> ' +
+                    msg;
+                c.appendChild(t);
+                setTimeout(() => {
+                    t.style.opacity = '0';
+                    t.style.transform = 'translateX(100%)';
+                    setTimeout(() => t.remove(), 300);
+                }, 3000);
+            }
+
+            /* ═══ NAV ═══ */
+            const NAV_ITEMS = [
+                {
+                    id: 'dashboard',
+                    icon: 'fa-chart-pie',
+                    label: 'Dashboard',
+                    roles: [
+                        'owner',
+                        'admin-produksi',
+                        'admin-gudang',
+                        'admin-penjualan',
+                        'keuangan',
+                    ],
+                },
+                {
+                    id: 'produk',
+                    icon: 'fa-book',
+                    label: 'Produk',
+                    roles: ['owner', 'admin-produksi', 'admin-gudang', 'admin-penjualan'],
+                },
+                {
+                    id: 'naskah',
+                    icon: 'fa-pen-fancy',
+                    label: 'Naskah & Biaya Produksi',
+                    roles: ['owner', 'admin-produksi'],
+                },
+                {
+                    id: 'relasi',
+                    icon: 'fa-address-book',
+                    label: 'Pelanggan/Reseller',
+                    roles: ['owner', 'admin-penjualan'],
+                },
+                {
+                    id: 'barangdatang',
+                    icon: 'fa-truck-ramp-box',
+                    label: 'Barang Datang',
+                    roles: ['owner', 'admin-produksi', 'admin-gudang'],
+                },
+                {
+                    id: 'penjualan',
+                    icon: 'fa-file-invoice',
+                    label: 'Penjualan',
+                    roles: ['owner', 'admin-penjualan'],
+                },
+                {
+                    id: 'retur',
+                    icon: 'fa-rotate-left',
+                    label: 'Retur Barang',
+                    roles: ['owner', 'admin-gudang', 'admin-penjualan'],
+                },
+                {
+                    id: 'kuitansi',
+                    icon: 'fa-receipt',
+                    label: 'Kuitansi & Pembayaran',
+                    roles: ['owner', 'keuangan'],
+                },
+                {
+                    id: 'stok',
+                    icon: 'fa-boxes-stacked',
+                    label: 'Stok Buku',
+                    roles: ['owner', 'admin-produksi', 'admin-gudang'],
+                },
+                {
+                    id: 'kas',
+                    icon: 'fa-money-bill-wave',
+                    label: 'Kas & Biaya',
+                    roles: ['owner', 'keuangan'],
+                },
+                {
+                    id: 'laporan',
+                    icon: 'fa-chart-line',
+                    label: 'Laporan',
+                    roles: ['owner', 'keuangan'],
+                },
+                { id: 'users', icon: 'fa-users-gear', label: 'Manajemen User', roles: ['owner'] },
+            ];
+            const TAB_TITLES = {
+                dashboard: ['Dashboard', 'Overview bisnis penerbitan'],
+                produk: ['Produk (Judul Buku)', 'Data judul buku & harga'],
+                naskah: ['Naskah & Biaya Produksi', 'Manajemen naskah & biaya cetak'],
+                relasi: ['Relasi (Pelanggan/Reseller)', 'Data pelanggan, reseller & prospek'],
+                barangdatang: ['Barang Datang', 'Stok masuk dari percetakan'],
+                penjualan: ['Penjualan (Nota Jual)', 'Distribusi & penjualan buku'],
+                retur: ['Retur Barang', 'Pengembalian buku dari relasi'],
+                kuitansi: ['Kuitansi & Pembayaran', 'Bukti pembayaran dari relasi'],
+                stok: ['Stok / Inventory Buku', 'Persediaan buku per judul'],
+                kas: ['Kas & Biaya Operasional', 'Pencatatan keluar-masuk uang'],
+                laporan: ['Laporan', 'Laporan keuangan & operasional'],
+                users: ['Manajemen User', 'Kelola akun pengguna'],
+            };
+
+            /* ═══ AUTH ═══ */
+            function handleLogin(e) {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value.trim();
+                const pass = document.getElementById('login-pass').value;
+                const user = USERS.find((u) => u.email === email && u.pass === pass);
+                const err = document.getElementById('login-error');
+                if (!user) {
+                    err.textContent = 'Email atau password salah.';
+                    err.classList.remove('hidden');
+                    return;
+                }
+                err.classList.add('hidden');
+                currentUser = user;
+                document.getElementById('page-login').classList.add('hidden');
+                const aw = document.getElementById('app-wrapper');
+                aw.classList.remove('hidden');
+                aw.classList.add('flex');
+                document.getElementById('header-user-name').textContent = user.nama;
+                document.getElementById('header-user-role').textContent = user.label;
+                document.getElementById('header-avatar').textContent = user.nama.charAt(0);
+                buildSidebar();
+                go('dashboard');
+            }
+            function handleLogout() {
+                currentUser = null;
+                document.getElementById('page-login').classList.remove('hidden');
+                const aw = document.getElementById('app-wrapper');
+                aw.classList.add('hidden');
+                aw.classList.remove('flex');
+            }
+            function togglePass() {
+                const inp = document.getElementById('login-pass'),
+                    eye = document.getElementById('pass-eye');
+                if (inp.type === 'password') {
+                    inp.type = 'text';
+                    eye.className = 'fa-solid fa-eye-slash text-sm';
+                } else {
+                    inp.type = 'password';
+                    eye.className = 'fa-solid fa-eye text-sm';
+                }
+            }
+            function buildSidebar() {
+                const nav = document.getElementById('sidebar-nav');
+                let h = '';
+                NAV_ITEMS.forEach((item) => {
+                    if (!item.roles.includes(currentUser.role)) return;
+                    h +=
+                        '<button onclick="go(\'' +
+                        item.id +
+                        '\')" id="nav-' +
+                        item.id +
+                        '" class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60"><i class="fa-solid ' +
+                        item.icon +
+                        ' w-5 text-center text-[13px]"></i><span>' +
+                        item.label +
+                        '</span></button>';
+                });
+                nav.innerHTML = h;
+            }
+            function openSidebar() {
+                document.getElementById('sidebar').classList.remove('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.remove('hidden');
+            }
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }
+
+            let activeTab = 'dashboard';
+            let charts = {};
+            function go(tab) {
+                activeTab = tab;
+                document
+                    .querySelectorAll('.sidebar-item')
+                    .forEach((el) => el.classList.remove('active'));
+                const nb = document.getElementById('nav-' + tab);
+                if (nb) nb.classList.add('active');
+                const [title, sub] = TAB_TITLES[tab] || [tab, ''];
+                document.getElementById('page-title').textContent = title;
+                document.getElementById('page-subtitle').textContent = sub;
+                closeSidebar();
+                renderTab(tab);
+            }
+            function renderTab(tab) {
+                const mc = document.getElementById('main-content');
+                mc.innerHTML = '';
+                mc.classList.remove('fade-in');
+                void mc.offsetWidth;
+                mc.classList.add('fade-in');
+                Object.values(charts).forEach((c) => {
+                    if (c && c.destroy) c.destroy();
+                });
+                charts = {};
+                const fn = {
+                    dashboard: renderDashboard,
+                    produk: renderProduk,
+                    naskah: renderNaskah,
+                    relasi: renderRelasi,
+                    barangdatang: renderBarangDatang,
+                    penjualan: renderPenjualan,
+                    retur: renderRetur,
+                    kuitansi: renderKuitansi,
+                    stok: renderStok,
+                    kas: renderKas,
+                    laporan: renderLaporan,
+                    users: renderUsers,
+                };
+                if (fn[tab]) fn[tab](mc);
+            }
+
+            /* ═══ DASHBOARD ═══ */
+            function renderDashboard(mc) {
+                const now = new Date();
+                const bulanIni = penjualan.filter((p) => {
+                    const d = new Date(p.tanggal);
+                    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+                });
+                const totalPenjualanBulan = bulanIni.reduce((s, p) => s + p.total, 0);
+                const kasMasuk = kas
+                    .filter((k) => k.jenis === 'Masuk')
+                    .reduce((s, k) => s + k.jumlah, 0);
+                const kasKeluar = kas
+                    .filter((k) => k.jenis === 'Keluar')
+                    .reduce((s, k) => s + k.jumlah, 0);
+                const stokMenipis = produk.filter((p) => p.stok < (p.stokMinimum || 50)).length;
+                const returTerbaru = retur.slice(-3).reverse();
+                const terjual = {};
+                penjualan.forEach((p) =>
+                    p.items.forEach((i) => {
+                        terjual[i.produkId] = (terjual[i.produkId] || 0) + i.jumlah;
+                    }),
+                );
+                const terlaris = Object.entries(terjual)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 1);
+                const terlarisNama = terlaris.length
+                    ? getProduk(Number(terlaris[0][0])).judul
+                    : '-';
+                const terlarisQty = terlaris.length ? terlaris[0][1] : 0;
+                const biayaKas = {};
+                kas.filter((k) => k.jenis === 'Keluar').forEach((k) => {
+                    biayaKas[k.kategori] = (biayaKas[k.kategori] || 0) + k.jumlah;
+                });
+                const biayaLabels = Object.keys(biayaKas);
+                const biayaData = Object.values(biayaKas);
+                const biayaColors = [
+                    '#4A2545',
+                    '#C08457',
+                    '#6B3A66',
+                    '#2F855A',
+                    '#D97706',
+                    '#78716C',
+                    '#3B82F6',
+                    '#8B5CF6',
+                ];
+
+                mc.innerHTML =
+                    '<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center"><i class="fa-solid fa-file-invoice text-primary"></i></div><span class="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Bulan Ini</span></div><p class="text-2xl font-extrabold text-charcoal">' +
+                    fmtRpShort(totalPenjualanBulan) +
+                    '</p><p class="text-xs text-muted mt-1">Penjualan Bulan Ini</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center"><i class="fa-solid fa-arrow-trend-up text-success"></i></div><span class="text-xs font-bold text-success bg-emerald-50 px-2 py-0.5 rounded-full">Masuk</span></div><p class="text-2xl font-extrabold text-charcoal">' +
+                    fmtRpShort(kasMasuk) +
+                    '</p><p class="text-xs text-muted mt-1">Kas Masuk</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-danger/10 flex items-center justify-center"><i class="fa-solid fa-arrow-trend-down text-danger"></i></div><span class="text-xs font-bold text-danger bg-red-50 px-2 py-0.5 rounded-full">Keluar</span></div><p class="text-2xl font-extrabold text-charcoal">' +
+                    fmtRpShort(kasKeluar) +
+                    '</p><p class="text-xs text-muted mt-1">Kas Keluar</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl ' +
+                    (stokMenipis > 0 ? 'bg-danger/10' : 'bg-success/10') +
+                    ' flex items-center justify-center"><i class="fa-solid fa-boxes-stacked ' +
+                    (stokMenipis > 0 ? 'text-danger' : 'text-success') +
+                    '"></i></div>' +
+                    (stokMenipis > 0
+                        ? '<span class="text-xs font-bold text-danger bg-red-50 px-2 py-0.5 rounded-full">Kritis!</span>'
+                        : '<span class="text-xs font-bold text-success bg-emerald-50 px-2 py-0.5 rounded-full">Aman</span>') +
+                    '</div><p class="text-2xl font-extrabold text-charcoal">' +
+                    stokMenipis +
+                    '</p><p class="text-xs text-muted mt-1">Stok Menipis</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center"><i class="fa-solid fa-trophy text-purple-500"></i></div><span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">Terlaris</span></div><p class="text-lg font-extrabold text-charcoal truncate">' +
+                    terlarisNama +
+                    '</p><p class="text-xs text-muted mt-1">' +
+                    terlarisQty +
+                    ' eksemplar terjual</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center"><i class="fa-solid fa-rotate-left text-accent"></i></div><span class="text-xs font-bold text-accent bg-orange-50 px-2 py-0.5 rounded-full">Retur</span></div>' +
+                    (returTerbaru.length > 0
+                        ? '<div class="space-y-1">' +
+                          returTerbaru
+                              .map(
+                                  (rt) =>
+                                      '<p class="text-xs text-charcoal truncate"><i class="fa-solid fa-circle text-[4px] text-accent mr-1 align-middle"></i>' +
+                                      rt.noRetur +
+                                      ' — ' +
+                                      fmtRp(rt.total) +
+                                      '</p>',
+                              )
+                              .join('') +
+                          '</div>'
+                        : '<p class="text-sm text-muted">Belum ada retur</p>') +
+                    '<p class="text-[10px] text-muted mt-1">' +
+                    retur.length +
+                    ' total retur</p></div>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-1">Penjualan Bulanan</h3><p class="text-xs text-muted mb-4">Total penjualan per bulan (juta Rp)</p><div class="relative" style="height:260px"><canvas id="chart-penjualan"></canvas></div></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-1">Komposisi Biaya</h3><p class="text-xs text-muted mb-4">Rincian biaya operasional</p><div class="relative flex items-center justify-center" style="height:260px"><canvas id="chart-biaya"></canvas></div></div>' +
+                    '</div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5"><div class="flex items-center justify-between mb-4"><div><h3 class="font-bold text-charcoal">Penjualan Terbaru</h3><p class="text-xs text-muted">5 nota jual terakhir</p></div><button onclick="go(\'penjualan\')" class="text-xs font-semibold text-primary hover:text-primary-dark transition">Lihat Semua &rarr;</button></div>' +
+                    '<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Nota</th><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Total</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Tanggal</th></tr></thead><tbody>' +
+                    penjualan
+                        .slice(0, 5)
+                        .map((p) => {
+                            const r = getRelasi(p.relasiId);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                p.noNota +
+                                '</td><td class="py-3 pr-4">' +
+                                (r.nama || '-') +
+                                '</td><td class="py-3 pr-4 font-bold text-primary">' +
+                                fmtRp(p.total) +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(p.status) +
+                                '</td><td class="py-3">' +
+                                p.tanggal +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div></div>';
+
+                setTimeout(() => {
+                    const c1 = document.getElementById('chart-penjualan');
+                    if (c1)
+                        charts.penjualan = new Chart(c1.getContext('2d'), {
+                            type: 'line',
+                            data: {
+                                labels: ['Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                                datasets: [
+                                    {
+                                        label: 'Jt Rp',
+                                        data: [8.5, 12.3, totalPenjualanBulan / 1000000, 0, 0, 0],
+                                        backgroundColor: '#4A2545',
+                                        borderRadius: 8,
+                                        borderSkipped: false,
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { color: '#F7F3EE' } },
+                                    x: { grid: { display: false } },
+                                },
+                            },
+                        });
+                    const c2 = document.getElementById('chart-biaya');
+                    if (c2 && biayaLabels.length)
+                        charts.biaya = new Chart(c2.getContext('2d'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: biayaLabels,
+                                datasets: [
+                                    {
+                                        data: biayaData,
+                                        backgroundColor: biayaColors.slice(0, biayaLabels.length),
+                                        borderWidth: 0,
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                cutout: '70%',
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            padding: 12,
+                                            usePointStyle: true,
+                                            font: { size: 10 },
+                                        },
+                                    },
+                                },
+                            },
+                        });
+                }, 100);
+            }
+
+            /* ═══ PRODUK ═══ */
+            function renderProduk(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Data judul buku, penulis, harga, dan stok.</p><button onclick="openModal(\'produk\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Produk</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3 pr-4">Penulis</th><th class="pb-3 pr-4">Kategori</th><th class="pb-3 pr-4">ISBN</th><th class="pb-3 pr-4">Harga Jual</th><th class="pb-3 pr-4">Stok</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    produk
+                        .map((p) => {
+                            const stokBadge =
+                                p.stok < (p.stokMinimum || 50)
+                                    ? statusBadge('Stok Menipis')
+                                    : '<span class="text-charcoal font-bold">' + p.stok + '</span>';
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                p.judul +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                p.penulis +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' +
+                                p.kategori +
+                                '</span></td><td class="py-3 pr-4 text-xs">' +
+                                (p.isbn || '-') +
+                                '</td><td class="py-3 pr-4 font-bold text-primary">' +
+                                fmtRp(p.hargaJual) +
+                                '</td><td class="py-3 pr-4">' +
+                                stokBadge +
+                                '</td><td class="py-3 flex gap-2"><button onclick="editData(\'produk\',' +
+                                p.id +
+                                ')" class="text-primary hover:text-primary-dark text-xs font-semibold"><i class="fa-solid fa-pen mr-1"></i>Edit</button><button onclick="if(confirm(\'Hapus produk ini?\')) deleteData(\'produk\',' +
+                                p.id +
+                                ')" class="text-danger hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash mr-1"></i>Hapus</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ NASKAH ═══ */
+            function renderNaskah(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Manajemen naskah masuk, biaya naskah, kertas, dan cetak per judul.</p><button onclick="openModal(\'naskah\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Naskah</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Judul Naskah</th><th class="pb-3 pr-4">Penulis</th><th class="pb-3 pr-4">Biaya Naskah</th><th class="pb-3 pr-4">Biaya Kertas</th><th class="pb-3 pr-4">Biaya Cetak</th><th class="pb-3 pr-4">Total Biaya</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Tanggal</th></tr></thead><tbody>' +
+                    naskah
+                        .map((n) => {
+                            const total = n.biayaNaskah + n.biayaKertas + n.biayaCetak;
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                n.judul +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                n.penulis +
+                                '</td><td class="py-3 pr-4">' +
+                                fmtRp(n.biayaNaskah) +
+                                '</td><td class="py-3 pr-4">' +
+                                fmtRp(n.biayaKertas) +
+                                '</td><td class="py-3 pr-4">' +
+                                fmtRp(n.biayaCetak) +
+                                '</td><td class="py-3 pr-4 font-bold text-primary">' +
+                                fmtRp(total) +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(n.status) +
+                                '</td><td class="py-3 flex gap-2"><button onclick="editData(\'naskah\',' +
+                                n.id +
+                                ')" class="text-primary hover:text-primary-dark text-xs font-semibold"><i class="fa-solid fa-pen mr-1"></i>Edit</button><button onclick="if(confirm(\'Hapus naskah ini?\')) deleteData(\'naskah\',' +
+                                n.id +
+                                ')" class="text-danger hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash mr-1"></i>Hapus</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ RELASI ═══ */
+            function renderRelasi(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Data pelanggan, reseller, distributor, dan prospek.</p><button onclick="openModal(\'relasi\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Relasi</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Nama Relasi</th><th class="pb-3 pr-4">Tipe</th><th class="pb-3 pr-4">Kontak</th><th class="pb-3 pr-4">Alamat</th><th class="pb-3 pr-4">Status</th><th class="pb-3 pr-4">Order</th><th class="pb-3 pr-4">Total Nilai</th><th class="pb-3 pr-4">Catatan</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    relasi
+                        .map((r) => {
+                            const jmlOrder = penjualan.filter((p) => p.relasiId === r.id).length;
+                            const totalNilai = penjualan
+                                .filter((p) => p.relasiId === r.id)
+                                .reduce((s, p) => s + p.total, 0);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                r.nama +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-accent/10 text-accent text-xs font-bold">' +
+                                r.tipe +
+                                '</span></td><td class="py-3 pr-4 text-xs">' +
+                                r.kontak +
+                                '<br/>' +
+                                r.telp +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                r.alamat +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(r.status) +
+                                '</td><td class="py-3 pr-4 font-bold text-charcoal">' +
+                                jmlOrder +
+                                '</td><td class="py-3 pr-4 font-bold text-primary">' +
+                                (totalNilai > 0 ? fmtRpShort(totalNilai) : '-') +
+                                '</td><td class="py-3 text-xs text-muted max-w-[150px] truncate">' +
+                                r.catatan +
+                                "</td><td class=\"py-3\"><button onclick=\"if(confirm('Hapus relasi ini?')) deleteData('relasi'," +
+                                r.id +
+                                ')" class="text-danger hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash mr-1"></i>Hapus</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ BARANG DATANG ═══ */
+            function renderBarangDatang(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Catatan buku masuk gudang dari hasil cetak. Stok otomatis bertambah.</p><button onclick="openModal(\'barangdatang\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Barang Datang</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3 pr-4">Jumlah</th><th class="pb-3 pr-4">Sumber</th><th class="pb-3">Catatan</th></tr></thead><tbody>' +
+                    barangDatang
+                        .map((b) => {
+                            const pr = getProduk(b.produkId);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 text-xs">' +
+                                b.tanggal +
+                                '</td><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                (pr.judul || '-') +
+                                '</td><td class="py-3 pr-4 font-bold text-primary">' +
+                                b.jumlah +
+                                ' eks</td><td class="py-3 pr-4 text-xs">' +
+                                b.sumber +
+                                '</td><td class="py-3 text-xs text-muted">' +
+                                (b.catatan || '-') +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ PENJUALAN ═══ */
+            function renderPenjualan(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Nota jual dan distribusi buku ke relasi. Stok otomatis berkurang.</p><button onclick="openModal(\'penjualan\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Buat Nota Jual</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Nota</th><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Item</th><th class="pb-3 pr-4">Total</th><th class="pb-3 pr-4">Status</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    penjualan
+                        .map((p) => {
+                            const r = getRelasi(p.relasiId);
+                            const itemSummary = p.items
+                                .map((i) => {
+                                    const pr = getProduk(i.produkId);
+                                    return (pr.judul || '?') + ' (' + i.jumlah + ')';
+                                })
+                                .join(', ');
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                p.noNota +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                p.tanggal +
+                                '</td><td class="py-3 pr-4">' +
+                                (r.nama || '-') +
+                                '</td><td class="py-3 pr-4 text-xs max-w-[200px] truncate">' +
+                                itemSummary +
+                                '</td><td class="py-3 pr-4 font-bold text-primary">' +
+                                fmtRp(p.total) +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(p.status) +
+                                '</td><td class="py-3"><button onclick="showPenjualanDetail(' +
+                                p.id +
+                                ')" class="text-primary hover:text-primary-dark text-xs font-semibold"><i class="fa-solid fa-eye mr-1"></i>Detail</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            function showPenjualanDetail(id) {
+                const p = getNotaJual(id);
+                const r = getRelasi(p.relasiId);
+                const backdrop = document.createElement('div');
+                backdrop.className =
+                    'fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4';
+                backdrop.onclick = (e) => {
+                    if (e.target === backdrop) backdrop.remove();
+                };
+                let itemsHtml = p.items
+                    .map((i) => {
+                        const pr = getProduk(i.produkId);
+                        return (
+                            '<tr class="border-b border-bordercl last:border-0"><td class="py-2 pr-3 font-semibold">' +
+                            (pr.judul || '-') +
+                            '</td><td class="py-2 pr-3">' +
+                            i.jumlah +
+                            ' eks</td><td class="py-2 pr-3">' +
+                            fmtRp(i.harga) +
+                            '</td><td class="py-2 pr-3 font-bold text-primary">' +
+                            fmtRp(i.jumlah * i.harga) +
+                            '</td></tr>'
+                        );
+                    })
+                    .join('');
+                backdrop.innerHTML =
+                    '<div class="bg-surface rounded-2xl shadow-2xl w-full max-w-lg p-6 fade-in">' +
+                    '<div class="flex items-center justify-between mb-4"><h3 class="font-bold text-charcoal text-lg">Detail Nota Jual</h3><button onclick="this.closest(\'.fixed\').remove()" class="text-muted hover:text-danger"><i class="fa-solid fa-xmark text-lg"></i></button></div>' +
+                    '<div class="space-y-1 text-sm mb-4"><p><b class="text-muted">No. Nota:</b> ' +
+                    p.noNota +
+                    '</p><p><b class="text-muted">Tanggal:</b> ' +
+                    p.tanggal +
+                    '</p><p><b class="text-muted">Relasi:</b> ' +
+                    (r.nama || '-') +
+                    '</p><p><b class="text-muted">Status:</b> ' +
+                    statusBadge(p.status) +
+                    '</p></div>' +
+                    '<div class="overflow-x-auto"><table class="w-full text-xs"><thead><tr class="border-b border-bordercl text-left text-muted uppercase tracking-wider"><th class="pb-2 pr-3">Judul</th><th class="pb-2 pr-3">Jumlah</th><th class="pb-2 pr-3">Harga</th><th class="pb-2">Subtotal</th></tr></thead><tbody>' +
+                    itemsHtml +
+                    '</tbody></table></div>' +
+                    '<div class="mt-4 pt-3 border-t border-bordercl flex justify-between"><span class="font-bold text-charcoal">Total</span><span class="font-extrabold text-primary text-lg">' +
+                    fmtRp(p.total) +
+                    '</span></div></div>';
+                document.body.appendChild(backdrop);
+            }
+
+            /* ═══ RETUR ═══ */
+            function renderRetur(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Retur buku dari relasi. Stok otomatis bertambah kembali.</p><button onclick="openModal(\'retur\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Catat Retur</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Retur</th><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Nota Jual</th><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Item</th><th class="pb-3 pr-4">Total</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                    retur
+                        .map((rt) => {
+                            const r = getRelasi(rt.relasiId);
+                            const nj = getNotaJual(rt.notaJualId);
+                            const itemSummary = rt.items
+                                .map((i) => {
+                                    const pr = getProduk(i.produkId);
+                                    return (pr.judul || '?') + ' (' + i.jumlah + ')';
+                                })
+                                .join(', ');
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                rt.noRetur +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                rt.tanggal +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                (nj.noNota || '-') +
+                                '</td><td class="py-3 pr-4">' +
+                                (r.nama || '-') +
+                                '</td><td class="py-3 pr-4 text-xs max-w-[200px] truncate">' +
+                                itemSummary +
+                                '</td><td class="py-3 pr-4 font-bold text-danger">' +
+                                fmtRp(rt.total) +
+                                '</td><td class="py-3 pr-4">' +
+                                statusBadge(rt.status) +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ KUITANSI ═══ */
+            function renderKuitansi(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Bukti pembayaran dari relasi. Dapat mereferensikan satu atau beberapa nota jual.</p><button onclick="openModal(\'kuitansi\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Buat Kuitansi</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Kuitansi</th><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Nota Jual</th><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Jumlah Bayar</th><th class="pb-3 pr-4">Metode</th><th class="pb-3 pr-4">Sisa Tagihan</th><th class="pb-3">Keterangan</th></tr></thead><tbody>' +
+                    kuitansi
+                        .map((k) => {
+                            const r = getRelasi(k.relasiId);
+                            const notaIds = k.notaJualIds || (k.notaJualId ? [k.notaJualId] : []);
+                            const notaLabels = notaIds
+                                .map((nId) => {
+                                    const n = getNotaJual(nId);
+                                    return n ? n.noNota : '-';
+                                })
+                                .join(', ');
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                k.noKuitansi +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                k.tanggal +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                notaLabels +
+                                '</td><td class="py-3 pr-4">' +
+                                (r.nama || '-') +
+                                '</td><td class="py-3 pr-4 font-bold text-success">' +
+                                fmtRp(k.jumlahBayar) +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                k.metode +
+                                '</td><td class="py-3 pr-4 ' +
+                                (k.sisaTagihan > 0 ? 'font-bold text-warning' : 'text-muted') +
+                                '">' +
+                                fmtRp(k.sisaTagihan) +
+                                '</td><td class="py-3 text-xs text-muted max-w-[180px] truncate">' +
+                                k.keterangan +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ STOK ═══ */
+            function renderStok(mc) {
+                const riwayatStok = [];
+                barangDatang.forEach((b) => {
+                    const pr = getProduk(b.produkId);
+                    riwayatStok.push({
+                        tanggal: b.tanggal,
+                        judul: pr.judul || '-',
+                        jenis: 'Masuk',
+                        jumlah: b.jumlah,
+                        keterangan: 'Barang datang dari ' + b.sumber,
+                    });
+                });
+                penjualan.forEach((p) => {
+                    p.items.forEach((i) => {
+                        const pr = getProduk(i.produkId);
+                        riwayatStok.push({
+                            tanggal: p.tanggal,
+                            judul: pr.judul || '-',
+                            jenis: 'Keluar',
+                            jumlah: i.jumlah,
+                            keterangan: 'Penjualan ' + p.noNota,
+                        });
+                    });
+                });
+                retur.forEach((rt) => {
+                    rt.items.forEach((i) => {
+                        const pr = getProduk(i.produkId);
+                        riwayatStok.push({
+                            tanggal: rt.tanggal,
+                            judul: pr.judul || '-',
+                            jenis: 'Retur',
+                            jumlah: i.jumlah,
+                            keterangan: 'Retur ' + rt.noRetur,
+                        });
+                    });
+                });
+                riwayatStok.sort((a, b) => b.tanggal.localeCompare(a.tanggal));
+
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Persediaan buku tersedia per judul. Stok menipis ditandai otomatis.</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3 pr-4">Kategori</th><th class="pb-3 pr-4">Harga Jual</th><th class="pb-3 pr-4">Stok Tersedia</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                    produk
+                        .map((p) => {
+                            const kritis = p.stok < (p.stokMinimum || 50);
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                p.judul +
+                                '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' +
+                                p.kategori +
+                                '</span></td><td class="py-3 pr-4">' +
+                                fmtRp(p.hargaJual) +
+                                '</td><td class="py-3 pr-4 font-bold ' +
+                                (kritis ? 'text-danger' : 'text-charcoal') +
+                                '">' +
+                                p.stok +
+                                ' eks</td><td class="py-3">' +
+                                statusBadge(kritis ? 'Stok Menipis' : 'Stok Aman') +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>' +
+                    '<div class="mt-6 bg-surface rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4">Grafik Stok per Judul</h3><div class="relative" style="height:260px"><canvas id="chart-stok"></canvas></div></div>' +
+                    '<div class="mt-6 bg-surface rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-1">Riwayat Pergerakan Stok</h3><p class="text-xs text-muted mb-4">Log masuk, keluar, dan retur buku</p>' +
+                    '<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3 pr-4">Jenis</th><th class="pb-3 pr-4">Jumlah</th><th class="pb-3">Keterangan</th></tr></thead><tbody>' +
+                    riwayatStok
+                        .slice(0, 15)
+                        .map((r) => {
+                            const jenisBadge =
+                                r.jenis === 'Masuk'
+                                    ? '<span class="text-success font-bold"><i class="fa-solid fa-arrow-up mr-1"></i>Masuk</span>'
+                                    : r.jenis === 'Keluar'
+                                      ? '<span class="text-danger font-bold"><i class="fa-solid fa-arrow-down mr-1"></i>Keluar</span>'
+                                      : '<span class="text-blue-600 font-bold"><i class="fa-solid fa-rotate-left mr-1"></i>Retur</span>';
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 text-xs">' +
+                                r.tanggal +
+                                '</td><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                r.judul +
+                                '</td><td class="py-3 pr-4">' +
+                                jenisBadge +
+                                '</td><td class="py-3 pr-4 font-bold">' +
+                                r.jumlah +
+                                ' eks</td><td class="py-3 text-xs text-muted">' +
+                                r.keterangan +
+                                '</td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div></div>';
+
+                setTimeout(() => {
+                    const c = document.getElementById('chart-stok');
+                    if (c)
+                        charts.stok = new Chart(c.getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: produk.map((p) => p.judul.split(' ').slice(0, 2).join(' ')),
+                                datasets: [
+                                    {
+                                        label: 'Stok Saat Ini',
+                                        data: produk.map((p) => p.stok),
+                                        backgroundColor: '#4A2545',
+                                        borderRadius: 8,
+                                        borderSkipped: false,
+                                    },
+                                    {
+                                        label: 'Minimum',
+                                        data: produk.map(() => 50),
+                                        backgroundColor: '#DC2626',
+                                        borderRadius: 8,
+                                        borderSkipped: false,
+                                        borderWidth: 1,
+                                        borderColor: '#DC2626',
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: { usePointStyle: true, font: { size: 11 } },
+                                    },
+                                },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { color: '#F7F3EE' } },
+                                    x: { grid: { display: false } },
+                                },
+                            },
+                        });
+                }, 100);
+            }
+
+            /* ═══ KAS ═══ */
+            function renderKas(mc) {
+                const kasMasuk = kas
+                    .filter((k) => k.jenis === 'Masuk')
+                    .reduce((s, k) => s + k.jumlah, 0);
+                const kasKeluar = kas
+                    .filter((k) => k.jenis === 'Keluar')
+                    .reduce((s, k) => s + k.jumlah, 0);
+                const saldo = kasMasuk - kasKeluar;
+
+                mc.innerHTML =
+                    '<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Kas Masuk</p><p class="text-2xl font-extrabold text-success">' +
+                    fmtRpShort(kasMasuk) +
+                    '</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Kas Keluar</p><p class="text-2xl font-extrabold text-danger">' +
+                    fmtRpShort(kasKeluar) +
+                    '</p></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Saldo</p><p class="text-2xl font-extrabold ' +
+                    (saldo >= 0 ? 'text-success' : 'text-danger') +
+                    '">' +
+                    fmtRpShort(saldo) +
+                    '</p></div>' +
+                    '</div>' +
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Pencatatan uang masuk dan keluar.</p><button onclick="openModal(\'kas\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Catat Kas</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Jenis</th><th class="pb-3 pr-4">Kategori</th><th class="pb-3 pr-4">Jumlah</th><th class="pb-3 pr-4">Keterangan</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    kas
+                        .map((k) => {
+                            return (
+                                '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 text-xs">' +
+                                k.tanggal +
+                                '</td><td class="py-3 pr-4">' +
+                                (k.jenis === 'Masuk'
+                                    ? '<span class="text-success font-bold"><i class="fa-solid fa-arrow-up mr-1"></i>Masuk</span>'
+                                    : '<span class="text-danger font-bold"><i class="fa-solid fa-arrow-down mr-1"></i>Keluar</span>') +
+                                '</td><td class="py-3 pr-4 text-xs">' +
+                                k.kategori +
+                                '</td><td class="py-3 pr-4 font-bold ' +
+                                (k.jenis === 'Masuk' ? 'text-success' : 'text-danger') +
+                                '">' +
+                                fmtRp(k.jumlah) +
+                                '</td><td class="py-3 pr-4 text-xs text-muted max-w-[200px] truncate">' +
+                                k.keterangan +
+                                "</td><td class=\"py-3\"><button onclick=\"if(confirm('Hapus transaksi ini?')) deleteData('kas'," +
+                                k.id +
+                                ')" class="text-danger hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash mr-1"></i>Hapus</button></td></tr>'
+                            );
+                        })
+                        .join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ LAPORAN ═══ */
+            let laporanFilter = { dari: '', sampai: '' };
+
+            function renderLaporan(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-wrap gap-2 mb-4" id="laporan-tabs">' +
+                    '<button onclick="switchLaporanTab(\'penjualan\')" class="lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white transition">Penjualan</button>' +
+                    '<button onclick="switchLaporanTab(\'kas\')" class="lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-surface border border-bordercl text-muted hover:text-charcoal transition">Kas</button>' +
+                    '<button onclick="switchLaporanTab(\'stok\')" class="lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-surface border border-bordercl text-muted hover:text-charcoal transition">Stok</button>' +
+                    '<button onclick="switchLaporanTab(\'biaya\')" class="lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-surface border border-bordercl text-muted hover:text-charcoal transition">Biaya Produksi</button>' +
+                    '<button onclick="switchLaporanTab(\'biayaop\')" class="lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-surface border border-bordercl text-muted hover:text-charcoal transition">Biaya Operasional</button>' +
+                    '<button onclick="switchLaporanTab(\'retur\')" class="lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-surface border border-bordercl text-muted hover:text-charcoal transition">Retur</button>' +
+                    '<button onclick="switchLaporanTab(\'brgdatang\')" class="lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-surface border border-bordercl text-muted hover:text-charcoal transition">Barang Datang/Keluar</button>' +
+                    '</div>' +
+                    '<div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">' +
+                    '<div class="flex items-center gap-2"><label class="text-xs font-bold text-muted">Dari:</label><input id="lap-dari" type="date" value="' +
+                    laporanFilter.dari +
+                    '" onchange="updateLaporanFilter()" class="px-3 py-1.5 text-xs rounded-lg border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                    '<div class="flex items-center gap-2"><label class="text-xs font-bold text-muted">Sampai:</label><input id="lap-sampai" type="date" value="' +
+                    laporanFilter.sampai +
+                    '" onchange="updateLaporanFilter()" class="px-3 py-1.5 text-xs rounded-lg border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"></div>' +
+                    '<button onclick="resetLaporanFilter()" class="text-xs font-semibold text-primary hover:text-primary-dark transition"><i class="fa-solid fa-rotate-right mr-1"></i>Reset</button>' +
+                    '<div class="flex-1"></div>' +
+                    '<div class="flex gap-2">' +
+                    '<button onclick="exportLaporan(\'excel\')" class="px-3 py-1.5 rounded-lg bg-success text-white text-xs font-bold hover:bg-emerald-700 transition"><i class="fa-solid fa-file-excel mr-1"></i>Export Excel</button>' +
+                    '<button onclick="exportLaporan(\'pdf\')" class="px-3 py-1.5 rounded-lg bg-danger text-white text-xs font-bold hover:bg-red-700 transition"><i class="fa-solid fa-file-pdf mr-1"></i>Export PDF</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div id="laporan-body"></div>';
+                switchLaporanTab('penjualan');
+            }
+
+            function updateLaporanFilter() {
+                laporanFilter.dari = document.getElementById('lap-dari').value;
+                laporanFilter.sampai = document.getElementById('lap-sampai').value;
+                switchLaporanTab(activeLaporanTab);
+            }
+            function resetLaporanFilter() {
+                laporanFilter = { dari: '', sampai: '' };
+                document.getElementById('lap-dari').value = '';
+                document.getElementById('lap-sampai').value = '';
+                switchLaporanTab(activeLaporanTab);
+            }
+            function filterByDate(arr, dateField) {
+                if (!laporanFilter.dari && !laporanFilter.sampai) return arr;
+                return arr.filter((item) => {
+                    const d = item[dateField];
+                    if (laporanFilter.dari && d < laporanFilter.dari) return false;
+                    if (laporanFilter.sampai && d > laporanFilter.sampai) return false;
+                    return true;
+                });
+            }
+            function exportLaporan(type) {
+                const title =
+                    'Laporan ' +
+                    (activeLaporanTab.charAt(0).toUpperCase() + activeLaporanTab.slice(1));
+                const dateRange =
+                    laporanFilter.dari || laporanFilter.sampai
+                        ? 'Periode: ' +
+                          (laporanFilter.dari || '...') +
+                          ' s/d ' +
+                          (laporanFilter.sampai || '...')
+                        : 'Semua Data';
+                if (type === 'excel') {
+                    showToast(
+                        'Export Excel: ' +
+                            title +
+                            ' (' +
+                            dateRange +
+                            ') — Fitur ini akan terhubung ke backend saat development.',
+                        'info',
+                    );
+                } else {
+                    showToast(
+                        'Export PDF: ' +
+                            title +
+                            ' (' +
+                            dateRange +
+                            ') — Fitur ini akan terhubung ke backend saat development.',
+                        'info',
+                    );
+                }
+            }
+
+            let activeLaporanTab = 'penjualan';
+            function switchPenjualanLapSub(sub) {
+                document.querySelectorAll('.lap-pj-sub').forEach((b) => {
+                    b.className =
+                        'lap-pj-sub px-3 py-1.5 rounded-lg text-xs font-bold bg-surface border border-bordercl text-muted transition';
+                });
+                const btns = document.querySelectorAll('.lap-pj-sub');
+                const idx = { all: 0, judul: 1, relasi: 2 };
+                if (btns[idx[sub]])
+                    btns[idx[sub]].className =
+                        'lap-pj-sub px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-white transition';
+                const c = document.getElementById('lap-penjualan-sub');
+                if (!c) return;
+                if (sub === 'all') {
+                    c.innerHTML =
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Nota</th><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Items</th><th class="pb-3">Total</th></tr></thead><tbody>' +
+                        filterByDate(penjualan, 'tanggal')
+                            .map((p) => {
+                                const r = getRelasi(p.relasiId);
+                                const items = p.items
+                                    .map((i) => getProduk(i.produkId).judul + ' x' + i.jumlah)
+                                    .join(', ');
+                                return (
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                    p.noNota +
+                                    '</td><td class="py-3 pr-4 text-xs">' +
+                                    p.tanggal +
+                                    '</td><td class="py-3 pr-4">' +
+                                    (r.nama || '-') +
+                                    '</td><td class="py-3 pr-4 text-xs">' +
+                                    items +
+                                    '</td><td class="py-3 font-bold text-primary">' +
+                                    fmtRp(p.total) +
+                                    '</td></tr>'
+                                );
+                            })
+                            .join('') +
+                        '</tbody></table></div>';
+                } else if (sub === 'judul') {
+                    const perJudul = {};
+                    filterByDate(penjualan, 'tanggal').forEach((p) =>
+                        p.items.forEach((i) => {
+                            const pr = getProduk(i.produkId);
+                            if (!perJudul[pr.id])
+                                perJudul[pr.id] = { judul: pr.judul, total: 0, qty: 0 };
+                            perJudul[pr.id].total += i.jumlah * i.harga;
+                            perJudul[pr.id].qty += i.jumlah;
+                        }),
+                    );
+                    const sorted = Object.values(perJudul).sort((a, b) => b.total - a.total);
+                    c.innerHTML =
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><h3 class="font-bold text-charcoal mb-3">Penjualan per Judul Buku</h3><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3 pr-4">Total Terjual</th><th class="pb-3">Total Nilai</th></tr></thead><tbody>' +
+                        sorted
+                            .map(
+                                (j) =>
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                    j.judul +
+                                    '</td><td class="py-3 pr-4 font-bold">' +
+                                    j.qty +
+                                    ' eks</td><td class="py-3 font-bold text-primary">' +
+                                    fmtRp(j.total) +
+                                    '</td></tr>',
+                            )
+                            .join('') +
+                        '</tbody></table></div>';
+                } else if (sub === 'relasi') {
+                    const perRelasi = {};
+                    filterByDate(penjualan, 'tanggal').forEach((p) => {
+                        if (!perRelasi[p.relasiId])
+                            perRelasi[p.relasiId] = {
+                                nama: getRelasi(p.relasiId).nama,
+                                total: 0,
+                                nota: 0,
+                            };
+                        perRelasi[p.relasiId].total += p.total;
+                        perRelasi[p.relasiId].nota++;
+                    });
+                    const sorted = Object.values(perRelasi).sort((a, b) => b.total - a.total);
+                    c.innerHTML =
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><h3 class="font-bold text-charcoal mb-3">Penjualan per Relasi</h3><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Jumlah Nota</th><th class="pb-3">Total Nilai</th></tr></thead><tbody>' +
+                        sorted
+                            .map(
+                                (r) =>
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                    r.nama +
+                                    '</td><td class="py-3 pr-4 font-bold">' +
+                                    r.nota +
+                                    ' nota</td><td class="py-3 font-bold text-primary">' +
+                                    fmtRp(r.total) +
+                                    '</td></tr>',
+                            )
+                            .join('') +
+                        '</tbody></table></div>';
+                }
+            }
+
+            function switchLaporanTab(tab) {
+                activeLaporanTab = tab;
+                document.querySelectorAll('.lap-tab').forEach((b) => {
+                    b.className =
+                        'lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-surface border border-bordercl text-muted hover:text-charcoal transition';
+                });
+                const tabs = document.querySelectorAll('.lap-tab');
+                const tabIndex = {
+                    penjualan: 0,
+                    kas: 1,
+                    stok: 2,
+                    biaya: 3,
+                    biayaop: 4,
+                    retur: 5,
+                    brgdatang: 6,
+                };
+                if (tabs[tabIndex[tab]])
+                    tabs[tabIndex[tab]].className =
+                        'lap-tab px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white transition';
+                const body = document.getElementById('laporan-body');
+
+                if (tab === 'penjualan') {
+                    const totalPenjualan = penjualan.reduce((s, p) => s + p.total, 0);
+                    body.innerHTML =
+                        '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Penjualan</p><p class="text-2xl font-extrabold text-primary">' +
+                        fmtRpShort(totalPenjualan) +
+                        '</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Jumlah Nota</p><p class="text-2xl font-extrabold text-charcoal">' +
+                        penjualan.length +
+                        '</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Rata-rata/Nota</p><p class="text-2xl font-extrabold text-accent">' +
+                        fmtRpShort(totalPenjualan / penjualan.length) +
+                        '</p></div>' +
+                        '</div>' +
+                        '<div class="flex gap-2 mb-4">' +
+                        '<button onclick="switchPenjualanLapSub(\'all\')" class="lap-pj-sub px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-white transition">Semua</button>' +
+                        '<button onclick="switchPenjualanLapSub(\'judul\')" class="lap-pj-sub px-3 py-1.5 rounded-lg text-xs font-bold bg-surface border border-bordercl text-muted transition">Per Judul</button>' +
+                        '<button onclick="switchPenjualanLapSub(\'relasi\')" class="lap-pj-sub px-3 py-1.5 rounded-lg text-xs font-bold bg-surface border border-bordercl text-muted transition">Per Relasi</button>' +
+                        '</div>' +
+                        '<div id="lap-penjualan-sub"></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 mt-4"><h3 class="font-bold text-charcoal mb-4">Grafik Penjualan per Bulan</h3><div class="relative" style="height:260px"><canvas id="chart-lap-penjualan"></canvas></div></div>';
+                    setTimeout(() => {
+                        switchPenjualanLapSub('all');
+                        const c = document.getElementById('chart-lap-penjualan');
+                        if (c)
+                            charts.lapPenjualan = new Chart(c.getContext('2d'), {
+                                type: 'line',
+                                data: {
+                                    labels: ['Jul', 'Agu', 'Sep'],
+                                    datasets: [
+                                        {
+                                            label: 'Jt Rp',
+                                            data: [8.5, 12.3, totalPenjualan / 1000000],
+                                            backgroundColor: '#4A2545',
+                                            borderRadius: 8,
+                                            borderSkipped: false,
+                                        },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        y: { beginAtZero: true, grid: { color: '#F7F3EE' } },
+                                        x: { grid: { display: false } },
+                                    },
+                                },
+                            });
+                    }, 100);
+                } else if (tab === 'kas') {
+                    const kasMasuk = kas
+                        .filter((k) => k.jenis === 'Masuk')
+                        .reduce((s, k) => s + k.jumlah, 0);
+                    const kasKeluar = kas
+                        .filter((k) => k.jenis === 'Keluar')
+                        .reduce((s, k) => s + k.jumlah, 0);
+                    body.innerHTML =
+                        '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Kas Masuk</p><p class="text-2xl font-extrabold text-success">' +
+                        fmtRpShort(kasMasuk) +
+                        '</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Kas Keluar</p><p class="text-2xl font-extrabold text-danger">' +
+                        fmtRpShort(kasKeluar) +
+                        '</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Saldo</p><p class="text-2xl font-extrabold text-primary">' +
+                        fmtRpShort(kasMasuk - kasKeluar) +
+                        '</p></div>' +
+                        '</div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4">Kas Masuk vs Keluar</h3><div class="relative" style="height:260px"><canvas id="chart-lap-kas"></canvas></div></div>';
+                    setTimeout(() => {
+                        const c = document.getElementById('chart-lap-kas');
+                        if (c)
+                            charts.lapKas = new Chart(c.getContext('2d'), {
+                                type: 'line',
+                                data: {
+                                    labels: ['Jul', 'Agu', 'Sep'],
+                                    datasets: [
+                                        {
+                                            label: 'Masuk (Jt)',
+                                            data: [4.2, 6.8, kasMasuk / 1000000],
+                                            borderColor: '#2F855A',
+                                            backgroundColor: 'rgba(47,133,90,.1)',
+                                            fill: true,
+                                            tension: 0.3,
+                                        },
+                                        {
+                                            label: 'Keluar (Jt)',
+                                            data: [5.1, 7.2, kasKeluar / 1000000],
+                                            borderColor: '#DC2626',
+                                            backgroundColor: 'rgba(220,38,38,.1)',
+                                            fill: true,
+                                            tension: 0.3,
+                                        },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom',
+                                            labels: { usePointStyle: true, font: { size: 11 } },
+                                        },
+                                    },
+                                    scales: {
+                                        y: { beginAtZero: true, grid: { color: '#F7F3EE' } },
+                                        x: { grid: { display: false } },
+                                    },
+                                },
+                            });
+                    }, 100);
+                } else if (tab === 'stok') {
+                    body.innerHTML =
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3 pr-4">Kategori</th><th class="pb-3 pr-4">Stok</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                        produk
+                            .map((p) => {
+                                return (
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                    p.judul +
+                                    '</td><td class="py-3 pr-4">' +
+                                    p.kategori +
+                                    '</td><td class="py-3 pr-4 font-bold">' +
+                                    p.stok +
+                                    ' eks</td><td class="py-3">' +
+                                    statusBadge(
+                                        p.stok < (p.stokMinimum || 50)
+                                            ? 'Stok Menipis'
+                                            : 'Stok Aman',
+                                    ) +
+                                    '</td></tr>'
+                                );
+                            })
+                            .join('') +
+                        '</tbody></table></div>';
+                } else if (tab === 'biaya') {
+                    body.innerHTML =
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Judul Naskah</th><th class="pb-3 pr-4">Biaya Naskah</th><th class="pb-3 pr-4">Biaya Kertas</th><th class="pb-3 pr-4">Biaya Cetak</th><th class="pb-3">Total Biaya</th></tr></thead><tbody>' +
+                        naskah
+                            .map((n) => {
+                                return (
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                    n.judul +
+                                    '</td><td class="py-3 pr-4">' +
+                                    fmtRp(n.biayaNaskah) +
+                                    '</td><td class="py-3 pr-4">' +
+                                    fmtRp(n.biayaKertas) +
+                                    '</td><td class="py-3 pr-4">' +
+                                    fmtRp(n.biayaCetak) +
+                                    '</td><td class="py-3 font-bold text-primary">' +
+                                    fmtRp(n.biayaNaskah + n.biayaKertas + n.biayaCetak) +
+                                    '</td></tr>'
+                                );
+                            })
+                            .join('') +
+                        '</tbody></table></div>';
+                } else if (tab === 'biayaop') {
+                    const biayaOpKategori = {};
+                    kas.filter(
+                        (k) =>
+                            k.jenis === 'Keluar' &&
+                            ['ATK', 'Akomodasi', 'Paket/Pengiriman', 'Lain-lain'].includes(
+                                k.kategori,
+                            ),
+                    ).forEach((k) => {
+                        biayaOpKategori[k.kategori] = (biayaOpKategori[k.kategori] || 0) + k.jumlah;
+                    });
+                    const biayaOpTotal = Object.values(biayaOpKategori).reduce((s, v) => s + v, 0);
+                    const biayaOpData = kas.filter(
+                        (k) =>
+                            k.jenis === 'Keluar' &&
+                            ['ATK', 'Akomodasi', 'Paket/Pengiriman', 'Lain-lain'].includes(
+                                k.kategori,
+                            ),
+                    );
+                    body.innerHTML =
+                        '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Biaya Operasional</p><p class="text-2xl font-extrabold text-danger">' +
+                        fmtRpShort(biayaOpTotal) +
+                        '</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">ATK</p><p class="text-2xl font-extrabold text-accent">' +
+                        fmtRpShort(biayaOpKategori['ATK'] || 0) +
+                        '</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Akomodasi & Paket</p><p class="text-2xl font-extrabold text-primary">' +
+                        fmtRpShort(
+                            (biayaOpKategori['Akomodasi'] || 0) +
+                                (biayaOpKategori['Paket/Pengiriman'] || 0),
+                        ) +
+                        '</p></div>' +
+                        '</div>' +
+                        '<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5"><h3 class="font-bold text-charcoal mb-4">Komposisi Biaya Operasional</h3><div class="relative" style="height:260px"><canvas id="chart-lap-biayaop"></canvas></div></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><h3 class="font-bold text-charcoal mb-4">Detail Transaksi</h3><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Kategori</th><th class="pb-3 pr-4">Keterangan</th><th class="pb-3">Jumlah</th></tr></thead><tbody>' +
+                        biayaOpData
+                            .map(
+                                (k) =>
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 text-xs">' +
+                                    k.tanggal +
+                                    '</td><td class="py-3 pr-4"><span class="px-2 py-0.5 rounded-lg bg-accent/10 text-accent text-xs font-bold">' +
+                                    k.kategori +
+                                    '</span></td><td class="py-3 pr-4 text-xs">' +
+                                    k.keterangan +
+                                    '</td><td class="py-3 font-bold text-danger">' +
+                                    fmtRp(k.jumlah) +
+                                    '</td></tr>',
+                            )
+                            .join('') +
+                        '</tbody></table></div>' +
+                        '</div>';
+                    setTimeout(() => {
+                        const c = document.getElementById('chart-lap-biayaop');
+                        if (c)
+                            charts.lapBiayaOp = new Chart(c.getContext('2d'), {
+                                type: 'doughnut',
+                                data: {
+                                    labels: Object.keys(biayaOpKategori),
+                                    datasets: [
+                                        {
+                                            data: Object.values(biayaOpKategori),
+                                            backgroundColor: ['#C08457', '#8B5CF6', '#3B82F6'],
+                                            borderWidth: 0,
+                                        },
+                                    ],
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom',
+                                            labels: { usePointStyle: true, font: { size: 11 } },
+                                        },
+                                    },
+                                },
+                            });
+                    }, 100);
+                } else if (tab === 'retur') {
+                    body.innerHTML =
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">No. Retur</th><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Alasan</th><th class="pb-3 pr-4">Total</th><th class="pb-3">Status</th></tr></thead><tbody>' +
+                        retur
+                            .map((rt) => {
+                                const r = getRelasi(rt.relasiId);
+                                const alasan = rt.items.map((i) => i.alasan).join(', ');
+                                return (
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                    rt.noRetur +
+                                    '</td><td class="py-3 pr-4 text-xs">' +
+                                    rt.tanggal +
+                                    '</td><td class="py-3 pr-4">' +
+                                    (r.nama || '-') +
+                                    '</td><td class="py-3 pr-4 text-xs">' +
+                                    alasan +
+                                    '</td><td class="py-3 pr-4 font-bold text-danger">' +
+                                    fmtRp(rt.total) +
+                                    '</td><td class="py-3">' +
+                                    statusBadge(rt.status) +
+                                    '</td></tr>'
+                                );
+                            })
+                            .join('') +
+                        '</tbody></table></div>';
+                } else if (tab === 'brgdatang') {
+                    const bdMasuk = filterByDate(barangDatang, 'tanggal');
+                    const pjKeluar = filterByDate(penjualan, 'tanggal');
+                    const totalMasuk = bdMasuk.reduce((s, b) => s + b.jumlah, 0);
+                    const totalKeluar = pjKeluar.reduce(
+                        (s, p) => s + p.items.reduce((si, i) => si + i.jumlah, 0),
+                        0,
+                    );
+                    body.innerHTML =
+                        '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Masuk</p><p class="text-2xl font-extrabold text-success">' +
+                        totalMasuk +
+                        ' eks</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Total Keluar</p><p class="text-2xl font-extrabold text-danger">' +
+                        totalKeluar +
+                        ' eks</p></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 text-center"><p class="text-xs text-muted uppercase font-bold mb-1">Selisih</p><p class="text-2xl font-extrabold text-primary">' +
+                        (totalMasuk - totalKeluar) +
+                        ' eks</p></div>' +
+                        '</div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><h3 class="font-bold text-charcoal mb-4">Detail Barang Datang</h3><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3 pr-4">Jumlah</th><th class="pb-3 pr-4">Sumber</th><th class="pb-3">Catatan</th></tr></thead><tbody>' +
+                        bdMasuk
+                            .map((b) => {
+                                const pr = getProduk(b.produkId);
+                                return (
+                                    '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 text-xs">' +
+                                    b.tanggal +
+                                    '</td><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                    (pr.judul || '-') +
+                                    '</td><td class="py-3 pr-4 font-bold text-success">' +
+                                    b.jumlah +
+                                    ' eks</td><td class="py-3 pr-4 text-xs">' +
+                                    b.sumber +
+                                    '</td><td class="py-3 text-xs text-muted">' +
+                                    b.catatan +
+                                    '</td></tr>'
+                                );
+                            })
+                            .join('') +
+                        '</tbody></table></div>' +
+                        '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto mt-4"><h3 class="font-bold text-charcoal mb-4">Detail Barang Keluar (Penjualan)</h3><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Tanggal</th><th class="pb-3 pr-4">No. Nota</th><th class="pb-3 pr-4">Relasi</th><th class="pb-3 pr-4">Judul Buku</th><th class="pb-3">Jumlah</th></tr></thead><tbody>' +
+                        pjKeluar
+                            .flatMap((p) => {
+                                const r = getRelasi(p.relasiId);
+                                return p.items.map((i) => {
+                                    const pr = getProduk(i.produkId);
+                                    return (
+                                        '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 text-xs">' +
+                                        p.tanggal +
+                                        '</td><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                                        p.noNota +
+                                        '</td><td class="py-3 pr-4 text-xs">' +
+                                        (r.nama || '-') +
+                                        '</td><td class="py-3 pr-4">' +
+                                        (pr.judul || '-') +
+                                        '</td><td class="py-3 font-bold text-danger">' +
+                                        i.jumlah +
+                                        ' eks</td></tr>'
+                                    );
+                                });
+                            })
+                            .join('') +
+                        '</tbody></table></div>';
+                }
+            }
+
+            /* ═══ USERS ═══ */
+            function renderUsers(mc) {
+                mc.innerHTML =
+                    '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5"><p class="text-sm text-muted">Kelola akun pengguna dan hak akses.</p><button onclick="openModal(\'user\')" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dark transition"><i class="fa-solid fa-plus mr-1"></i> Tambah User</button></div>' +
+                    '<div class="bg-surface rounded-2xl border border-bordercl p-5 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-muted uppercase tracking-wider border-b border-bordercl"><th class="pb-3 pr-4">Nama</th><th class="pb-3 pr-4">Email</th><th class="pb-3 pr-4">Role</th><th class="pb-3">Aksi</th></tr></thead><tbody>' +
+                    USERS.map((u) => {
+                        return (
+                            '<tr class="border-b border-bordercl last:border-0"><td class="py-3 pr-4 font-semibold text-charcoal">' +
+                            u.nama +
+                            '</td><td class="py-3 pr-4 text-xs">' +
+                            u.email +
+                            '</td><td class="py-3 pr-4">' +
+                            statusBadge(u.label) +
+                            '</td><td class="py-3 flex gap-2"><button onclick="editData(\'user\',' +
+                            u.id +
+                            ')" class="text-primary hover:text-primary-dark text-xs font-semibold"><i class="fa-solid fa-pen mr-1"></i>Edit</button><button onclick="if(confirm(\'Hapus user ini?\')) deleteData(\'user\',' +
+                            u.id +
+                            ')" class="text-danger hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash mr-1"></i>Hapus</button></td></tr>'
+                        );
+                    }).join('') +
+                    '</tbody></table></div>';
+            }
+
+            /* ═══ MODAL SYSTEM ═══ */
+            function openModal(type) {
+                const bg = document.getElementById('modal-backdrop');
+                const ct = document.getElementById('modal-container');
+                bg.classList.remove('hidden');
+                let h = '';
+                const inputCls =
+                    'w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none';
+                const labelCls = 'text-xs font-bold text-muted uppercase tracking-wider mb-1 block';
+
+                switch (type) {
+                    case 'produk':
+                        let naskahOpts =
+                            '<option value="">Tidak terkait</option>' +
+                            naskah
+                                .map((n) => '<option value="' + n.id + '">' + n.judul + '</option>')
+                                .join('');
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Produk</h3><p class="text-xs text-muted italic">Add Book Title</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'produk\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Judul Buku</label><input id="f-judul" required class="' +
+                            inputCls +
+                            '"></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Penulis</label><input id="f-penulis" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Kategori</label><select id="f-kategori" class="' +
+                            inputCls +
+                            ' bg-white"><option>Novel</option><option>Pelajaran</option><option>Anak</option><option>Teknologi</option><option>Sejarah</option><option>Kuliner</option><option>Religi</option></select></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">ISBN</label><input id="f-isbn" class="' +
+                            inputCls +
+                            '" placeholder="Opsional"></div><div><label class="' +
+                            labelCls +
+                            '">Harga Jual (Rp)</label><input id="f-harga" type="number" required class="' +
+                            inputCls +
+                            '"></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Stok Awal</label><input id="f-stok" type="number" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Stok Minimum</label><input id="f-stokMinimum" type="number" value="50" class="' +
+                            inputCls +
+                            '"></div></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Terkait Naskah (Opsional)</label><select id="f-naskahId" class="' +
+                            inputCls +
+                            ' bg-white">' +
+                            naskahOpts +
+                            '</select></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        break;
+                    case 'naskah':
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Naskah</h3><p class="text-xs text-muted italic">Add Manuscript</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'naskah\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Judul Naskah</label><input id="f-judul" required class="' +
+                            inputCls +
+                            '"></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Penulis</label><input id="f-penulis" required class="' +
+                            inputCls +
+                            '"></div>' +
+                            '<div class="grid grid-cols-3 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Biaya Naskah (Rp)</label><input id="f-biayaNaskah" type="number" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Biaya Kertas (Rp)</label><input id="f-biayaKertas" type="number" value="0" class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Biaya Cetak (Rp)</label><input id="f-biayaCetak" type="number" value="0" class="' +
+                            inputCls +
+                            '"></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Status</label><select id="f-status" class="' +
+                            inputCls +
+                            ' bg-white"><option>Naskah Diterima</option><option>Proses Cetak</option><option>Selesai Cetak</option></select></div><div><label class="' +
+                            labelCls +
+                            '">Tanggal Masuk</label><input id="f-tanggalMasuk" type="date" required class="' +
+                            inputCls +
+                            '"></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        break;
+                    case 'relasi':
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Relasi</h3><p class="text-xs text-muted italic">Add Contact</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'relasi\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Nama Relasi</label><input id="f-nama" required class="' +
+                            inputCls +
+                            '"></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Tipe</label><select id="f-tipe" class="' +
+                            inputCls +
+                            ' bg-white"><option>Toko Buku</option><option>Reseller</option><option>Distributor</option><option>Perorangan</option><option>Prospek</option></select></div><div><label class="' +
+                            labelCls +
+                            '">Status</label><select id="f-status" class="' +
+                            inputCls +
+                            ' bg-white"><option>Aktif</option><option>Prospek</option></select></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Kontak</label><input id="f-kontak" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Telepon</label><input id="f-telp" class="' +
+                            inputCls +
+                            '"></div></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Alamat</label><textarea id="f-alamat" rows="2" class="' +
+                            inputCls +
+                            ' resize-none"></textarea></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Catatan</label><textarea id="f-catatan" rows="2" class="' +
+                            inputCls +
+                            ' resize-none"></textarea></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        break;
+                    case 'barangdatang':
+                        let bdOpts = produk
+                            .map((p) => '<option value="' + p.id + '">' + p.judul + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah Barang Datang</h3><p class="text-xs text-muted italic">Stock Entry</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'barangdatang\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Tanggal</label><input id="f-tanggal" type="date" required class="' +
+                            inputCls +
+                            '"></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Judul Buku</label><select id="f-produkId" required class="' +
+                            inputCls +
+                            ' bg-white">' +
+                            bdOpts +
+                            '</select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Jumlah (eksemplar)</label><input id="f-jumlah" type="number" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Sumber</label><input id="f-sumber" placeholder="Percetakan..." class="' +
+                            inputCls +
+                            '"></div></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Catatan</label><textarea id="f-catatan" rows="2" class="' +
+                            inputCls +
+                            ' resize-none"></textarea></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        break;
+                    case 'penjualan':
+                        let prOpts = produk
+                            .map(
+                                (p) =>
+                                    '<option value="' +
+                                    p.id +
+                                    '" data-harga="' +
+                                    p.hargaJual +
+                                    '">' +
+                                    p.judul +
+                                    ' (' +
+                                    fmtRp(p.hargaJual) +
+                                    ')</option>',
+                            )
+                            .join('');
+                        let rlOpts = relasi
+                            .filter((r) => r.status === 'Aktif')
+                            .map((r) => '<option value="' + r.id + '">' + r.nama + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Buat Nota Jual</h3><p class="text-xs text-muted italic">Create Sales Note</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'penjualan\',event)" class="p-5 space-y-4">' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Tanggal</label><input id="f-tanggal" type="date" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Relasi</label><select id="f-relasiId" required class="' +
+                            inputCls +
+                            ' bg-white">' +
+                            rlOpts +
+                            '</select></div></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Item Penjualan</label><div id="pj-items" class="space-y-2"></div><button type="button" onclick="addPenjualanItem()" class="mt-2 text-xs font-bold text-primary hover:text-primary-dark"><i class="fa-solid fa-plus mr-1"></i>Tambah Item</button></div>' +
+                            '<div class="bg-bg rounded-xl p-3 flex justify-between items-center"><span class="text-sm font-bold text-muted">Total:</span><span id="pj-total" class="text-lg font-extrabold text-primary">' +
+                            fmtRp(0) +
+                            '</span></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        setTimeout(addPenjualanItem, 50);
+                        break;
+                    case 'retur':
+                        let rjOpts = penjualan
+                            .map(
+                                (p) =>
+                                    '<option value="' +
+                                    p.id +
+                                    '">' +
+                                    p.noNota +
+                                    ' - ' +
+                                    getRelasi(p.relasiId).nama +
+                                    '</option>',
+                            )
+                            .join('');
+                        let rtPrOpts = produk
+                            .map((p) => '<option value="' + p.id + '">' + p.judul + '</option>')
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Catat Retur</h3><p class="text-xs text-muted italic">Record Return</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'retur\',event)" class="p-5 space-y-4">' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Tanggal</label><input id="f-tanggal" type="date" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Nota Jual Referensi</label><select id="f-notaJualId" required class="' +
+                            inputCls +
+                            ' bg-white">' +
+                            rjOpts +
+                            '</select></div></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Item Retur</label><div id="rt-items" class="space-y-2"></div><button type="button" onclick="addReturItem()" class="mt-2 text-xs font-bold text-primary hover:text-primary-dark"><i class="fa-solid fa-plus mr-1"></i>Tambah Item</button></div>' +
+                            '<div class="bg-bg rounded-xl p-3 flex justify-between items-center"><span class="text-sm font-bold text-muted">Total Retur:</span><span id="rt-total" class="text-lg font-extrabold text-danger">' +
+                            fmtRp(0) +
+                            '</span></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        setTimeout(addReturItem, 50);
+                        break;
+                    case 'kuitansi':
+                        let kjCheckboxes = penjualan
+                            .filter((p) => p.status !== 'Lunas')
+                            .map((p) => {
+                                return (
+                                    '<label class="flex items-center gap-2 p-2 rounded-lg border border-bordercl hover:bg-bg cursor-pointer kj-nota-item"><input type="checkbox" value="' +
+                                    p.id +
+                                    '" data-total="' +
+                                    p.total +
+                                    '" class="kj-nota-cb" onchange="updateKuitansiTotal()"><div class="flex-1"><span class="text-xs font-bold text-charcoal">' +
+                                    p.noNota +
+                                    ' - ' +
+                                    getRelasi(p.relasiId).nama +
+                                    '</span><br/><span class="text-[10px] text-muted">' +
+                                    fmtRp(p.total) +
+                                    '</span></div></label>'
+                                );
+                            })
+                            .join('');
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Buat Kuitansi</h3><p class="text-xs text-muted italic">Create Receipt</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'kuitansi\',event)" class="p-5 space-y-4">' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Tanggal</label><input id="f-tanggal" type="date" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Metode</label><select id="f-metode" class="' +
+                            inputCls +
+                            ' bg-white"><option>Transfer Bank</option><option>Tunai</option><option>Cek</option></select></div></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Pilih Nota Jual (bisa lebih dari satu)</label><div id="kj-notas" class="space-y-1 max-h-40 overflow-y-auto">' +
+                            kjCheckboxes +
+                            '</div><div class="mt-1 text-xs text-muted"><span id="kj-count">0</span> nota dipilih — Total: <span id="kj-tagihan" class="font-bold text-charcoal">' +
+                            fmtRp(0) +
+                            '</span></div></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Jumlah Bayar (Rp)</label><input id="f-jumlahBayar" type="number" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Keterangan</label><textarea id="f-keterangan" rows="2" class="' +
+                            inputCls +
+                            ' resize-none"></textarea></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        break;
+                    case 'kas':
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Catat Kas</h3><p class="text-xs text-muted italic">Record Cash Flow</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'kas\',event)" class="p-5 space-y-4">' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Tanggal</label><input id="f-tanggal" type="date" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Jenis</label><select id="f-jenis" class="' +
+                            inputCls +
+                            ' bg-white" onchange="updateKasKategori()"><option value="Masuk">Uang Masuk</option><option value="Keluar">Uang Keluar</option></select></div></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Kategori</label><select id="f-kategori" class="' +
+                            inputCls +
+                            ' bg-white"></select></div>' +
+                            '<div class="grid grid-cols-2 gap-3"><div><label class="' +
+                            labelCls +
+                            '">Jumlah (Rp)</label><input id="f-jumlah" type="number" required class="' +
+                            inputCls +
+                            '"></div><div><label class="' +
+                            labelCls +
+                            '">Keterangan</label><textarea id="f-keterangan" rows="2" class="' +
+                            inputCls +
+                            ' resize-none"></textarea></div></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        setTimeout(updateKasKategori, 50);
+                        break;
+                    case 'user':
+                        h =
+                            '<div class="sticky top-0 bg-surface border-b border-bordercl px-5 py-4 flex justify-between items-center rounded-t-2xl z-10"><div><h3 class="font-bold text-charcoal">Tambah User</h3><p class="text-xs text-muted italic">Add User</p></div><button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-bg flex items-center justify-center text-muted hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button></div>' +
+                            '<form onsubmit="saveData(\'user\',event)" class="p-5 space-y-4">' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Nama</label><input id="f-nama" required class="' +
+                            inputCls +
+                            '"></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Email</label><input id="f-email" type="email" required class="' +
+                            inputCls +
+                            '"></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Password</label><input id="f-pass" type="password" class="' +
+                            inputCls +
+                            '" placeholder="Kosongkan jika tidak diubah"></div>' +
+                            '<div><label class="' +
+                            labelCls +
+                            '">Role</label><select id="f-role" class="' +
+                            inputCls +
+                            ' bg-white"><option value="owner">Owner / Direktur</option><option value="admin-produksi">Admin Produksi/Naskah</option><option value="admin-gudang">Admin Gudang/Stok</option><option value="admin-penjualan">Admin Penjualan/Distribusi</option><option value="keuangan">Keuangan/Kasir</option></select></div>' +
+                            '<div class="flex gap-3 pt-2"><button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-bordercl text-sm font-semibold text-muted hover:bg-bg">Batal</button><button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark shadow-md">Simpan</button></div></form>';
+                        break;
+                }
+                ct.innerHTML = h;
+            }
+
+            function closeModal() {
+                document.getElementById('modal-backdrop').classList.add('hidden');
+            }
+
+            function updateKasKategori() {
+                const jenis = document.getElementById('f-jenis')?.value;
+                const sel = document.getElementById('f-kategori');
+                if (!sel) return;
+                const masukOpts = ['Penjualan', 'Lain-lain'];
+                const keluarOpts = [
+                    'Biaya Naskah',
+                    'Biaya Kertas',
+                    'Biaya Cetak',
+                    'ATK',
+                    'Akomodasi',
+                    'Paket/Pengiriman',
+                    'Lain-lain',
+                ];
+                const opts = (jenis === 'Keluar' ? keluarOpts : masukOpts)
+                    .map((o) => '<option>' + o + '</option>')
+                    .join('');
+                sel.innerHTML = opts;
+            }
+
+            let pjItemCounter = 0;
+            function addPenjualanItem() {
+                const c = document.getElementById('pj-items');
+                if (!c) return;
+                const idx = pjItemCounter++;
+                const prOpts = produk
+                    .map(
+                        (p) =>
+                            '<option value="' +
+                            p.id +
+                            '" data-harga="' +
+                            p.hargaJual +
+                            '">' +
+                            p.judul +
+                            '</option>',
+                    )
+                    .join('');
+                const row = document.createElement('div');
+                row.className = 'flex gap-2 items-end';
+                row.id = 'pj-item-' + idx;
+                row.innerHTML =
+                    '<div class="flex-1"><select class="pj-produk w-full px-3 py-2 text-sm rounded-lg border border-bordercl bg-white" onchange="updatePenjualanItemHarga(this,' +
+                    idx +
+                    ')"><option value="">Pilih...</option>' +
+                    prOpts +
+                    '</select></div><div class="w-20"><input type="number" placeholder="Qty" class="pj-jumlah w-full px-3 py-2 text-sm rounded-lg border border-bordercl" onchange="updatePenjualanTotal()" oninput="updatePenjualanTotal()"></div><div class="w-28"><input type="number" placeholder="Harga" class="pj-harga w-full px-3 py-2 text-sm rounded-lg border border-bordercl" onchange="updatePenjualanTotal()" oninput="updatePenjualanTotal()"></div><button type="button" onclick="removePenjualanItem(' +
+                    idx +
+                    ')" class="w-8 h-8 rounded-lg bg-danger/10 text-danger flex items-center justify-center text-sm hover:bg-danger/20"><i class="fa-solid fa-xmark"></i></button>';
+                c.appendChild(row);
+                updatePenjualanTotal();
+            }
+            function removePenjualanItem(idx) {
+                const r = document.getElementById('pj-item-' + idx);
+                if (r) r.remove();
+                updatePenjualanTotal();
+            }
+            function updatePenjualanItemHarga(sel, idx) {
+                const harga = sel.options[sel.selectedIndex].getAttribute('data-harga') || 0;
+                const row = document.getElementById('pj-item-' + idx);
+                if (row) row.querySelector('.pj-harga').value = harga;
+                updatePenjualanTotal();
+            }
+            function updatePenjualanTotal() {
+                let total = 0;
+                document.querySelectorAll('#pj-items .pj-jumlah').forEach((el, i) => {
+                    const h = Number(
+                        document.querySelectorAll('#pj-items .pj-harga')[i]?.value || 0,
+                    );
+                    total += Number(el.value || 0) * h;
+                });
+                const te = document.getElementById('pj-total');
+                if (te) te.textContent = fmtRp(total);
+            }
+
+            let rtItemCounter = 0;
+            function addReturItem() {
+                const c = document.getElementById('rt-items');
+                if (!c) return;
+                const idx = rtItemCounter++;
+                const prOpts = produk
+                    .map((p) => '<option value="' + p.id + '">' + p.judul + '</option>')
+                    .join('');
+                const row = document.createElement('div');
+                row.className = 'flex gap-2 items-end';
+                row.id = 'rt-item-' + idx;
+                row.innerHTML =
+                    '<div class="flex-1"><select class="rt-produk w-full px-3 py-2 text-sm rounded-lg border border-bordercl bg-white"><option value="">Pilih...</option>' +
+                    prOpts +
+                    '</select></div><div class="w-16"><input type="number" placeholder="Qty" class="rt-jumlah w-full px-3 py-2 text-sm rounded-lg border border-bordercl" onchange="updateReturTotal()" oninput="updateReturTotal()"></div><div class="w-24"><input type="number" placeholder="Harga" class="rt-harga w-full px-3 py-2 text-sm rounded-lg border border-bordercl" onchange="updateReturTotal()" oninput="updateReturTotal()"></div><div class="flex-1"><input type="text" placeholder="Alasan" class="rt-alasan w-full px-3 py-2 text-sm rounded-lg border border-bordercl"></div><button type="button" onclick="removeReturItem(' +
+                    idx +
+                    ')" class="w-8 h-8 rounded-lg bg-danger/10 text-danger flex items-center justify-center text-sm hover:bg-danger/20"><i class="fa-solid fa-xmark"></i></button>';
+                c.appendChild(row);
+                updateReturTotal();
+            }
+            function removeReturItem(idx) {
+                const r = document.getElementById('rt-item-' + idx);
+                if (r) r.remove();
+                updateReturTotal();
+            }
+            function updateReturTotal() {
+                let total = 0;
+                document.querySelectorAll('#rt-items .rt-jumlah').forEach((el, i) => {
+                    const h = Number(
+                        document.querySelectorAll('#rt-items .rt-harga')[i]?.value || 0,
+                    );
+                    total += Number(el.value || 0) * h;
+                });
+                const te = document.getElementById('rt-total');
+                if (te) te.textContent = fmtRp(total);
+            }
+
+            function updateKuitansiTotal() {
+                const cbs = document.querySelectorAll('.kj-nota-cb');
+                let total = 0,
+                    count = 0;
+                cbs.forEach((cb) => {
+                    if (cb.checked) {
+                        total += Number(cb.dataset.total);
+                        count++;
+                    }
+                });
+                const tc = document.getElementById('kj-count');
+                const tt = document.getElementById('kj-tagihan');
+                if (tc) tc.textContent = count;
+                if (tt) tt.textContent = fmtRp(total);
+            }
+
+            function deleteData(type, id) {
+                if (type === 'produk') {
+                    produk = produk.filter((p) => p.id !== id);
+                    showToast('Produk berhasil dihapus!');
+                } else if (type === 'user') {
+                    USERS = USERS.filter((u) => u.id !== id);
+                    showToast('User berhasil dihapus!');
+                } else if (type === 'naskah') {
+                    naskah = naskah.filter((n) => n.id !== id);
+                    showToast('Naskah berhasil dihapus!');
+                } else if (type === 'relasi') {
+                    relasi = relasi.filter((r) => r.id !== id);
+                    showToast('Relasi berhasil dihapus!');
+                } else if (type === 'kas') {
+                    kas = kas.filter((k) => k.id !== id);
+                    showToast('Transaksi kas berhasil dihapus!');
+                }
+                renderCurrentPage();
+            }
+
+            function editData(type, id) {
+                if (type === 'produk') {
+                    const p = produk.find((x) => x.id === id);
+                    if (!p) return;
+                    openModal('produk');
+                    setTimeout(() => {
+                        document.querySelector('#modal-container h3').textContent = 'Edit Produk';
+                        document.getElementById('f-judul').value = p.judul;
+                        document.getElementById('f-penulis').value = p.penulis;
+                        document.getElementById('f-kategori').value = p.kategori;
+                        document.getElementById('f-isbn').value = p.isbn || '';
+                        document.getElementById('f-harga').value = p.hargaJual;
+                        document.getElementById('f-stok').value = p.stok;
+                        document.getElementById('f-stokMinimum').value = p.stokMinimum || 50;
+                        if (p.naskahId) document.getElementById('f-naskahId').value = p.naskahId;
+                        document.querySelector('#modal-container form').onsubmit = function (e) {
+                            e.preventDefault();
+                            p.judul = v('f-judul');
+                            p.penulis = v('f-penulis');
+                            p.kategori = v('f-kategori');
+                            p.isbn = v('f-isbn') || null;
+                            p.hargaJual = Number(v('f-harga'));
+                            p.stok = Number(v('f-stok'));
+                            p.stokMinimum = Number(v('f-stokMinimum') || 50);
+                            p.naskahId = v('f-naskahId') ? Number(v('f-naskahId')) : null;
+                            closeModal();
+                            renderCurrentPage();
+                            showToast('Produk berhasil diupdate!');
+                        };
+                    }, 100);
+                } else if (type === 'user') {
+                    const u = USERS.find((x) => x.id === id);
+                    if (!u) return;
+                    openModal('user');
+                    setTimeout(() => {
+                        document.querySelector('#modal-container h3').textContent = 'Edit User';
+                        document.getElementById('f-nama').value = u.nama;
+                        document.getElementById('f-email').value = u.email;
+                        document.getElementById('f-role').value = u.role;
+                        document.querySelector('#modal-container form').onsubmit = function (e) {
+                            e.preventDefault();
+                            u.nama = v('f-nama');
+                            u.email = v('f-email');
+                            u.role = v('f-role');
+                            const roleLabels = {
+                                owner: 'Owner / Direktur',
+                                'admin-produksi': 'Admin Produksi/Naskah',
+                                'admin-gudang': 'Admin Gudang/Stok',
+                                'admin-penjualan': 'Admin Penjualan/Distribusi',
+                                keuangan: 'Keuangan/Kasir',
+                            };
+                            u.label = roleLabels[u.role] || u.role;
+                            if (v('f-pass')) u.pass = v('f-pass');
+                            closeModal();
+                            renderCurrentPage();
+                            showToast('User berhasil diupdate!');
+                        };
+                    }, 100);
+                } else if (type === 'naskah') {
+                    const n = naskah.find((x) => x.id === id);
+                    if (!n) return;
+                    openModal('naskah');
+                    setTimeout(() => {
+                        document.querySelector('#modal-container h3').textContent = 'Edit Naskah';
+                        document.getElementById('f-judul').value = n.judul;
+                        document.getElementById('f-penulis').value = n.penulis;
+                        document.getElementById('f-biayaNaskah').value = n.biayaNaskah;
+                        document.getElementById('f-biayaKertas').value = n.biayaKertas;
+                        document.getElementById('f-biayaCetak').value = n.biayaCetak;
+                        document.getElementById('f-status').value = n.status;
+                        document.getElementById('f-tanggalMasuk').value = n.tanggalMasuk;
+                        document.querySelector('#modal-container form').onsubmit = function (e) {
+                            e.preventDefault();
+                            n.judul = v('f-judul');
+                            n.penulis = v('f-penulis');
+                            n.biayaNaskah = Number(v('f-biayaNaskah'));
+                            n.biayaKertas = Number(v('f-biayaKertas'));
+                            n.biayaCetak = Number(v('f-biayaCetak'));
+                            n.status = v('f-status');
+                            n.tanggalMasuk = v('f-tanggalMasuk');
+                            closeModal();
+                            renderCurrentPage();
+                            showToast('Naskah berhasil diupdate!');
+                        };
+                    }, 100);
+                }
+            }
+
+            function renderCurrentPage() {
+                const mc = document.getElementById('main-content');
+                if (currentPage === 'dashboard') renderDashboard(mc);
+                else if (currentPage === 'produk') renderProduk(mc);
+                else if (currentPage === 'naskah') renderNaskah(mc);
+                else if (currentPage === 'relasi') renderRelasi(mc);
+                else if (currentPage === 'barangdatang') renderBarangDatang(mc);
+                else if (currentPage === 'penjualan') renderPenjualan(mc);
+                else if (currentPage === 'retur') renderRetur(mc);
+                else if (currentPage === 'kuitansi') renderKuitansi(mc);
+                else if (currentPage === 'stok') renderStok(mc);
+                else if (currentPage === 'kas') renderKas(mc);
+                else if (currentPage === 'laporan') renderLaporan(mc);
+                else if (currentPage === 'users') renderUsers(mc);
+            }
+
+            function saveData(type, e) {
+                e.preventDefault();
+                const inputCls =
+                    'w-full px-4 py-2.5 text-sm rounded-xl border border-bordercl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none';
+                const labelCls = 'text-xs font-bold text-muted uppercase tracking-wider mb-1 block';
+
+                switch (type) {
+                    case 'produk':
+                        const prNaskahId = v('f-naskahId') ? Number(v('f-naskahId')) : null;
+                        produk.push({
+                            id: nextId(produk),
+                            judul: v('f-judul'),
+                            penulis: v('f-penulis'),
+                            kategori: v('f-kategori'),
+                            isbn: v('f-isbn') || null,
+                            hargaJual: Number(v('f-harga')),
+                            stok: Number(v('f-stok')),
+                            stokMinimum: Number(v('f-stokMinimum') || 50),
+                            naskahId: prNaskahId,
+                        });
+                        showToast('Produk baru berhasil ditambahkan!');
+                        break;
+                    case 'naskah':
+                        naskah.push({
+                            id: nextId(naskah),
+                            judul: v('f-judul'),
+                            penulis: v('f-penulis'),
+                            biayaNaskah: Number(v('f-biayaNaskah')),
+                            biayaKertas: Number(v('f-biayaKertas')),
+                            biayaCetak: Number(v('f-biayaCetak')),
+                            status: v('f-status'),
+                            tanggalMasuk: v('f-tanggalMasuk'),
+                        });
+                        showToast('Naskah baru berhasil ditambahkan!');
+                        break;
+                    case 'relasi':
+                        relasi.push({
+                            id: nextId(relasi),
+                            nama: v('f-nama'),
+                            tipe: v('f-tipe'),
+                            kontak: v('f-kontak'),
+                            telp: v('f-telp'),
+                            alamat: v('f-alamat'),
+                            status: v('f-status'),
+                            catatan: v('f-catatan'),
+                        });
+                        showToast('Relasi baru berhasil ditambahkan!');
+                        break;
+                    case 'barangdatang':
+                        const bdProdukId = Number(v('f-produkId'));
+                        const bdJumlah = Number(v('f-jumlah'));
+                        barangDatang.push({
+                            id: nextId(barangDatang),
+                            tanggal: v('f-tanggal'),
+                            produkId: bdProdukId,
+                            jumlah: bdJumlah,
+                            sumber: v('f-sumber'),
+                            catatan: v('f-catatan'),
+                        });
+                        const prStok = produk.find((p) => p.id === bdProdukId);
+                        if (prStok) prStok.stok += bdJumlah;
+                        showToast(
+                            'Barang datang tercatat! Stok ' +
+                                (prStok ? prStok.judul : '') +
+                                ' bertambah ' +
+                                bdJumlah +
+                                ' eks.',
+                        );
+                        break;
+                    case 'penjualan':
+                        const pjRelasiId = Number(v('f-relasiId'));
+                        const pjItems = [];
+                        document.querySelectorAll('#pj-items > div').forEach((row) => {
+                            const prId = Number(row.querySelector('.pj-produk').value);
+                            const jml = Number(row.querySelector('.pj-jumlah').value);
+                            const hrg = Number(row.querySelector('.pj-harga').value);
+                            if (prId && jml > 0)
+                                pjItems.push({ produkId: prId, jumlah: jml, harga: hrg });
+                        });
+                        if (pjItems.length === 0) {
+                            showToast('Minimal harus ada 1 item!', 'error');
+                            return;
+                        }
+                        const pjTotal = pjItems.reduce((s, i) => s + i.jumlah * i.harga, 0);
+                        penjualan.push({
+                            id: nextId(penjualan),
+                            noNota: 'NJ-2026-' + String(nextId(penjualan)).padStart(3, '0'),
+                            tanggal: v('f-tanggal'),
+                            relasiId: pjRelasiId,
+                            items: pjItems,
+                            total: pjTotal,
+                            status: 'Belum Bayar',
+                        });
+                        pjItems.forEach((i) => {
+                            const pjPr = produk.find((p) => p.id === i.produkId);
+                            if (pjPr) pjPr.stok = Math.max(0, pjPr.stok - i.jumlah);
+                        });
+                        showToast(
+                            'Nota jual berhasil dibuat! ' +
+                                pjItems.length +
+                                ' item, total ' +
+                                fmtRp(pjTotal),
+                        );
+                        break;
+                    case 'retur':
+                        const rtNotaJualId = Number(v('f-notaJualId'));
+                        const rtRelasi = getNotaJual(rtNotaJualId);
+                        const rtItems = [];
+                        document.querySelectorAll('#rt-items > div').forEach((row) => {
+                            const prId = Number(row.querySelector('.rt-produk').value);
+                            const jml = Number(row.querySelector('.rt-jumlah').value);
+                            const hrg = Number(row.querySelector('.rt-harga').value);
+                            const alasan = row.querySelector('.rt-alasan').value;
+                            if (prId && jml > 0)
+                                rtItems.push({
+                                    produkId: prId,
+                                    jumlah: jml,
+                                    harga: hrg,
+                                    alasan: alasan,
+                                });
+                        });
+                        if (rtItems.length === 0) {
+                            showToast('Minimal harus ada 1 item retur!', 'error');
+                            return;
+                        }
+                        const rtTotal = rtItems.reduce((s, i) => s + i.jumlah * i.harga, 0);
+                        retur.push({
+                            id: nextId(retur),
+                            noRetur: 'NR-2026-' + String(nextId(retur)).padStart(3, '0'),
+                            tanggal: v('f-tanggal'),
+                            notaJualId: rtNotaJualId,
+                            relasiId: rtRelasi.relasiId,
+                            items: rtItems,
+                            total: rtTotal,
+                            status: 'Diterima',
+                        });
+                        rtItems.forEach((i) => {
+                            const rtPr = produk.find((p) => p.id === i.produkId);
+                            if (rtPr) rtPr.stok += i.jumlah;
+                        });
+                        showToast(
+                            'Retur tercatat! ' + rtItems.length + ' item, total ' + fmtRp(rtTotal),
+                        );
+                        break;
+                    case 'kuitansi':
+                        const kjNotas = [];
+                        document.querySelectorAll('.kj-nota-cb:checked').forEach((cb) => {
+                            kjNotas.push(Number(cb.value));
+                        });
+                        if (kjNotas.length === 0) {
+                            showToast('Pilih minimal 1 nota jual!', 'error');
+                            return;
+                        }
+                        const kjBayar = Number(v('f-jumlahBayar'));
+                        const kjTotalTagihan = kjNotas.reduce(
+                            (s, nId) => s + getNotaJual(nId).total,
+                            0,
+                        );
+                        const kjSisa = Math.max(0, kjTotalTagihan - kjBayar);
+                        kuitansi.push({
+                            id: nextId(kuitansi),
+                            noKuitansi: 'KW-2026-' + String(nextId(kuitansi)).padStart(3, '0'),
+                            tanggal: v('f-tanggal'),
+                            notaJualIds: kjNotas,
+                            relasiId: getNotaJual(kjNotas[0]).relasiId,
+                            jumlahBayar: kjBayar,
+                            metode: v('f-metode'),
+                            sisaTagihan: kjSisa,
+                            keterangan: v('f-keterangan'),
+                        });
+                        kjNotas.forEach((nId) => {
+                            const n = getNotaJual(nId);
+                            if (n) {
+                                const totalBayarNota = kjBayar / kjNotas.length;
+                                const sisaNota = Math.max(0, n.total - totalBayarNota);
+                                if (sisaNota === 0) n.status = 'Lunas';
+                                else n.status = 'Sebagian';
+                            }
+                        });
+                        showToast('Kuitansi berhasil dibuat! ' + kjNotas.length + ' nota jual.');
+                        break;
+                    case 'kas':
+                        kas.push({
+                            id: nextId(kas),
+                            tanggal: v('f-tanggal'),
+                            jenis: v('f-jenis'),
+                            kategori: v('f-kategori'),
+                            jumlah: Number(v('f-jumlah')),
+                            keterangan: v('f-keterangan'),
+                        });
+                        showToast('Transaksi kas tercatat!');
+                        break;
+                    case 'user':
+                        const roleLabels = {
+                            owner: 'Owner / Direktur',
+                            'admin-produksi': 'Admin Produksi/Naskah',
+                            'admin-gudang': 'Admin Gudang/Stok',
+                            'admin-penjualan': 'Admin Penjualan/Distribusi',
+                            keuangan: 'Keuangan/Kasir',
+                        };
+                        const newRole = v('f-role');
+                        USERS.push({
+                            id: nextId(USERS),
+                            nama: v('f-nama'),
+                            email: v('f-email'),
+                            pass: v('f-pass') || 'password123',
+                            role: newRole,
+                            label: roleLabels[newRole] || newRole,
+                        });
+                        showToast('User baru berhasil ditambahkan!');
+                        break;
+                }
+                closeModal();
+                renderTab(activeTab);
+            }
+        </script>
+    </body>
+</html>

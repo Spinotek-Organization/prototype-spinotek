@@ -5,6 +5,19 @@
  */
 window.PROJECTS_DATA = [
   {
+    "slug": "penerbitan-distributor-buku",
+    "name": "Penerbitan & Distributor Buku",
+    "description": "Sistem Penerbitan, Distribusi & Keuangan Buku — Manajemen naskah, produksi, produk, relasi, barang datang, penjualan, retur, kuitansi, stok, kas, laporan, dan user.",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": ["html", "css", "javascript", "tailwindcss", "chart.js"],
+    "icon": "📚",
+    "demo_url": "penerbitan-distributor-buku/index.html",
+    "repo_url": null,
+    "image": "penerbitan-distributor-buku/card.png",
+    "added_at": "2026-09-22"
+  },
+  {
     "slug": "pandora-wedding-planner",
     "name": "Pandora Wedding Planner",
     "description": "Pandora Wedding Planner adalah platform yang membantu pasangan merencanakan pernikahan mereka.",
