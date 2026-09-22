@@ -2936,18 +2936,18 @@
 
             function renderCurrentPage() {
                 const mc = document.getElementById('main-content');
-                if (currentPage === 'dashboard') renderDashboard(mc);
-                else if (currentPage === 'produk') renderProduk(mc);
-                else if (currentPage === 'naskah') renderNaskah(mc);
-                else if (currentPage === 'relasi') renderRelasi(mc);
-                else if (currentPage === 'barangdatang') renderBarangDatang(mc);
-                else if (currentPage === 'penjualan') renderPenjualan(mc);
-                else if (currentPage === 'retur') renderRetur(mc);
-                else if (currentPage === 'kuitansi') renderKuitansi(mc);
-                else if (currentPage === 'stok') renderStok(mc);
-                else if (currentPage === 'kas') renderKas(mc);
-                else if (currentPage === 'laporan') renderLaporan(mc);
-                else if (currentPage === 'users') renderUsers(mc);
+                if (activeTab === 'dashboard') renderDashboard(mc);
+                else if (activeTab === 'produk') renderProduk(mc);
+                else if (activeTab === 'naskah') renderNaskah(mc);
+                else if (activeTab === 'relasi') renderRelasi(mc);
+                else if (activeTab === 'barangdatang') renderBarangDatang(mc);
+                else if (activeTab === 'penjualan') renderPenjualan(mc);
+                else if (activeTab === 'retur') renderRetur(mc);
+                else if (activeTab === 'kuitansi') renderKuitansi(mc);
+                else if (activeTab === 'stok') renderStok(mc);
+                else if (activeTab === 'kas') renderKas(mc);
+                else if (activeTab === 'laporan') renderLaporan(mc);
+                else if (activeTab === 'users') renderUsers(mc);
             }
 
             function saveData(type, e) {
