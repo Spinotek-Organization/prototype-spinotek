@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agang Motor - Showroom Jual Beli & Tukar Tambah Motor Bekas Makassar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf2f2',
+                            100: '#fde8e8',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            900: '#7f1d1d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Animasi Gelombang / Radar Pulse untuk Pin Peta */
+        @keyframes ripple {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+            70% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
+        }
+        .ping-wave-1 {
+            animation: ripple 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        }
+        .ping-wave-2 {
+            animation: ripple 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Bar Promo -->
+    <div class="bg-gradient-to-r from-red-700 via-red-600 to-amber-600 text-white text-xs md:text-sm font-medium py-2 px-4 shadow-inner">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1">
+            <div class="flex items-center gap-2">
+                <span class="bg-amber-400 text-slate-900 text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse">INFO RESMI</span>
+                <span>Jual, Beli, & Tukar Tambah Motor Bekas Cash / Kredit</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://wa.me/6281342992988" target="_blank" class="hover:underline flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> +62 813-4299-2988</a>
+                <span class="hidden md:inline">|</span>
+                <span class="hidden md:flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> Jl. Veteran Utara No. 235, Makassar</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo Brand (Menggunakan Logo Agang Motor) -->
+            <a href="#beranda" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-200 shadow-md group-hover:scale-105 transition">
+                    <img src="https://instagram.fbdj4-1.fna.fbcdn.net/v/t51.2885-19/249698127_166265019055411_5416301180269022271_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=110&_nc_map=urlgen_bucketless&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4zNzUuQzMifQ%3D%3D&_nc_ohc=a0ixTqyjskwQ7kNvwEFfJKS&_nc_oc=AdqzGnY_gLdvartFHYuvMZyJons0WhGDimh-mfYWAGxVSi2kgeS2RjwJZHiWjpFJRBs&_nc_zt=24&_nc_ht=instagram.fbdj4-1.fna&_nc_ss=7baaf&oh=00_AQNY13vXZsmTsX6rORKLL_Q5jVK9IMmUXmgJ76JbwsCeEQ&oe=6AC311B2" alt="Logo Agang Motor" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">AGANG <span class="text-red-600">MOTOR</span></span>
+                    <span class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold block">Makassar</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200">
+                <a href="#beranda" class="px-4 py-2 text-sm font-semibold text-red-600 bg-white rounded-full shadow-sm transition">Beranda</a>
+                <a href="#katalog" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-white/50 rounded-full transition">Katalog Motor</a>
+                <a href="#keunggulan" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-white/50 rounded-full transition">Layanan</a>
+                <a href="#lokasi" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-white/50 rounded-full transition">Lokasi Showroom</a>
+                <a href="#kontak" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-white/50 rounded-full transition">Kontak</a>
+            </nav>
+
+            <!-- Action Buttons Desktop -->
+            <div class="hidden lg:flex items-center gap-3">
+                <a href="https://instagram.com/agang_motor" target="_blank" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition" title="Instagram Agang Motor">
+                    <i class="fa-brands fa-instagram text-lg"></i>
+                </a>
+                <a href="https://wa.me/6281342992988?text=Halo%20Agang%20Motor,%20saya%20tertarik%20ingin%20bertanya%20mengenai%20unit%20motor." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-5 py-2.5 rounded-full text-sm shadow-md hover:shadow-lg transition flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button id="menu-btn" class="lg:hidden text-slate-700 hover:text-red-600 focus:outline-none p-2 rounded-lg hover:bg-slate-100 transition" aria-label="Menu Toggle">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3 shadow-xl transition-all">
+            <a href="#beranda" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-red-50 hover:text-red-600">Beranda</a>
+            <a href="#katalog" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-red-50 hover:text-red-600">Katalog Motor</a>
+            <a href="#keunggulan" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-red-50 hover:text-red-600">Layanan</a>
+            <a href="#lokasi" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-red-50 hover:text-red-600">Lokasi Showroom</a>
+            <a href="#kontak" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-red-50 hover:text-red-600">Kontak</a>
+            <div class="pt-2 flex flex-col gap-2">
+                <a href="https://wa.me/6281342992988" target="_blank" class="w-full bg-emerald-600 text-white text-center py-3 rounded-xl font-medium shadow flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> WhatsApp (+62 813-4299-2988)
+                </a>
+                <a href="https://instagram.com/agang_motor" target="_blank" class="w-full border border-slate-300 text-slate-700 text-center py-3 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-slate-50">
+                    <i class="fa-brands fa-instagram text-xl text-pink-600"></i> Instagram @agang_motor
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="relative bg-slate-900 text-white overflow-hidden py-16 md:py-24">
+        <div class="absolute inset-0 opacity-40 bg-cover bg-center mix-blend-overlay" style="background-image: url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=1600')"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-transparent"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 bg-red-600/30 border border-red-500/40 px-3.5 py-1.5 rounded-full text-xs font-semibold text-red-300">
+                    <i class="fa-solid fa-location-dot"></i> Jl. Veteran Utara No. 235, Makassar
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                    Pusat <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-400">Jual Beli & Tukar Tambah</span> Motor Bekas Makassar
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg max-w-2xl leading-relaxed">
+                    Melayani transaksi <strong class="text-white font-semibold">cash dan kredit</strong> dengan pilihan motor bekas berkualitas tinggi, surat-surat lengkap terjamin aman, serta proses cepat di Makassar.
+                </p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
+                    <div class="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                        <span class="block text-2xl font-extrabold text-amber-400">Cash/Kredit</span>
+                        <span class="text-xs text-slate-400">Fleksibel & Mudah</span>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                        <span class="block text-2xl font-extrabold text-red-400">Tukar Tambah</span>
+                        <span class="text-xs text-slate-400">Terima Motor Lama</span>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm col-span-2 sm:col-span-1">
+                        <span class="block text-2xl font-extrabold text-emerald-400">100%</span>
+                        <span class="text-xs text-slate-400">Surat & Dokumen Aman</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <a href="#katalog" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-red-600/30 text-center transition flex items-center justify-center gap-2 group">
+                        Lihat Katalog Motor <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </a>
+                    <a href="https://instagram.com/agang_motor" target="_blank" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-8 py-4 rounded-xl text-center backdrop-blur-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-instagram text-pink-400 text-xl"></i> Cek Update IG @agang_motor
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Featured Unit Card (Right Side) -->
+            <div class="lg:col-span-5">
+                <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 shadow-2xl backdrop-blur-md relative overflow-hidden group">
+                    <div class="absolute -top-12 -right-12 w-40 h-40 bg-red-600/20 rounded-full blur-2xl group-hover:bg-red-600/30 transition"></div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xs font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full border border-amber-500/30">🔥 Unit Pilihan Pekan Ini</span>
+                        <span class="text-xs text-slate-400">Stok Terbatas</span>
+                    </div>
+
+                    <div class="rounded-2xl overflow-hidden mb-5 bg-slate-900 border border-slate-700 h-56 relative">
+                        <img src="https://imgcdnblog.carmudi.com.ph/wp-content/uploads/2021/08/06180353/Yamaha-NMax-Connected-5.jpeg" alt="Yamaha NMAX 155" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute bottom-3 left-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-lg text-xs font-medium text-white border border-white/10">
+                            Matic • 155cc • 2023
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white">Yamaha NMAX 155 Connected ABS</h3>
+                    <p class="text-xs text-slate-400 mt-1">Kondisi mulus siap pakai, bisa tukar tambah dengan motor lama Anda.</p>
+
+                    <div class="mt-4 pt-4 border-t border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase text-slate-400 block font-semibold">Harga Cash / Kredit</span>
+                            <span class="text-xl font-extrabold text-emerald-400">Rp 27.500.000</span>
+                        </div>
+                        <a href="https://wa.me/6281342992988?text=Halo%20Agang%20Motor,%20saya%20mau%20tanya%20Yamaha%20NMAX%20155." target="_blank" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition shadow">
+                            Booking Unit <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Layanan / Keunggulan -->
+    <section id="keunggulan" class="py-16 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-red-600 font-bold uppercase text-xs tracking-widest bg-red-50 px-3.5 py-1.5 rounded-full border border-red-200">LAYANAN KAMI</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Jual, Beli, & Tukar Tambah Motor Bekas</h2>
+                <p class="text-slate-600 mt-2 text-sm sm:text-base">Solusi terbaik untuk kebutuhan kendaraan roda dua Anda di Makassar.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-50 hover:bg-white border border-slate-200 hover:border-red-200 p-6 rounded-2xl shadow-sm hover:shadow-xl transition group">
+                    <div class="w-12 h-12 bg-red-100 group-hover:bg-red-600 text-red-600 group-hover:text-white rounded-xl flex items-center justify-center text-xl font-bold transition mb-4 shadow-sm">
+                        <i class="fa-solid fa-motorcycle"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Jual Beli Motor Bekas</h3>
+                    <p class="text-slate-600 text-sm mt-2 leading-relaxed">Menyediakan berbagai pilihan motor bekas berkualitas yang siap pakai dengan harga bersaing.</p>
+                </div>
+
+                <div class="bg-slate-50 hover:bg-white border border-slate-200 hover:border-red-200 p-6 rounded-2xl shadow-sm hover:shadow-xl transition group">
+                    <div class="w-12 h-12 bg-red-100 group-hover:bg-red-600 text-red-600 group-hover:text-white rounded-xl flex items-center justify-center text-xl font-bold transition mb-4 shadow-sm">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Tukar Tambah (Trade-in)</h3>
+                    <p class="text-slate-600 text-sm mt-2 leading-relaxed">Punya motor lama? Tukarkan dengan unit impian Anda di showroom kami dengan penaksiran harga terbaik.</p>
+                </div>
+
+                <div class="bg-slate-50 hover:bg-white border border-slate-200 hover:border-red-200 p-6 rounded-2xl shadow-sm hover:shadow-xl transition group">
+                    <div class="w-12 h-12 bg-red-100 group-hover:bg-red-600 text-red-600 group-hover:text-white rounded-xl flex items-center justify-center text-xl font-bold transition mb-4 shadow-sm">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Cash & Kredit</h3>
+                    <p class="text-slate-600 text-sm mt-2 leading-relaxed">Melayani pembelian secara tunai maupun kredit dengan proses mudah dan cicilan yang ringan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Katalog Motor -->
+    <section id="katalog" class="py-20 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span class="text-red-600 font-bold uppercase text-xs tracking-widest bg-red-50 px-3 py-1 rounded-full border border-red-200">KATALOG SHOWROOM</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Pilihan Unit Motor</h2>
+                    <p class="text-slate-600 text-sm mt-1">Cek ketersediaan unit motor matic, sport, dan bebek terbaru kami.</p>
+                </div>
+
+                <!-- Filter Categories Buttons -->
+                <div class="flex flex-wrap gap-2" id="filter-container">
+                    <button onclick="filterMotor('all')" class="filter-btn active-filter px-4 py-2 text-xs font-bold uppercase rounded-xl bg-red-600 text-white shadow transition">Semua Unit</button>
+                    <button onclick="filterMotor('Matic')" class="filter-btn px-4 py-2 text-xs font-bold uppercase rounded-xl bg-white text-slate-700 hover:bg-slate-200 border border-slate-300 transition">Matic</button>
+                    <button onclick="filterMotor('Sport')" class="filter-btn px-4 py-2 text-xs font-bold uppercase rounded-xl bg-white text-slate-700 hover:bg-slate-200 border border-slate-300 transition">Sport</button>
+                    <button onclick="filterMotor('Bebek')" class="filter-btn px-4 py-2 text-xs font-bold uppercase rounded-xl bg-white text-slate-700 hover:bg-slate-200 border border-slate-300 transition">Bebek</button>
+                </div>
+            </div>
+
+            <!-- Motor Grid List -->
+            <div id="motor-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Item 1: Yamaha NMAX 155 ABS -->
+                <div class="motor-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col" data-category="Matic">
+                    <div class="relative h-52 bg-slate-200 overflow-hidden">
+                        <img src="https://imgcdnblog.carmudi.com.ph/wp-content/uploads/2021/08/06180353/Yamaha-NMax-Connected-5.jpeg" alt="Yamaha NMAX 155 ABS" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">Ready Stock</span>
+                        <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-1 rounded-md">Matic</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-slate-900">Yamaha NMAX 155 ABS</h3>
+                                <span class="text-xs text-slate-500 font-medium">Tahun 2023</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-slate-600 mt-2">
+                                <span><i class="fa-solid fa-gauge text-red-500 mr-1"></i> 12.000 KM</span>
+                                <span><i class="fa-solid fa-gears text-red-500 mr-1"></i> ABS</span>
+                                <span><i class="fa-solid fa-gas-pump text-red-500 mr-1"></i> Injeksi</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-semibold text-slate-400 block">Harga Tunai / Kredit</span>
+                                <span class="text-base font-extrabold text-red-600">Rp 27.500.000</span>
+                            </div>
+                            <a href="https://wa.me/6281342992988?text=Halo%20Agang%20Motor,%20saya%20ingin%20pesan%20Yamaha%20NMAX%20155." target="_blank" class="bg-slate-900 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow">
+                                <i class="fa-brands fa-whatsapp mr-1"></i> Pesan Unit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2: Honda PCX 160 CBS -->
+                <div class="motor-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col" data-category="Matic">
+                    <div class="relative h-52 bg-slate-200 overflow-hidden">
+                        <img src="https://cdn-jk01.kabaroto.com/media/1d/df/37/1ddf37a7c25910e71dc0b154559472ab.jpg" alt="Honda PCX 160 CBS" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-amber-500 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">Dibooking</span>
+                        <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-1 rounded-md">Matic</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-slate-900">Honda PCX 160 CBS</h3>
+                                <span class="text-xs text-slate-500 font-medium">Tahun 2022</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-slate-600 mt-2">
+                                <span><i class="fa-solid fa-gauge text-red-500 mr-1"></i> 18.000 KM</span>
+                                <span><i class="fa-solid fa-gears text-red-500 mr-1"></i> Matic</span>
+                                <span><i class="fa-solid fa-gas-pump text-red-500 mr-1"></i> 160cc</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-semibold text-slate-400 block">Harga Tunai / Kredit</span>
+                                <span class="text-base font-extrabold text-red-600">Rp 26.800.000</span>
+                            </div>
+                            <a href="https://wa.me/6281342992988?text=Halo%20Agang%20Motor,%20saya%20ingin%20tanya%20Honda%20PCX%20160." target="_blank" class="bg-slate-900 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow">
+                                <i class="fa-brands fa-whatsapp mr-1"></i> Tanya Unit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3: Yamaha R15 V4 Connected -->
+                <div class="motor-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col" data-category="Sport">
+                    <div class="relative h-52 bg-slate-200 overflow-hidden">
+                        <img src="https://imgcdnblog.carmudi.com.ph/wp-content/uploads/2022/02/03111945/Yamaha-R15M-test-ride-6.jpg" alt="Yamaha R15 V4 Connected" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">Ready Stock</span>
+                        <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-1 rounded-md">Sport</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-slate-900">Yamaha R15 V4 Connected</h3>
+                                <span class="text-xs text-slate-500 font-medium">Tahun 2023</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-slate-600 mt-2">
+                                <span><i class="fa-solid fa-gauge text-red-500 mr-1"></i> 9.500 KM</span>
+                                <span><i class="fa-solid fa-gears text-red-500 mr-1"></i> Manual 6-Spd</span>
+                                <span><i class="fa-solid fa-gas-pump text-red-500 mr-1"></i> 155cc</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-semibold text-slate-400 block">Harga Tunai / Kredit</span>
+                                <span class="text-base font-extrabold text-red-600">Rp 32.500.000</span>
+                            </div>
+                            <a href="https://wa.me/6281342992988?text=Halo%20Agang%20Motor,%20saya%20ingin%20pesan%20Yamaha%20R15%20V4." target="_blank" class="bg-slate-900 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow">
+                                <i class="fa-brands fa-whatsapp mr-1"></i> Pesan Unit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4: Honda BeAT CBS ISS Deluxe -->
+                <div class="motor-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col" data-category="Matic">
+                    <div class="relative h-52 bg-slate-200 overflow-hidden">
+                        <img src="https://www.saibumi.com/img_artikel/90IMG-20220331-WA0109.jpg" alt="Honda BeAT CBS ISS Deluxe" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">Ready Stock</span>
+                        <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-1 rounded-md">Matic</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-slate-900">Honda BeAT CBS ISS Deluxe</h3>
+                                <span class="text-xs text-slate-500 font-medium">Tahun 2024</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-slate-600 mt-2">
+                                <span><i class="fa-solid fa-gauge text-red-500 mr-1"></i> 5.000 KM</span>
+                                <span><i class="fa-solid fa-gears text-red-500 mr-1"></i> ISS Matic</span>
+                                <span><i class="fa-solid fa-gas-pump text-red-500 mr-1"></i> 110cc</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-semibold text-slate-400 block">Harga Tunai / Kredit</span>
+                                <span class="text-base font-extrabold text-red-600">Rp 16.500.000</span>
+                            </div>
+                            <a href="https://wa.me/6281342992988?text=Halo%20Agang%20Motor,%20saya%20ingin%20pesan%20Honda%20BeAT%20Deluxe." target="_blank" class="bg-slate-900 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow">
+                                <i class="fa-brands fa-whatsapp mr-1"></i> Pesan Unit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 5: Kawasaki W175 SE Retro -->
+                <div class="motor-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col" data-category="Sport">
+                    <div class="relative h-52 bg-slate-200 overflow-hidden">
+                        <img src="https://imgcdn.oto.com/large/gallery/exterior/88/1274/kawasaki-w-175-slant-rear-view-full-image-146079.jpg" alt="Kawasaki W175 SE Retro" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-red-700 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">Terjual</span>
+                        <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-1 rounded-md">Sport</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-slate-900">Kawasaki W175 SE Retro</h3>
+                                <span class="text-xs text-slate-500 font-medium">Tahun 2021</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-slate-600 mt-2">
+                                <span><i class="fa-solid fa-gauge text-red-500 mr-1"></i> 14.000 KM</span>
+                                <span><i class="fa-solid fa-gears text-red-500 mr-1"></i> Manual 5-Spd</span>
+                                <span><i class="fa-solid fa-gas-pump text-red-500 mr-1"></i> 177cc</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-semibold text-slate-400 block">Harga Tunai / Kredit</span>
+                                <span class="text-base font-extrabold text-slate-400 line-through">Rp 23.000.000</span>
+                            </div>
+                            <span class="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-lg border border-red-200">Unit Terjual</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 6: Honda Supra GTR 150 -->
+                <div class="motor-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col" data-category="Bebek">
+                    <div class="relative h-52 bg-slate-200 overflow-hidden">
+                        <img src="https://harianbanyuasin.disway.id/upload/586be33dec2eb95c66cd728d70b5a7fe.jpg" alt="Honda Supra GTR 150" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">Ready Stock</span>
+                        <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-1 rounded-md">Bebek</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-slate-900">Honda Supra GTR 150</h3>
+                                <span class="text-xs text-slate-500 font-medium">Tahun 2022</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-slate-600 mt-2">
+                                <span><i class="fa-solid fa-gauge text-red-500 mr-1"></i> 21.000 KM</span>
+                                <span><i class="fa-solid fa-gears text-red-500 mr-1"></i> Manual 6-Spd</span>
+                                <span><i class="fa-solid fa-gas-pump text-red-500 mr-1"></i> 150cc</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-semibold text-slate-400 block">Harga Tunai / Kredit</span>
+                                <span class="text-base font-extrabold text-red-600">Rp 16.200.000</span>
+                            </div>
+                            <a href="https://wa.me/6281342992988?text=Halo%20Agang%20Motor,%20saya%20ingin%20pesan%20Supra%20GTR%20150." target="_blank" class="bg-slate-900 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow">
+                                <i class="fa-brands fa-whatsapp mr-1"></i> Pesan Unit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Lokasi Showroom (Posisinya pas di titik merah map + Animasi Gelombang Radar) -->
+    <section id="lokasi" class="py-20 bg-white border-t border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-red-600 font-bold uppercase text-xs tracking-widest bg-red-50 px-3 py-1 rounded-full border border-red-200">LOKASI SHOWROOM</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Jalan Veteran Utara No. 235, Makassar</h2>
+                <p class="text-slate-600 mt-2 text-sm sm:text-base">Kunjungi langsung showroom kami untuk melihat unit, test drive, atau konsultasi tukar tambah.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Local Map Image Area -->
+                <div class="lg:col-span-12 bg-slate-100 p-4 rounded-3xl border border-slate-300 shadow-inner relative overflow-hidden">
+                    <div class="relative rounded-2xl overflow-hidden h-[380px] sm:h-[450px] bg-slate-900 shadow-lg border border-slate-300">
+                        <img src="map-lokasi.png" alt="Peta Lokasi Showroom Agang Motor" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
+
+                        <!-- Main Marker Custom Pin Overlay (Disesuaikan ke titik merah aslinya di map) -->
+                        <div class="absolute top-[48%] left-[54%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer z-20" onclick="showLocationAlert('Agang Motor: Jl. Veteran Utara No. 235, Makassar.')">
+                            
+                            <!-- Bubble Tooltip Text -->
+                            <span class="absolute -top-11 bg-red-600 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-2xl border border-red-400 whitespace-nowrap animate-bounce flex items-center gap-1.5">
+                                <i class="fa-solid fa-store"></i> Agang Motor (Jl. Veteran Utara No. 235)
+                            </span>
+
+                            <!-- Icon Pin Utama dengan Animasi Gelombang / Ripple Effect -->
+                            <div class="relative flex items-center justify-center">
+                                <!-- Gelombang 1 -->
+                                <div class="absolute w-14 h-14 bg-red-500 rounded-full ping-wave-1"></div>
+                                <!-- Gelombang 2 -->
+                                <div class="absolute w-20 h-20 bg-red-500/50 rounded-full ping-wave-2"></div>
+
+                                <!-- Pin Icon Tengah -->
+                                <div class="relative w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center text-xl shadow-2xl border-4 border-white">
+                                    <i class="fa-solid fa-motorcycle"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Map Controls Footer -->
+                        <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-xl flex items-center justify-between shadow-lg border border-slate-200 z-10">
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block">Agang Motor Showroom Makassar</span>
+                                <span class="text-xs text-slate-500">Jual • Beli • Tukar Tambah Motor Bekas</span>
+                            </div>
+                            <a href="https://maps.google.com/?q=Jl.+Veteran+Utara+No.+235+Makassar" target="_blank" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg text-xs transition shadow flex items-center gap-1.5">
+                                <i class="fa-solid fa-diamond-turn-right"></i> Buka Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with Spinotek Logo Branding -->
+    <footer id="kontak" class="bg-slate-950 text-white pt-16 pb-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+            
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-700">
+                        <img src="https://instagram.fbdj4-1.fna.fbcdn.net/v/t51.2885-19/249698127_166265019055411_5416301180269022271_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=110&_nc_map=urlgen_bucketless&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4zNzUuQzMifQ%3D%3D&_nc_ohc=a0ixTqyjskwQ7kNvwEFfJKS&_nc_oc=AdqzGnY_gLdvartFHYuvMZyJons0WhGDimh-mfYWAGxVSi2kgeS2RjwJZHiWjpFJRBs&_nc_zt=24&_nc_ht=instagram.fbdj4-1.fna&_nc_ss=7baaf&oh=00_AQNY13vXZsmTsX6rORKLL_Q5jVK9IMmUXmgJ76JbwsCeEQ&oe=6AC311B2" alt="Agang Motor" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-xl font-extrabold tracking-tight">AGANG MOTOR</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Pusat jual beli dan tukar tambah motor bekas cash dan kredit terpercaya di Makassar. Surat-surat kendaraan dijamin lengkap dan aman.
+                </p>
+                <div class="flex items-center gap-3 pt-2">
+                    <a href="https://instagram.com/agang_motor" target="_blank" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-red-600 flex items-center justify-center text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://wa.me/6281342992988" target="_blank" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-emerald-600 flex items-center justify-center text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="tel:+6281342992988" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-blue-600 flex items-center justify-center text-white transition"><i class="fa-solid fa-phone"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-l-2 border-red-600 pl-3">Menu Navigasi</h4>
+                <ul class="space-y-2.5 text-sm text-slate-400">
+                    <li><a href="#beranda" class="hover:text-red-500 transition">Beranda Utama</a></li>
+                    <li><a href="#katalog" class="hover:text-red-500 transition">Katalog Motor Lengkap</a></li>
+                    <li><a href="#keunggulan" class="hover:text-red-500 transition">Layanan & Keunggulan</a></li>
+                    <li><a href="#lokasi" class="hover:text-red-500 transition">Lokasi Showroom</a></li>
+                    <li><a href="#kontak" class="hover:text-red-500 transition">Hubungi Kami</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-l-2 border-red-600 pl-3">Kategori Unit</h4>
+                <ul class="space-y-2.5 text-sm text-slate-400">
+                    <li><a href="#katalog" onclick="filterMotor('Matic')" class="hover:text-red-500 transition">Motor Matic</a></li>
+                    <li><a href="#katalog" onclick="filterMotor('Sport')" class="hover:text-red-500 transition">Motor Sport</a></li>
+                    <li><a href="#katalog" onclick="filterMotor('Bebek')" class="hover:text-red-500 transition">Motor Bebek</a></li>
+                    <li><a href="#katalog" onclick="filterMotor('all')" class="hover:text-red-500 transition">Promo Tukar Tambah</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-l-2 border-red-600 pl-3">Kontak & Alamat</h4>
+                <div class="space-y-3 text-sm text-slate-400">
+                    <p class="text-xs leading-relaxed text-slate-300">
+                        <i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Jl. Veteran Utara No. 235, Makassar
+                    </p>
+                    <p class="text-xs text-slate-300">
+                        <i class="fa-brands fa-whatsapp text-emerald-500 mr-1"></i> +62 813-4299-2988
+                    </p>
+                    <p class="text-xs text-amber-400 pt-1">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Jual Beli & Tukar Tambah Cash / Kredit
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-900 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 Agang Motor Makassar. All rights reserved.</p>
+            <p class="flex items-center gap-2 justify-center">
+                <span>Powered by</span>
+                <a href="https://spinotek.com" target="_blank" class="inline-flex items-center gap-1.5 bg-slate-900 px-3 py-1 rounded-lg border border-slate-800 hover:border-cyan-500 transition">
+                    <img src="https://spinotek.com/images/logo/spinotek-logo.png" alt="Spinotek Logo" class="h-4 w-auto object-contain">
+                    <span class="text-cyan-400 font-bold tracking-wider">SPINOTEK</span>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 transform transition-all text-center">
+            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xl mx-auto mb-4">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <h3 id="modal-title" class="text-lg font-bold text-slate-900">Informasi Lokasi</h3>
+            <p id="modal-desc" class="text-xs text-slate-600 mt-2 leading-relaxed">Deskripsi lokasi showroom...</p>
+            <button onclick="closeModal()" class="mt-6 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl text-xs transition shadow">
+                Mengerti / Tutup
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Interactivity -->
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        function filterMotor(category) {
+            const cards = document.querySelectorAll('.motor-card');
+            const buttons = document.querySelectorAll('#filter-container button');
+
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-red-600', 'text-white', 'shadow');
+                btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+                if((category === 'all' && btn.innerText.includes('Semua')) || btn.innerText.includes(category)) {
+                    btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+                    btn.classList.add('bg-red-600', 'text-white', 'shadow');
+                }
+            });
+
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function showLocationAlert(message) {
+            const modal = document.getElementById('custom-modal');
+            const modalDesc = document.getElementById('modal-desc');
+            modalDesc.innerText = message;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

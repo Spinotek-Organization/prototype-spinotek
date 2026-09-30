@@ -1,0 +1,6 @@
+{
+  "name": "Agang Motor Showroom",
+  "description": "Prototype V1 Showroom Motor Bekas & Baru Berkualitas.",
+  "techStack": ["HTML", "Tailwind CSS", "JavaScript"],
+  "folder": "prototype-showroom-agang-motor"
+}
