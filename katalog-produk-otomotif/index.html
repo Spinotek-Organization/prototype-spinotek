@@ -1,0 +1,1292 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WERACE &mdash; LED Motor Mobil | Katalog Produk Otomotif</title>
+<meta name="description" content="WERACE Indonesia &mdash; Katalog produk LED motor dan mobil. Temukan LED headlamp, bulb, strip, work light, dan aksesoris otomotif." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: { sans: ['Inter', 'sans-serif'] },
+colors: {
+primary: { DEFAULT: '#E79000', dark: '#C97900', light: '#F8B84A', 50: '#FFF7E8', 100: '#FFE9BF', 200: '#FFD27A', 600: '#C97900', 700: '#A45F00', 800: '#784600', 900: '#4B2C00' },
+dark: { 950: '#080808', 900: '#101010', 800: '#171717', 700: '#222222', 600: '#2C2C2C', border: '#303030' },
+lt: { bg: '#F7F7F5', surface: '#FFFFFF', muted: '#F1F1EF', border: '#E5E5E2', text: '#111111', sec: '#5F5F5F', mut: '#888888' },
+}
+}
+}
+};
+</script>
+<style>
+:root { --op: #E79000; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: 5rem; }
+body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+.ns::-webkit-scrollbar { display: none; }
+.ns { -ms-overflow-style: none; scrollbar-width: none; }
+.cs::-webkit-scrollbar { width: 5px; height: 5px; }
+.cs::-webkit-scrollbar-track { background: transparent; }
+.cs::-webkit-scrollbar-thumb { background: #E5E5E2; border-radius: 4px; }
+.dark-theme .cs::-webkit-scrollbar-thumb { background: #303030; }
+.pat-diamond { background-image: repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(231,144,0,.08) 18px, rgba(231,144,0,.08) 19px); }
+.pat-racing { background-image: repeating-linear-gradient(-45deg, transparent, transparent 14px, rgba(231,144,0,.10) 14px, rgba(231,144,0,.10) 15px); }
+.pat-grid { background-image: linear-gradient(rgba(231,144,0,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(231,144,0,.06) 1px, transparent 1px); background-size: 24px 24px; }
+.pat-speed { background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(231,144,0,.07) 40px, rgba(231,144,0,.07) 42px); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn .25s ease forwards; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.slide-up { animation: slideUp .3s ease forwards; }
+.toast-wrap { position: fixed; top: 16px; right: 16px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast { padding: 12px 20px; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.18); animation: fadeIn .25s ease; display: flex; align-items: center; gap: 8px; }
+.toast-success { background: #2F855A; }
+.toast-error { background: #DC2626; }
+.toast-info { background: #2F855A; color: #fff; }
+.modal-overlay { background: rgba(0,0,0,.55); backdrop-filter: blur(4px); }
+input:focus, select:focus, textarea:focus { border-color: #E79000 !important; box-shadow: 0 0 0 3px rgba(231,144,0,.18) !important; outline: none; }
+select { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888888' d='M6 8.5L2.5 5h7z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.85rem center; padding-right: 2.4rem !important; }
+.sidebar-item { transition: all .15s; }
+.sidebar-item:hover { background: rgba(231,144,0,.08); }
+.sidebar-item.active { background: rgba(231,144,0,.14); color: #E79000; }
+.sidebar-item.active i { color: #E79000; }
+.exp-btn { width: 2.25rem; height: 2.25rem; padding: 0; overflow: hidden; border-radius: 9999px; transition: width .3s ease, background-color .2s ease, color .2s ease; display: flex; align-items: center; justify-content: center; }
+.exp-btn .exp-label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; display: inline-block; margin-left: 0; transition: max-width .3s ease, opacity .25s ease, margin .3s ease; }
+.exp-btn:hover { width: var(--exp-w); padding: 0 .75rem; justify-content: flex-start; }
+.exp-btn:hover .exp-label { max-width: 8rem; opacity: 1; margin-left: .375rem; }
+</style>
+</head>
+<body class="bg-lt-bg text-lt-text antialiased">
+
+<div id="toast-container" class="toast-wrap"></div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PUBLIC CATALOG â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="catalog-view">
+
+<!-- Header -->
+<header class="bg-dark-900 sticky top-0 z-40 border-b border-dark-border">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<a href="#" onclick="showCatalog();return false;" class="flex items-center gap-2 shrink-0">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"><i class="fa-solid fa-bolt text-dark-950 text-sm"></i></div>
+<span class="text-white font-extrabold text-lg tracking-tight">WERACE</span>
+</a>
+<nav class="hidden md:flex items-center gap-6">
+<a href="#produk" class="text-white/70 hover:text-primary text-sm font-medium transition">Produk</a>
+<a href="#kategori" onclick="event.preventDefault();scrollToCategories()" class="text-white/70 hover:text-primary text-sm font-medium transition">Kategori</a>
+<a href="#tentang" class="text-white/70 hover:text-primary text-sm font-medium transition">Tentang</a>
+</nav>
+<div class="flex items-center gap-3">
+<button onclick="focusSearch()" class="w-9 h-9 rounded-lg bg-dark-700 hover:bg-dark-600 flex items-center justify-center text-white/70 hover:text-primary transition" aria-label="Cari"><i class="fa-solid fa-magnifying-glass text-sm"></i></button>
+<button onclick="showLogin()" class="w-9 h-9 rounded-lg bg-dark-700 hover:bg-dark-600 flex items-center justify-center text-white/70 hover:text-primary transition" aria-label="Admin"><i class="fa-solid fa-user-shield text-sm"></i></button>
+<a href="https://wa.me/6285799455079" target="_blank" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan</a>
+<button onclick="toggleMobileMenu()" class="md:hidden w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-white/70" aria-label="Menu"><i id="burger-icon" class="fa-solid fa-bars text-sm transition-transform duration-300"></i></button>
+</div>
+</div>
+<div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="pt-3 pb-4 space-y-1">
+<a href="#produk" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Produk</a>
+<a href="#kategori" onclick="event.preventDefault();toggleMobileMenu();scrollToCategories()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Kategori</a>
+<a href="#tentang" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Tentang</a>
+<a href="https://wa.me/6285799455079" target="_blank" class="block px-3 py-2 rounded-lg bg-primary text-dark-950 text-sm font-bold text-center mt-2"><i class="fa-brands fa-whatsapp mr-1"></i> Tanyakan Produk</a>
+</div>
+</div>
+</div>
+</header>
+
+<!-- Hero -->
+<section class="bg-dark-900 relative overflow-hidden">
+<div class="absolute inset-0 pat-diamond"></div>
+<div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 relative">
+<div class="max-w-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="text-primary text-xs font-semibold">LED Otomotif Premium</span>
+</div>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">Ilight Your Ride,<br /><span class="text-primary">Feel The Race.</span></h1>
+<p class="text-white/60 text-base sm:text-lg leading-relaxed mb-8">Katalog lengkap LED motor &amp; mobil &mdash; headlamp, bulb, strip, work light, dan aksesoris. 400+ produk siap dikirim.</p>
+<div class="flex flex-wrap gap-3">
+<a href="#produk" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-solid fa-table-cells-large"></i> Telusuri Produk</a>
+<a href="https://wa.me/6285799455079" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-dark-700 hover:bg-dark-600 text-white font-bold text-sm border border-dark-border transition"><i class="fa-brands fa-whatsapp text-primary"></i> Chat WhatsApp</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Kategori -->
+<section id="kategori" class="py-10 sm:py-14 bg-lt-bg">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<h2 class="text-xl sm:text-2xl font-bold mb-1">Kategori Produk</h2>
+<p class="text-lt-mut text-sm mb-6">Pilih kategori untuk mempermudah pencarian</p>
+<div id="category-pills" class="flex flex-wrap gap-2"></div>
+</div>
+</section>
+
+<!-- Produk -->
+<section id="produk" class="pb-16 bg-lt-bg">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+<!-- Search + Filter Bar -->
+<div class="bg-white rounded-2xl border border-lt-border p-4 sm:p-5 mb-6 shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+<div class="flex flex-col sm:flex-row gap-3">
+<div class="relative flex-1">
+<i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-lt-mut text-sm"></i>
+<input id="search-input" type="text" placeholder="Cari produk, kode, atau kategori..." oninput="handleSearch()" class="w-full pl-11 pr-4 py-3 rounded-xl border border-lt-border bg-lt-bg text-sm focus:ring-0" />
+</div>
+<div class="flex gap-3">
+<select id="filter-category" onchange="handleFilterChange()" class="pl-4 pr-11 py-3 rounded-xl border border-lt-border bg-lt-bg text-sm text-lt-text min-w-[140px]">
+<option value="">Semua Kategori</option>
+</select>
+<button onclick="toggleFilterDrawer()" class="lg:hidden px-4 py-3 rounded-xl border border-lt-border bg-lt-bg text-sm font-medium"><i class="fa-solid fa-sliders mr-1"></i> Filter</button>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3">
+<p id="result-count" class="text-xs text-lt-mut"></p>
+<div class="flex gap-2">
+<select id="sort-select" onchange="handleFilterChange()" class="pl-3 pr-10 py-1.5 rounded-lg border border-lt-border bg-white text-xs">
+<option value="name-asc">Nama A-Z</option>
+<option value="name-desc">Nama Z-A</option>
+<option value="sku">Kode Produk</option>
+</select>
+</div>
+</div>
+</div>
+
+<!-- Active Filters -->
+<div id="active-filters" class="flex flex-wrap gap-2 mb-4"></div>
+
+<!-- Product Grid -->
+<div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5"></div>
+
+<!-- Empty State -->
+<div id="empty-state" class="hidden text-center py-16">
+<div class="w-16 h-16 rounded-2xl bg-lt-muted flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-box-open text-lt-mut text-2xl"></i></div>
+<h3 class="text-lg font-bold mb-1">Produk tidak ditemukan</h3>
+<p class="text-lt-mut text-sm mb-4">Coba gunakan kata kunci atau kategori lain.</p>
+<button onclick="resetFilters()" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition">Reset Filter</button>
+</div>
+
+<!-- Pagination -->
+<div id="pagination" class="flex items-center justify-center gap-2 mt-8"></div>
+</div>
+</section>
+
+<!-- Tentang -->
+<section id="tentang" class="py-16 bg-dark-900 relative overflow-hidden">
+<div class="absolute inset-0 pat-speed"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+<div class="max-w-2xl">
+<h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Tentang WERACE</h2>
+<p class="text-white/60 text-sm leading-relaxed mb-6">WERACE Indonesia adalah penyedia produk LED otomotif untuk motor dan mobil. Kami menyediakan berbagai jenis LED headlamp, bulb, strip, work light, dan aksesoris berkualitas tinggi dengan harga kompetitif. Konsultasikan kebutuhan LED kendaraan Anda langsung via WhatsApp.</p>
+<div class="flex flex-wrap gap-6">
+<div><p class="text-2xl font-extrabold text-primary" id="stat-products">400+</p><p class="text-white/50 text-xs">Produk</p></div>
+<div><p class="text-2xl font-extrabold text-primary" id="stat-categories">6</p><p class="text-white/50 text-xs">Kategori</p></div>
+<div><p class="text-2xl font-extrabold text-primary">24/7</p><p class="text-white/50 text-xs">WhatsApp Support</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark-950 relative overflow-hidden">
+<div class="absolute inset-0 pat-diamond opacity-50"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center"><i class="fa-solid fa-bolt text-dark-950 text-xs"></i></div>
+<span class="text-white font-bold text-sm">WERACE Indonesia</span>
+</div>
+<p class="text-white/40 text-xs text-center">&copy; 2026 WERACE &mdash; LED Motor Mobil. All rights reserved.</p>
+<div class="bg-white rounded-lg p-2 inline-block">
+<img src="assets/spinotek-logo.png" alt="Spinotek" class="h-5 rounded px-1" onerror="this.style.display='none'" />
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-white/10 text-center">
+<p class="text-white/30 text-[10px]">Developed by Spinotek Corp.</p>
+</div>
+</div>
+</footer>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN LOGIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="login-view" class="hidden min-h-screen bg-dark-950 flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 pat-grid"></div>
+<div class="relative z-10 w-full max-w-sm px-4">
+<div class="bg-dark-900 rounded-2xl border border-dark-border p-8 fade-in">
+<div class="text-center mb-8">
+<div class="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-bolt text-dark-950 text-xl"></i></div>
+<h1 class="text-xl font-extrabold text-white">WERACE Admin</h1>
+<p class="text-white/40 text-xs mt-1">Dashboard Pengelolaan Katalog</p>
+</div>
+<div id="login-error" class="hidden mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"></div>
+<form onsubmit="handleLogin(event)" class="space-y-4">
+<div>
+<label class="text-xs font-bold text-white/50 uppercase tracking-wider mb-1.5 block">Email</label>
+<input id="login-email" type="email" value="admin@werace.com" class="w-full px-4 py-3 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" placeholder="admin@werace.com" />
+</div>
+<div>
+<label class="text-xs font-bold text-white/50 uppercase tracking-wider mb-1.5 block">Password</label>
+<input id="login-pass" type="password" value="admin123" class="w-full px-4 py-3 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" placeholder="Password" />
+</div>
+<button type="submit" class="w-full py-3 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-solid fa-right-to-bracket mr-2"></i> Masuk</button>
+</form>
+<div class="mt-6 p-3 rounded-xl bg-dark-800 border border-dark-border">
+<p class="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-1">Demo</p>
+<p class="text-xs text-white/60">admin@werace.com / admin123</p>
+</div>
+<button onclick="showCatalog()" class="w-full mt-4 text-xs text-white/40 hover:text-primary transition"><i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Katalog</button>
+</div>
+</div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN DASHBOARD â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="admin-view" class="hidden dark-theme">
+<div class="flex min-h-screen">
+
+<!-- Sidebar -->
+<aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-40 w-[240px] bg-dark-900 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-dark-border">
+<div class="px-4 py-5">
+<div class="flex items-center justify-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shrink-0"><i class="fa-solid fa-bolt text-dark-950 text-sm"></i></div>
+<div class="min-w-0">
+<h1 class="text-white font-bold text-sm">WERACE Admin</h1>
+<p class="text-white/40 text-[10px] italic">Katalog Otomotif</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2.5 py-3 space-y-0.5 overflow-y-auto cs">
+<button onclick="adminNav('dashboard')" data-nav="dashboard" class="sidebar-item active w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 w-full text-left"><i class="fa-solid fa-table-cells-large w-4 text-center"></i> Dashboard</button>
+<button onclick="adminNav('products')" data-nav="products" class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 w-full text-left"><i class="fa-solid fa-box w-4 text-center"></i> Produk</button>
+<button onclick="adminNav('categories')" data-nav="categories" class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 w-full text-left"><i class="fa-solid fa-tags w-4 text-center"></i> Kategori</button>
+<button onclick="adminNav('import')" data-nav="import" class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 w-full text-left"><i class="fa-solid fa-file-import w-4 text-center"></i> Import / Export</button>
+<button onclick="adminNav('settings')" data-nav="settings" class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 w-full text-left"><i class="fa-solid fa-gear w-4 text-center"></i> Pengaturan</button>
+</nav>
+<div class="px-3 py-3 text-center">
+<div class="bg-white rounded-lg p-3 w-full">
+<img src="assets/spinotek-logo.png" alt="Spinotek" class="h-5 mx-auto rounded px-1" onerror="this.style.display='none'" />
+<p class="text-[9px] text-lt-mut leading-tight mt-2">&copy; 2026 WERACE Indonesia.<br/>Developed by Spinotek Corp.</p>
+</div>
+</div>
+</aside>
+
+<!-- Sidebar Overlay (mobile) -->
+<div id="admin-overlay" onclick="closeAdminSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+<!-- Main -->
+<div class="flex-1 flex flex-col min-h-screen lg:ml-[240px]">
+<!-- Header -->
+<header class="bg-dark-950 sticky top-0 z-20">
+<div class="flex items-center justify-between px-4 sm:px-6 pt-5 pb-2">
+<div class="flex items-center gap-3">
+<button onclick="openAdminSidebar()" class="lg:hidden w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-white/60"><i class="fa-solid fa-bars text-sm"></i></button>
+<div>
+<h2 id="admin-page-title" class="font-bold text-white text-xl">Dashboard</h2>
+<p id="admin-page-sub" class="text-sm text-white/40">Ringkasan katalog</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button onclick="showCatalog()" style="--exp-w:8rem" class="exp-btn bg-dark-700 hover:bg-dark-600 text-white/70 hover:text-primary text-xs font-medium" aria-label="Lihat Katalog"><i class="fa-solid fa-globe text-sm shrink-0"></i><span class="exp-label">Lihat Katalog</span></button>
+<button onclick="handleLogout()" style="--exp-w:5.25rem" class="exp-btn bg-dark-700 hover:bg-dark-600 text-white/70 hover:text-red-400 text-xs font-medium" aria-label="Keluar"><i class="fa-solid fa-right-from-bracket text-sm shrink-0"></i><span class="exp-label">Keluar</span></button>
+</div>
+</div>
+</header>
+
+<!-- Content -->
+<main id="admin-content" class="flex-1 px-4 sm:px-6 pt-2 pb-4 sm:pb-6 bg-dark-950"></main>
+</div>
+</div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• MODALS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- Product Detail Modal -->
+<div id="modal-detail" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-detail')">
+<div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto slide-up">
+<div class="sticky top-0 bg-white border-b border-lt-border px-5 py-4 flex justify-between items-center z-10 rounded-t-2xl">
+<h3 class="font-bold text-lg">Detail Produk</h3>
+<button onclick="closeModal('modal-detail')" class="w-8 h-8 rounded-lg bg-lt-muted flex items-center justify-center text-lt-mut hover:text-lt-text"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div id="detail-content" class="p-5"></div>
+</div>
+</div>
+
+<!-- Product Form Modal (Admin) -->
+<div id="modal-form" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-form')">
+<div class="bg-dark-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-dark-border slide-up">
+<div class="sticky top-0 bg-dark-900 border-b border-dark-border px-5 py-4 flex justify-between items-center z-10 rounded-t-2xl">
+<div>
+<h3 id="form-title" class="font-bold text-white">Tambah Produk</h3>
+<p class="text-xs text-white/40 italic">Product Form</p>
+</div>
+<button onclick="closeModal('modal-form')" class="w-8 h-8 rounded-lg bg-dark-700 flex items-center justify-center text-white/50 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<form id="product-form" onsubmit="handleProductSubmit(event)" class="p-5 space-y-5">
+<!-- Basic Info -->
+<div class="space-y-3">
+<p class="text-xs font-bold text-primary uppercase tracking-wider">Informasi Dasar</p>
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Nama Produk *</label>
+<input id="pf-name" required class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" />
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Kode Produk / SKU *</label>
+<input id="pf-sku" required class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" placeholder="WR-001" />
+</div>
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Status</label>
+<select id="pf-status" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm">
+<option value="aktif">Aktif</option>
+<option value="draft">Draft</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Kategori *</label>
+<select id="pf-category" required onchange="updateSubcategoryOptions()" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm"></select>
+</div>
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Subkategori</label>
+<select id="pf-subcategory" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm"></select>
+</div>
+</div>
+</div>
+<!-- Description -->
+<div class="space-y-3">
+<p class="text-xs font-bold text-primary uppercase tracking-wider">Deskripsi</p>
+<textarea id="pf-description" rows="3" class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm resize-none" placeholder="Deskripsi singkat produk..."></textarea>
+</div>
+<!-- Specifications -->
+<div class="space-y-3">
+<p class="text-xs font-bold text-primary uppercase tracking-wider">Spesifikasi</p>
+<div id="spec-rows" class="space-y-2"></div>
+<button type="button" onclick="addSpecRow()" class="text-xs font-bold text-primary hover:text-primary-dark"><i class="fa-solid fa-plus mr-1"></i> Tambah Spesifikasi</button>
+</div>
+<!-- Actions -->
+<div class="flex gap-3 pt-2 border-t border-dark-border">
+<button type="button" onclick="closeModal('modal-form')" class="flex-1 py-2.5 rounded-xl border border-dark-border text-sm font-semibold text-white/50 hover:bg-dark-700">Batal</button>
+<button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition">Simpan Produk</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Category Form Modal -->
+<div id="modal-category" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-category')">
+<div class="bg-dark-900 rounded-2xl w-full max-w-md border border-dark-border slide-up">
+<div class="sticky top-0 bg-dark-900 border-b border-dark-border px-5 py-4 flex justify-between items-center rounded-t-2xl">
+<h3 id="cat-form-title" class="font-bold text-white">Tambah Kategori</h3>
+<button onclick="closeModal('modal-category')" class="w-8 h-8 rounded-lg bg-dark-700 flex items-center justify-center text-white/50"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<form onsubmit="handleCategorySubmit(event)" class="p-5 space-y-4">
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Nama Kategori *</label>
+<input id="cf-name" required class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" />
+</div>
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Icon (FontAwesome)</label>
+<input id="cf-icon" class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" placeholder="fa-lightbulb" />
+</div>
+<div>
+<label class="text-xs font-bold text-white/50 mb-1 block">Subkategori (pisahkan dengan koma)</label>
+<input id="cf-subcategories" class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" placeholder="H4, H7, H11" />
+</div>
+<div class="flex gap-3 pt-2">
+<button type="button" onclick="closeModal('modal-category')" class="flex-1 py-2.5 rounded-xl border border-dark-border text-sm font-semibold text-white/50 hover:bg-dark-700">Batal</button>
+<button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition">Simpan</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="modal-confirm" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-confirm')">
+<div class="bg-dark-900 rounded-2xl w-full max-w-sm border border-dark-border p-6 text-center slide-up">
+<div class="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-triangle-exclamation text-red-400 text-xl"></i></div>
+<h3 id="confirm-title" class="text-white font-bold text-lg mb-1">Hapus Produk?</h3>
+<p id="confirm-desc" class="text-white/50 text-sm mb-6">Tindakan ini tidak bisa dibatalkan.</p>
+<div class="flex gap-3">
+<button onclick="closeModal('modal-confirm')" class="flex-1 py-2.5 rounded-xl border border-dark-border text-sm font-semibold text-white/50 hover:bg-dark-700">Batal</button>
+<button id="confirm-btn" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold transition">Hapus</button>
+</div>
+</div>
+</div>
+
+<!-- Import Modal -->
+<div id="modal-import" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-import')">
+<div class="bg-dark-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-dark-border slide-up">
+<div class="sticky top-0 bg-dark-900 border-b border-dark-border px-5 py-4 flex justify-between items-center rounded-t-2xl">
+<div>
+<h3 class="font-bold text-white">Import Produk (CSV)</h3>
+<p class="text-xs text-white/40 italic">Upload &rarr; Validate &rarr; Preview &rarr; Confirm</p>
+</div>
+<button onclick="closeModal('modal-import')" class="w-8 h-8 rounded-lg bg-dark-700 flex items-center justify-center text-white/50"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div class="p-5">
+<div id="import-step-1">
+<div class="border-2 border-dashed border-dark-border rounded-2xl p-8 text-center hover:border-primary/50 transition cursor-pointer" onclick="document.getElementById('csv-file').click()">
+<i class="fa-solid fa-cloud-arrow-up text-3xl text-primary mb-3"></i>
+<p class="text-white font-semibold text-sm mb-1">Klik untuk upload file CSV</p>
+<p class="text-white/40 text-xs">Format: nama,sku,kategori,subkategori,deskripsi,status</p>
+<input id="csv-file" type="file" accept=".csv" class="hidden" onchange="handleCSVUpload(event)" />
+</div>
+<div class="mt-4 p-3 rounded-xl bg-dark-800 border border-dark-border">
+<p class="text-xs text-white/50"><i class="fa-solid fa-circle-info text-primary mr-1"></i> Kolom wajib: <code class="text-primary">nama, sku, kategori</code>. Kolom opsional: subkategori, deskripsi, spesifikasi (format: Label:Value;Label:Value), status.</p>
+</div>
+<button onclick="downloadTemplate()" class="mt-3 text-xs font-bold text-primary hover:text-primary-dark"><i class="fa-solid fa-download mr-1"></i> Download Template CSV</button>
+</div>
+<div id="import-step-2" class="hidden">
+<div class="grid grid-cols-3 gap-3 mb-4">
+<div class="bg-dark-800 rounded-xl p-3 text-center border border-dark-border"><p class="text-xl font-extrabold text-green-400" id="imp-valid">0</p><p class="text-[10px] text-white/40 uppercase font-bold">Valid</p></div>
+<div class="bg-dark-800 rounded-xl p-3 text-center border border-dark-border"><p class="text-xl font-extrabold text-yellow-400" id="imp-warning">0</p><p class="text-[10px] text-white/40 uppercase font-bold">Warning</p></div>
+<div class="bg-dark-800 rounded-xl p-3 text-center border border-dark-border"><p class="text-xl font-extrabold text-red-400" id="imp-error">0</p><p class="text-[10px] text-white/40 uppercase font-bold">Error</p></div>
+</div>
+<div id="imp-errors" class="space-y-1 mb-4"></div>
+<div class="max-h-64 overflow-y-auto cs border border-dark-border rounded-xl">
+<table class="w-full text-xs">
+<thead class="bg-dark-800 sticky top-0"><tr class="text-left text-white/40 uppercase"><th class="px-3 py-2">Nama</th><th class="px-3 py-2">SKU</th><th class="px-3 py-2">Kategori</th><th class="px-3 py-2">Status</th></tr></thead>
+<tbody id="imp-preview" class="text-white/70"></tbody>
+</table>
+</div>
+<div class="flex gap-3 mt-4">
+<button onclick="resetImport()" class="flex-1 py-2.5 rounded-xl border border-dark-border text-sm font-semibold text-white/50 hover:bg-dark-700">Batal</button>
+<button onclick="confirmImport()" class="flex-1 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition">Konfirmasi Import</button>
+</div>
+</div>
+<div id="import-step-3" class="hidden text-center py-8">
+<div class="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-check text-green-400 text-2xl"></i></div>
+<h3 class="text-white font-bold text-lg mb-1">Import Selesai!</h3>
+<p class="text-white/50 text-sm mb-6" id="imp-result"></p>
+<button onclick="closeModal('modal-import');adminNav('products')" class="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition">Lihat Produk</button>
+</div>
+</div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• JAVASCRIPT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<script>
+/* â”€â”€â”€ Design Data â”€â”€â”€ */
+const DEFAULT_CATEGORIES = [
+{ id: 1, name: 'LED Headlamp', icon: 'fa-lightbulb', subcategories: ['H4', 'H7', 'H11', '9005', '9006'] },
+{ id: 2, name: 'LED Bulb', icon: 'fa-lightbulb', subcategories: ['T10', 'W5W', 'P21W', 'SMD'] },
+{ id: 3, name: 'LED Strip', icon: 'fa-grip-lines', subcategories: ['Flexible', 'Rigid', 'RGB'] },
+{ id: 4, name: 'LED Work Light', icon: 'fa-sun', subcategories: ['Bar', 'Round', 'Square'] },
+{ id: 5, name: 'LED Fog Light', icon: 'fa-cloud', subcategories: ['Yellow', 'White'] },
+{ id: 6, name: 'Aksesoris', icon: 'fa-toolbox', subcategories: ['Relay', 'Socket', 'Harness'] }
+];
+
+function generateSampleProducts() {
+const names = [
+['LED Headlamp H4 6000K Super Bright', 1, 'H4'],
+['LED Headlamp H7 6000K Ultra Slim', 1, 'H7'],
+['LED Headlamp H11 6000K CREE', 1, 'H11'],
+['LED Headlamp 9005 6500K Xenon', 1, '9005'],
+['LED Headlamp 9006 6000K Crystal', 1, '9006'],
+['LED Headlamp H4 RGB Multi Color', 1, 'H4'],
+['LED Headlamp H7 Projector Beam', 1, 'H7'],
+['LED Headlamp H11 Mini Size', 1, 'H11'],
+['LED Headlamp H4 CANBUS No Error', 1, 'H4'],
+['LED Headlamp H7 Heavy Duty', 1, 'H7'],
+['LED Bulb T10 White 6000K', 2, 'T10'],
+['LED Bulb T10 Amber 3000K', 2, 'T10'],
+['LED Bulb W5W White 6000K', 2, 'W5W'],
+['LED Bulb W5W Crystal Blue', 2, 'W5W'],
+['LED Bulb P21W Red 6000K', 2, 'P21W'],
+['LED Bulb P21W White 6000K', 2, 'P21W'],
+['LED Bulb SMD 5730 12V', 2, 'SMD'],
+['LED Bulb SMD 2835 Warm White', 2, 'SMD'],
+['LED Bulb T10 Canary Yellow', 2, 'T10'],
+['LED Bulb W5W Ice Blue', 2, 'W5W'],
+['LED Strip Flexible 60cm RGB', 3, 'Flexible'],
+['LED Strip Flexible 120cm RGB', 3, 'Flexible'],
+['LED Strip Rigid 30cm White', 3, 'Rigid'],
+['LED Strip Rigid 60cm White', 3, 'Rigid'],
+['LED Strip RGB Waterproof IP67', 3, 'RGB'],
+['LED Strip Flexible Music Sync', 3, 'Flexible'],
+['LED Strip Rigid Amber Turn Signal', 3, 'Rigid'],
+['LED Strip Flexible Neon Glow', 3, 'Flexible'],
+['LED Work Light Bar 12" 72W', 4, 'Bar'],
+['LED Work Light Bar 20" 120W', 4, 'Bar'],
+['LED Work Light Round 4" 18W', 4, 'Round'],
+['LED Work Light Round 6" 36W', 4, 'Round'],
+['LED Work Light Square 3" 12W', 4, 'Square'],
+['LED Work Light Bar 42" 288W', 4, 'Bar'],
+['LED Work Light Round 8" 60W', 4, 'Round'],
+['LED Work Light Square 4" 24W', 4, 'Square'],
+['LED Fog Light Yellow 3000K', 5, 'Yellow'],
+['LED Fog Light White 6000K', 5, 'White'],
+['LED Fog Light Yellow Round 3"', 5, 'Yellow'],
+['LED Fog Light White Round 3"', 5, 'White'],
+['LED Fog Light Yellow Projector', 5, 'Yellow'],
+['LED Fog Light White Mini', 5, 'White'],
+['Relay 12V 30A Heavy Duty', 6, 'Relay'],
+['Relay Socket 5 Pin', 6, 'Socket'],
+['Harness Connector 2 Pin', 6, 'Harness'],
+['Socket H4 Ceramic', 6, 'Socket'],
+['Harness Extension 30cm', 6, 'Harness'],
+['Relay Harness Kit Universal', 6, 'Relay'],
+['Socket H7 Ceramic', 6, 'Socket'],
+['Harness Waterproof 4 Pin', 6, 'Harness'],
+['LED Headlamp H4 Bi-LED Projector', 1, 'H4'],
+['LED Bulb T10 RGB Color Cycle', 2, 'T10'],
+['LED Strip Flexible 5050 Waterproof', 3, 'Flexible'],
+['LED Work Light Bar 10" 60W', 4, 'Bar'],
+['LED Fog Light Yellow LED Combo', 5, 'Yellow'],
+['Relay Flasher LED Compatible', 6, 'Relay'],
+['LED Headlamp H7 Bi-LED Laser', 1, 'H7'],
+['LED Bulb W5W 3-SMD Canbus', 2, 'W5W'],
+['LED Strip Rigid 90cm White', 3, 'Rigid'],
+['LED Work Light Round 4" Amber', 4, 'Round'],
+];
+const specs = [
+[['Wattage', '30W'], ['Voltase', '12V DC'], ['Warna Cahaya', '6000K'], ['Suhu Operasi', '-40\u00B0C ~ 85\u00B0C']],
+[['Wattage', '18W'], ['Voltase', '12V DC'], ['Warna Cahaya', '6000K'], ['LED Chip', 'CREE XBD']],
+[['Wattage', '24W'], ['Voltase', '9-32V'], ['Warna Cahaya', '6500K'], ['Daya Tahan', '30.000 jam']],
+[['Wattage', '36W'], ['Voltase', '12V DC'], ['Warna Cahaya', '6000K'], ['Lumens', '3600lm']],
+[['Wattage', '5W'], ['Voltase', '12V DC'], ['Warna Cahaya', '6000K'], ['LED Chip', 'SMD 5730']],
+[['Wattage', '10W'], ['Voltase', '12V DC'], ['Panjang', '60cm'], ['IP Rating', 'IP65']],
+];
+return names.map((n, i) => {
+const cat = DEFAULT_CATEGORIES.find(c => c.id === n[1]);
+const sp = specs[i % specs.length].map(s => ({ label: s[0], value: s[1] }));
+return {
+id: i + 1,
+name: n[0],
+sku: 'WR-' + String(i + 1).padStart(3, '0'),
+categoryId: n[1],
+subcategory: n[2],
+description: n[0] + ' \u2014 produk LED otomotif berkualitas tinggi dari WERACE. Terang, hemat daya, dan tahan lama. Cocok untuk motor dan mobil.',
+specs: sp,
+status: 'aktif',
+createdAt: '2026-01-' + String((i % 28) + 1).padStart(2, '0')
+};
+});
+}
+
+/* â”€â”€â”€ localStorage Backend â”€â”€â”€ */
+function dbGet(key, fallback) {
+try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+}
+function dbSet(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+let products = dbGet('werace_products', null);
+let categories = dbGet('werace_categories', null);
+let settings = dbGet('werace_settings', { whatsapp: '6285799455079', siteName: 'WERACE Indonesia' });
+
+if (!categories) { categories = DEFAULT_CATEGORIES.slice(); dbSet('werace_categories', categories); }
+if (!products) { products = generateSampleProducts(); dbSet('werace_products', products); }
+
+function saveProducts() { dbSet('werace_products', products); }
+function saveCategories() { dbSet('werace_categories', categories); }
+function saveSettings() { dbSet('werace_settings', settings); }
+function nextId(arr) { return arr.length ? Math.max(...arr.map(x => x.id)) + 1 : 1; }
+function getCat(id) { return categories.find(c => c.id === id); }
+function getCatName(id) { const c = getCat(id); return c ? c.name : '-'; }
+
+/* â”€â”€â”€ Toast â”€â”€â”€ */
+function toast(msg, type = 'success') {
+const el = document.createElement('div');
+el.className = 'toast toast-' + type;
+el.innerHTML = '<i class="fa-solid fa-' + (type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle') + '"></i> <span class="flex-1">' + msg + '</span>' +
+'<button class="toast-close ml-2 shrink-0 w-5 h-5 rounded flex items-center justify-center hover:bg-black/10 transition" aria-label="Tutup"><i class="fa-solid fa-xmark text-xs"></i></button>';
+el.querySelector('.toast-close').addEventListener('click', () => { el.style.opacity = '0'; el.style.transition = 'opacity .2s'; setTimeout(() => el.remove(), 200); });
+document.getElementById('toast-container').appendChild(el);
+setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+/* â”€â”€â”€ Modals â”€â”€â”€ */
+function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+/* â”€â”€â”€ Router â”€â”€â”€ */
+let currentView = 'catalog';
+function showCatalog() {
+currentView = 'catalog';
+document.getElementById('catalog-view').classList.remove('hidden');
+document.getElementById('login-view').classList.add('hidden');
+document.getElementById('admin-view').classList.add('hidden');
+window.scrollTo(0, 0);
+renderCatalog();
+}
+function showLogin() {
+currentView = 'login';
+document.getElementById('catalog-view').classList.add('hidden');
+document.getElementById('login-view').classList.remove('hidden');
+document.getElementById('admin-view').classList.add('hidden');
+}
+function showAdmin() {
+currentView = 'admin';
+document.getElementById('catalog-view').classList.add('hidden');
+document.getElementById('login-view').classList.add('hidden');
+document.getElementById('admin-view').classList.remove('hidden');
+adminNav('dashboard');
+}
+function toggleMobileMenu() {
+const m = document.getElementById('mobile-menu');
+const open = m.classList.toggle('max-h-96');
+const icon = document.getElementById('burger-icon');
+if (icon) icon.className = 'fa-solid ' + (open ? 'fa-xmark' : 'fa-bars') + ' text-sm transition-transform duration-300' + (open ? ' rotate-90' : '');
+}
+function focusSearch() { document.getElementById('search-input').focus(); document.getElementById('produk').scrollIntoView({ behavior: 'smooth' }); }
+function scrollToCategories() { document.getElementById('kategori').scrollIntoView({ behavior: 'smooth' }); }
+
+/* â”€â”€â”€ Login â”€â”€â”€ */
+function handleLogin(e) {
+e.preventDefault();
+const email = document.getElementById('login-email').value;
+const pass = document.getElementById('login-pass').value;
+const err = document.getElementById('login-error');
+if (email === 'admin@werace.com' && pass === 'admin123') {
+err.classList.add('hidden');
+sessionStorage.setItem('werace_auth', '1');
+showAdmin();
+toast('Selamat datang, Admin!');
+} else {
+err.textContent = 'Email atau password salah.';
+err.classList.remove('hidden');
+}
+}
+function handleLogout() {
+sessionStorage.removeItem('werace_auth');
+showCatalog();
+toast('Berhasil keluar.', 'info');
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CATALOG â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+let catState = { search: '', category: '', sort: 'name-asc', page: 1, perPage: 12 };
+
+function renderCatalog() {
+renderCategoryPills();
+renderFilterOptions();
+renderProducts();
+document.getElementById('stat-products').textContent = products.length + '+';
+document.getElementById('stat-categories').textContent = categories.length;
+}
+
+function renderCategoryPills() {
+const el = document.getElementById('category-pills');
+el.innerHTML = '<button onclick="filterByCat(\'\')" class="px-4 py-2 rounded-xl text-sm font-semibold transition ' + (!catState.category ? 'bg-primary text-dark-950' : 'bg-white border border-lt-border text-lt-sec hover:border-primary') + '">Semua</button>' +
+categories.map(c => '<button onclick="filterByCat(\'' + c.name.replace(/'/g, "\\'") + '\')" class="px-4 py-2 rounded-xl text-sm font-semibold transition ' + (catState.category === c.name ? 'bg-primary text-dark-950' : 'bg-white border border-lt-border text-lt-sec hover:border-primary') + '"><i class="fa-solid ' + (c.icon || 'fa-tag') + ' mr-1.5 text-xs"></i>' + c.name + '</button>').join('');
+}
+
+function renderFilterOptions() {
+const sel = document.getElementById('filter-category');
+const cur = catState.category;
+sel.innerHTML = '<option value="">Semua Kategori</option>' + categories.map(c => '<option value="' + c.name + '"' + (cur === c.name ? ' selected' : '') + '>' + c.name + '</option>').join('');
+}
+
+function filterByCat(name) {
+catState.category = name;
+catState.page = 1;
+renderCatalog();
+document.getElementById('produk').scrollIntoView({ behavior: 'smooth' });
+}
+
+function handleSearch() {
+catState.search = document.getElementById('search-input').value.toLowerCase();
+catState.page = 1;
+renderProducts();
+}
+function handleFilterChange() {
+catState.category = document.getElementById('filter-category').value;
+catState.sort = document.getElementById('sort-select').value;
+catState.page = 1;
+renderCatalog();
+}
+function resetFilters() {
+catState = { search: '', category: '', sort: 'name-asc', page: 1, perPage: 12 };
+document.getElementById('search-input').value = '';
+renderCatalog();
+}
+
+function getFilteredProducts() {
+let list = products.filter(p => p.status === 'aktif');
+if (catState.search) {
+const q = catState.search.toLowerCase();
+list = list.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || getCatName(p.categoryId).toLowerCase().includes(q) || (p.subcategory || '').toLowerCase().includes(q));
+}
+if (catState.category) {
+const cat = categories.find(c => c.name === catState.category);
+if (cat) list = list.filter(p => p.categoryId === cat.id);
+}
+list.sort((a, b) => {
+if (catState.sort === 'name-asc') return a.name.localeCompare(b.name);
+if (catState.sort === 'name-desc') return b.name.localeCompare(a.name);
+if (catState.sort === 'sku') return a.sku.localeCompare(b.sku);
+return 0;
+});
+return list;
+}
+
+function renderProducts() {
+const list = getFilteredProducts();
+const total = list.length;
+const totalPages = Math.ceil(total / catState.perPage) || 1;
+if (catState.page > totalPages) catState.page = totalPages;
+const start = (catState.page - 1) * catState.perPage;
+const pageItems = list.slice(start, start + catState.perPage);
+
+document.getElementById('result-count').textContent = total + ' produk ditemukan';
+renderActiveFilters();
+
+const grid = document.getElementById('product-grid');
+const empty = document.getElementById('empty-state');
+if (total === 0) {
+grid.innerHTML = '';
+empty.classList.remove('hidden');
+document.getElementById('pagination').innerHTML = '';
+return;
+}
+empty.classList.add('hidden');
+
+grid.innerHTML = pageItems.map(p => {
+const cat = getCat(p.categoryId);
+return '<div class="bg-white rounded-2xl border border-lt-border overflow-hidden hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition group cursor-pointer flex flex-col" onclick="openDetail(' + p.id + ')">' +
+'<div class="aspect-square bg-lt-muted flex items-center justify-center relative overflow-hidden">' +
+'<div class="text-center"><i class="fa-solid ' + (cat && cat.icon ? cat.icon : 'fa-lightbulb') + ' text-4xl text-primary/30 group-hover:text-primary/50 transition"></i><p class="text-[10px] text-lt-mut mt-2 uppercase font-semibold">' + (cat ? cat.name : '') + '</p></div>' +
+'<span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-dark-900/80 text-white text-[10px] font-bold">' + p.sku + '</span>' +
+'</div>' +
+'<div class="p-3 sm:p-4 flex flex-col flex-1">' +
+'<p class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">' + getCatName(p.categoryId) + (p.subcategory ? ' &middot; ' + p.subcategory : '') + '</p>' +
+'<h3 class="font-bold text-sm text-lt-text leading-snug mb-2 line-clamp-2 group-hover:text-primary transition">' + p.name + '</h3>' +
+'<a href="' + buildWhatsAppLink(p) + '" target="_blank" onclick="event.stopPropagation()" class="mt-auto inline-flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-primary hover:bg-primary-dark text-dark-950 text-xs font-bold transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan Produk</a>' +
+'</div></div>';
+}).join('');
+
+renderPagination(totalPages);
+}
+
+function renderActiveFilters() {
+const el = document.getElementById('active-filters');
+let html = '';
+if (catState.search) html += '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">"' + escapeHtml(catState.search) + '" <button onclick="clearSearch()" class="hover:text-dark-950"><i class="fa-solid fa-xmark"></i></button></span>';
+if (catState.category) html += '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">' + catState.category + ' <button onclick="filterByCat(\'\')" class="hover:text-dark-950"><i class="fa-solid fa-xmark"></i></button></span>';
+el.innerHTML = html;
+}
+function clearSearch() { catState.search = ''; document.getElementById('search-input').value = ''; renderProducts(); }
+
+function renderPagination(totalPages) {
+const el = document.getElementById('pagination');
+if (totalPages <= 1) { el.innerHTML = ''; return; }
+let html = '<button onclick="goPage(' + (catState.page - 1) + ')" ' + (catState.page <= 1 ? 'disabled' : '') + ' class="px-3 py-2 rounded-lg border border-lt-border bg-white text-sm font-medium text-lt-sec disabled:opacity-30 hover:border-primary transition"><i class="fa-solid fa-chevron-left text-xs"></i></button>';
+for (let i = 1; i <= totalPages; i++) {
+if (totalPages > 7 && i > 3 && i < totalPages - 1 && Math.abs(i - catState.page) > 1) { if (i === 4) html += '<span class="px-1 text-lt-mut text-sm">&hellip;</span>'; continue; }
+html += '<button onclick="goPage(' + i + ')" class="' + (i === catState.page ? 'bg-primary text-dark-950 border-primary' : 'bg-white border-lt-border text-lt-sec hover:border-primary') + ' px-3.5 py-2 rounded-lg border text-sm font-bold transition">' + i + '</button>';
+}
+html += '<button onclick="goPage(' + (catState.page + 1) + ')" ' + (catState.page >= totalPages ? 'disabled' : '') + ' class="px-3 py-2 rounded-lg border border-lt-border bg-white text-sm font-medium text-lt-sec disabled:opacity-30 hover:border-primary transition"><i class="fa-solid fa-chevron-right text-xs"></i></button>';
+el.innerHTML = html;
+}
+function goPage(p) {
+const totalPages = Math.ceil(getFilteredProducts().length / catState.perPage) || 1;
+catState.page = Math.max(1, Math.min(p, totalPages));
+renderProducts();
+document.getElementById('produk').scrollIntoView({ behavior: 'smooth' });
+}
+
+function toggleFilterDrawer() {
+const sel = document.getElementById('filter-category');
+sel.classList.toggle('hidden');
+sel.classList.toggle('sm:block');
+}
+
+/* â”€â”€â”€ Product Detail â”€â”€â”€ */
+function openDetail(id) {
+const p = products.find(x => x.id === id);
+if (!p) return;
+const cat = getCat(p.categoryId);
+document.getElementById('detail-content').innerHTML =
+'<div class="grid grid-cols-1 md:grid-cols-2 gap-6">' +
+'<div class="aspect-square bg-lt-muted rounded-2xl flex flex-col items-center justify-center"><i class="fa-solid ' + (cat && cat.icon ? cat.icon : 'fa-lightbulb') + ' text-6xl text-primary/30"></i><p class="text-xs text-lt-mut mt-3 uppercase font-semibold">' + (cat ? cat.name : '') + '</p></div>' +
+'<div>' +
+'<span class="inline-block px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-3">' + getCatName(p.categoryId) + (p.subcategory ? ' &middot; ' + p.subcategory : '') + '</span>' +
+'<h2 class="text-xl sm:text-2xl font-extrabold text-lt-text mb-1">' + escapeHtml(p.name) + '</h2>' +
+'<p class="text-lt-mut text-xs mb-4">SKU: <span class="font-bold text-lt-text">' + p.sku + '</span></p>' +
+'<p class="text-lt-sec text-sm leading-relaxed mb-5">' + escapeHtml(p.description) + '</p>' +
+(p.specs && p.specs.length ? '<div class="mb-5"><h4 class="text-xs font-bold text-lt-mut uppercase tracking-wider mb-2">Spesifikasi</h4><div class="bg-lt-bg rounded-xl border border-lt-border divide-y divide-lt-border">' + p.specs.map(s => '<div class="flex justify-between px-4 py-2.5 text-sm"><span class="text-lt-mut">' + escapeHtml(s.label) + '</span><span class="font-semibold text-lt-text">' + escapeHtml(s.value) + '</span></div>').join('') + '</div></div>' : '') +
+'<a href="' + buildWhatsAppLink(p) + '" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-brands fa-whatsapp text-lg"></i> Tanyakan Produk Ini</a>' +
+'<p class="text-[11px] text-lt-mut text-center mt-2">Pesan otomatis menyertakan nama &amp; SKU produk</p>' +
+'</div></div>';
+openModal('modal-detail');
+}
+
+function buildWhatsAppLink(p) {
+const msg = 'Halo ' + (settings.siteName || 'WERACE') + ', saya ingin menanyakan produk:\n\n*' + p.name + '*\nSKU: ' + p.sku;
+return 'https://wa.me/' + settings.whatsapp + '?text=' + encodeURIComponent(msg);
+}
+
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+let adminPage = 'dashboard';
+let adminState = { search: '', category: '', page: 1, perPage: 15, sort: 'name-asc' };
+let editingProductId = null;
+let editingCategoryId = null;
+let confirmAction = null;
+let importData = null;
+
+function adminNav(page) {
+adminPage = page;
+document.querySelectorAll('.sidebar-item').forEach(b => b.classList.toggle('active', b.dataset.nav === page));
+const titles = { dashboard: ['Dashboard', 'Ringkasan katalog'], products: ['Produk', 'Kelola produk katalog'], categories: ['Kategori', 'Kelola kategori & subkategori'], import: ['Import / Export', 'Impor produk via CSV'], settings: ['Pengaturan', 'Konfigurasi website'] };
+document.getElementById('admin-page-title').textContent = titles[page][0];
+document.getElementById('admin-page-sub').textContent = titles[page][1];
+closeAdminSidebar();
+renderAdminPage();
+}
+
+function renderAdminPage() {
+const mc = document.getElementById('admin-content');
+if (adminPage === 'dashboard') renderAdminDashboard(mc);
+else if (adminPage === 'products') renderAdminProducts(mc);
+else if (adminPage === 'categories') renderAdminCategories(mc);
+else if (adminPage === 'import') renderAdminImport(mc);
+else if (adminPage === 'settings') renderAdminSettings(mc);
+}
+
+function openAdminSidebar() { document.getElementById('admin-sidebar').classList.remove('-translate-x-full'); document.getElementById('admin-overlay').classList.remove('hidden'); }
+function closeAdminSidebar() { document.getElementById('admin-sidebar').classList.add('-translate-x-full'); document.getElementById('admin-overlay').classList.add('hidden'); }
+
+/* â”€â”€â”€ Admin Dashboard â”€â”€â”€ */
+function renderAdminDashboard(mc) {
+const totalProducts = products.length;
+const totalCats = categories.length;
+const recent = products.slice(-8).reverse();
+const drafts = products.filter(p => p.status === 'draft').length;
+mc.innerHTML =
+'<div class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">' +
+'<div class="lg:col-span-3 space-y-4">' +
+'<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">' +
+kpiCard('fa-box', 'Total Produk', totalProducts, 'primary') +
+kpiCard('fa-tags', 'Kategori', totalCats, 'primary') +
+'</div>' +
+'<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">' +
+kpiCard('fa-plus-circle', 'Baru Ditambahkan', recent.length, 'green') +
+kpiCard('fa-triangle-exclamation', 'Perlu Perhatian', drafts, 'yellow') +
+'</div>' +
+'<div class="bg-dark-900 rounded-2xl border border-dark-border p-5"><h3 class="font-bold text-white mb-4">Produk per Kategori</h3><div class="space-y-3">' +
+categories.map(c => {
+const count = products.filter(p => p.categoryId === c.id).length;
+const pct = products.length ? Math.round(count / products.length * 100) : 0;
+return '<div><div class="flex justify-between text-xs mb-1"><span class="text-white/60">' + c.name + '</span><span class="text-white font-bold">' + count + '</span></div><div class="h-2 bg-dark-700 rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full transition-all" style="width:' + pct + '%"></div></div></div>';
+}).join('') +
+'</div></div>' +
+'</div>' +
+'<div class="lg:col-span-2"><div class="bg-dark-900 rounded-2xl border border-dark-border p-5"><div class="flex items-center justify-between mb-4"><h3 class="font-bold text-white">Produk Terbaru</h3><button onclick="adminNav(\'products\')" class="text-xs font-semibold text-primary hover:text-primary-dark">Lihat Semua &rarr;</button></div><div class="space-y-2">' +
+recent.map(p => '<div class="flex items-center gap-3 p-3 rounded-xl bg-dark-800 border border-dark-border"><div class="w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center shrink-0"><i class="fa-solid fa-lightbulb text-primary text-sm"></i></div><div class="min-w-0 flex-1"><p class="text-white text-sm font-semibold truncate">' + escapeHtml(p.name) + '</p><p class="text-white/40 text-xs">' + p.sku + ' &middot; ' + getCatName(p.categoryId) + '</p></div><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + (p.status === 'aktif' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400') + '">' + p.status + '</span></div>').join('') +
+'</div></div></div>' +
+'</div>';
+}
+function kpiCard(icon, label, value, color) {
+const colors = { primary: 'bg-primary/10 text-primary', green: 'bg-green-500/10 text-green-400', yellow: 'bg-yellow-500/10 text-yellow-400' };
+return '<div class="bg-dark-900 rounded-2xl border border-dark-border p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl ' + colors[color] + ' flex items-center justify-center"><i class="fa-solid ' + icon + '"></i></div></div><p class="text-2xl font-extrabold text-white">' + value + '</p><p class="text-xs text-white/40 mt-1">' + label + '</p></div>';
+}
+
+/* â”€â”€â”€ Admin Products â”€â”€â”€ */
+function renderAdminProducts(mc) {
+mc.innerHTML =
+'<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">' +
+'<div class="flex gap-2 flex-1"><div class="relative flex-1 max-w-md"><i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm"></i><input id="adm-search" value="' + escapeHtml(adminState.search) + '" oninput="adminSearch()" placeholder="Cari nama, SKU, kategori..." class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" /></div>' +
+'<select id="adm-cat" onchange="adminFilter()" class="pl-3 pr-10 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white/70 text-sm"><option value="">Semua Kategori</option>' + categories.map(c => '<option value="' + c.id + '"' + (adminState.category == c.id ? ' selected' : '') + '>' + c.name + '</option>').join('') + '</select>' +
+'<select id="adm-sort" onchange="adminFilter()" class="pl-3 pr-10 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white/70 text-sm"><option value="name-asc">A-Z</option><option value="name-desc">Z-A</option><option value="sku">SKU</option></select></div>' +
+'<div class="flex gap-2"><button onclick="openForm()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Produk</button></div>' +
+'</div>' +
+'<div class="bg-dark-900 rounded-2xl border border-dark-border overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-xs text-white/40 uppercase border-b border-dark-border"><th class="px-4 py-3">Produk</th><th class="px-4 py-3">SKU</th><th class="px-4 py-3">Kategori</th><th class="px-4 py-3">Status</th><th class="px-4 py-3 text-right">Aksi</th></tr></thead><tbody id="adm-products-body"></tbody></table></div></div>' +
+'<div id="adm-pagination" class="flex items-center justify-center gap-2 mt-4"></div>';
+renderAdminProductRows();
+}
+
+function adminSearch() { adminState.search = document.getElementById('adm-search').value.toLowerCase(); adminState.page = 1; renderAdminProductRows(); }
+function adminFilter() {
+adminState.category = document.getElementById('adm-cat').value;
+adminState.sort = document.getElementById('adm-sort').value;
+adminState.page = 1;
+renderAdminProductRows();
+}
+
+function getAdminFiltered() {
+let list = products.slice();
+if (adminState.search) {
+const q = adminState.search;
+list = list.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || getCatName(p.categoryId).toLowerCase().includes(q));
+}
+if (adminState.category) list = list.filter(p => p.categoryId == adminState.category);
+list.sort((a, b) => {
+if (adminState.sort === 'name-asc') return a.name.localeCompare(b.name);
+if (adminState.sort === 'name-desc') return b.name.localeCompare(a.name);
+if (adminState.sort === 'sku') return a.sku.localeCompare(b.sku);
+return 0;
+});
+return list;
+}
+
+function renderAdminProductRows() {
+const list = getAdminFiltered();
+const totalPages = Math.ceil(list.length / adminState.perPage) || 1;
+if (adminState.page > totalPages) adminState.page = totalPages;
+const start = (adminState.page - 1) * adminState.perPage;
+const rows = list.slice(start, start + adminState.perPage);
+
+const tbody = document.getElementById('adm-products-body');
+if (!tbody) return;
+if (rows.length === 0) {
+tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-12 text-center"><i class="fa-solid fa-box-open text-white/20 text-3xl mb-3"></i><p class="text-white/50 font-semibold">Belum ada produk</p><p class="text-white/30 text-xs mt-1">Tambahkan produk pertama untuk mulai mengelola katalog.</p></td></tr>';
+document.getElementById('adm-pagination').innerHTML = '';
+return;
+}
+tbody.innerHTML = rows.map(p => '<tr class="border-b border-dark-border last:border-0 hover:bg-dark-800/50">' +
+'<td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center shrink-0"><i class="fa-solid fa-lightbulb text-primary text-xs"></i></div><div class="min-w-0"><p class="text-white font-semibold text-sm truncate max-w-[200px]">' + escapeHtml(p.name) + '</p></div></div></td>' +
+'<td class="px-4 py-3 text-white/50 text-xs font-mono">' + p.sku + '</td>' +
+'<td class="px-4 py-3"><span class="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-xs font-bold">' + getCatName(p.categoryId) + '</span></td>' +
+'<td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + (p.status === 'aktif' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400') + '">' + p.status + '</span></td>' +
+'<td class="px-4 py-3 text-right whitespace-nowrap"><button onclick="openForm(' + p.id + ')" class="text-primary hover:text-primary-dark text-xs font-semibold mr-3"><i class="fa-solid fa-pen mr-1"></i>Edit</button><button onclick="confirmDelete(\'product\',' + p.id + ')" class="text-red-400 hover:text-red-300 text-xs font-semibold"><i class="fa-solid fa-trash mr-1"></i>Hapus</button></td>' +
+'</tr>').join('');
+
+const pag = document.getElementById('adm-pagination');
+let html = '<button onclick="adminGoPage(' + (adminState.page - 1) + ')" ' + (adminState.page <= 1 ? 'disabled' : '') + ' class="px-3 py-2 rounded-lg border border-dark-border text-white/50 text-xs font-medium disabled:opacity-30 hover:border-primary transition"><i class="fa-solid fa-chevron-left"></i></button>';
+for (let i = 1; i <= totalPages; i++) {
+if (totalPages > 7 && i > 3 && i < totalPages - 1 && Math.abs(i - adminState.page) > 1) { if (i === 4) html += '<span class="px-1 text-white/30 text-xs">&hellip;</span>'; continue; }
+html += '<button onclick="adminGoPage(' + i + ')" class="' + (i === adminState.page ? 'bg-primary text-dark-950 border-primary' : 'border-dark-border text-white/50 hover:border-primary') + ' px-3 py-2 rounded-lg border text-xs font-bold transition">' + i + '</button>';
+}
+html += '<button onclick="adminGoPage(' + (adminState.page + 1) + ')" ' + (adminState.page >= totalPages ? 'disabled' : '') + ' class="px-3 py-2 rounded-lg border border-dark-border text-white/50 text-xs font-medium disabled:opacity-30 hover:border-primary transition"><i class="fa-solid fa-chevron-right"></i></button>';
+pag.innerHTML = html;
+}
+function adminGoPage(p) {
+const totalPages = Math.ceil(getAdminFiltered().length / adminState.perPage) || 1;
+adminState.page = Math.max(1, Math.min(p, totalPages));
+renderAdminProductRows();
+}
+
+/* â”€â”€â”€ Product Form â”€â”€â”€ */
+function openForm(id) {
+editingProductId = id || null;
+document.getElementById('form-title').textContent = id ? 'Edit Produk' : 'Tambah Produk';
+const catSel = document.getElementById('pf-category');
+catSel.innerHTML = categories.map(c => '<option value="' + c.id + '">' + c.name + '</option>').join('');
+
+const specRows = document.getElementById('spec-rows');
+specRows.innerHTML = '';
+
+if (id) {
+const p = products.find(x => x.id === id);
+if (!p) return;
+document.getElementById('pf-name').value = p.name;
+document.getElementById('pf-sku').value = p.sku;
+document.getElementById('pf-status').value = p.status;
+document.getElementById('pf-category').value = p.categoryId;
+updateSubcategoryOptions();
+document.getElementById('pf-subcategory').value = p.subcategory || '';
+document.getElementById('pf-description').value = p.description || '';
+if (p.specs) p.specs.forEach(s => addSpecRow(s.label, s.value));
+} else {
+document.getElementById('pf-name').value = '';
+document.getElementById('pf-sku').value = 'WR-' + String(nextId(products)).padStart(3, '0');
+document.getElementById('pf-status').value = 'aktif';
+document.getElementById('pf-category').value = categories[0] ? categories[0].id : '';
+updateSubcategoryOptions();
+document.getElementById('pf-subcategory').value = '';
+document.getElementById('pf-description').value = '';
+addSpecRow();
+}
+openModal('modal-form');
+}
+
+function updateSubcategoryOptions() {
+const catId = Number(document.getElementById('pf-category').value);
+const cat = getCat(catId);
+const sel = document.getElementById('pf-subcategory');
+const subs = cat && cat.subcategories ? cat.subcategories : [];
+const cur = sel.value;
+sel.innerHTML = '<option value="">Pilih subkategori...</option>' + subs.map(s => '<option value="' + s + '"' + (cur === s ? ' selected' : '') + '>' + s + '</option>').join('');
+}
+
+function addSpecRow(label, value) {
+const container = document.getElementById('spec-rows');
+const idx = container.children.length;
+const row = document.createElement('div');
+row.className = 'flex gap-2';
+row.innerHTML = '<input class="spec-label flex-1 px-3 py-2 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" placeholder="Label" value="' + (label || '') + '" /><input class="spec-value flex-1 px-3 py-2 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" placeholder="Value" value="' + (value || '') + '" /><button type="button" onclick="this.parentElement.remove()" class="w-9 h-9 rounded-xl bg-dark-700 flex items-center justify-center text-white/40 hover:text-red-400 shrink-0"><i class="fa-solid fa-xmark text-sm"></i></button>';
+container.appendChild(row);
+}
+
+function handleProductSubmit(e) {
+e.preventDefault();
+const name = document.getElementById('pf-name').value.trim();
+const sku = document.getElementById('pf-sku').value.trim();
+const categoryId = Number(document.getElementById('pf-category').value);
+const subcategory = document.getElementById('pf-subcategory').value;
+const status = document.getElementById('pf-status').value;
+const description = document.getElementById('pf-description').value.trim();
+
+const specs = [];
+document.querySelectorAll('#spec-rows > div').forEach(row => {
+const l = row.querySelector('.spec-label').value.trim();
+const v = row.querySelector('.spec-value').value.trim();
+if (l && v) specs.push({ label: l, value: v });
+});
+
+if (editingProductId) {
+const p = products.find(x => x.id === editingProductId);
+if (p) { Object.assign(p, { name, sku, categoryId, subcategory, status, description, specs }); }
+toast('Produk berhasil diupdate!');
+} else {
+products.push({ id: nextId(products), name, sku, categoryId, subcategory, status, description, specs, createdAt: new Date().toISOString().slice(0, 10) });
+toast('Produk berhasil ditambahkan!');
+}
+saveProducts();
+closeModal('modal-form');
+renderAdminPage();
+renderCatalog();
+}
+
+/* â”€â”€â”€ Delete Confirm â”€â”€â”€ */
+function confirmDelete(type, id) {
+confirmAction = { type, id };
+if (type === 'product') {
+const p = products.find(x => x.id === id);
+document.getElementById('confirm-title').textContent = 'Hapus Produk?';
+document.getElementById('confirm-desc').textContent = '"' + (p ? p.name : '') + '" akan dihapus permanen.';
+} else if (type === 'category') {
+const c = getCat(id);
+const count = products.filter(p => p.categoryId === id).length;
+document.getElementById('confirm-title').textContent = 'Hapus Kategori?';
+document.getElementById('confirm-desc').textContent = '"' + (c ? c.name : '') + '" akan dihapus. ' + count + ' produk terkait perlu dipindah.';
+}
+document.getElementById('confirm-btn').onclick = executeDelete;
+openModal('modal-confirm');
+}
+
+function executeDelete() {
+if (!confirmAction) return;
+if (confirmAction.type === 'product') {
+products = products.filter(p => p.id !== confirmAction.id);
+saveProducts();
+toast('Produk berhasil dihapus.');
+} else if (confirmAction.type === 'category') {
+categories = categories.filter(c => c.id !== confirmAction.id);
+saveCategories();
+toast('Kategori berhasil dihapus.');
+}
+confirmAction = null;
+closeModal('modal-confirm');
+renderAdminPage();
+renderCatalog();
+}
+
+/* â”€â”€â”€ Categories â”€â”€â”€ */
+function renderAdminCategories(mc) {
+mc.innerHTML =
+'<div class="flex items-center justify-end mb-5"><button onclick="openCatForm()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Kategori</button></div>' +
+'<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">' +
+categories.map(c => {
+const count = products.filter(p => p.categoryId === c.id).length;
+return '<div class="bg-dark-900 rounded-2xl border border-dark-border p-5">' +
+'<div class="flex items-start justify-between mb-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center"><i class="fa-solid ' + (c.icon || 'fa-tag') + ' text-primary"></i></div><div><h3 class="text-white font-bold text-sm">' + c.name + '</h3><p class="text-white/40 text-xs">' + count + ' produk</p></div></div>' +
+'<div class="flex gap-1"><button onclick="openCatForm(' + c.id + ')" class="w-7 h-7 rounded-lg bg-dark-700 flex items-center justify-center text-white/50 hover:text-primary"><i class="fa-solid fa-pen text-xs"></i></button><button onclick="confirmDelete(\'category\',' + c.id + ')" class="w-7 h-7 rounded-lg bg-dark-700 flex items-center justify-center text-white/50 hover:text-red-400"><i class="fa-solid fa-trash text-xs"></i></button></div></div>' +
+(c.subcategories && c.subcategories.length ? '<div class="flex flex-wrap gap-1.5 mt-3">' + c.subcategories.map(s => '<span class="px-2 py-0.5 rounded-lg bg-dark-700 text-white/50 text-[10px] font-medium">' + s + '</span>').join('') + '</div>' : '') +
+'</div>';
+}).join('') + '</div>';
+}
+
+function openCatForm(id) {
+editingCategoryId = id || null;
+document.getElementById('cat-form-title').textContent = id ? 'Edit Kategori' : 'Tambah Kategori';
+if (id) {
+const c = getCat(id);
+document.getElementById('cf-name').value = c.name;
+document.getElementById('cf-icon').value = c.icon || '';
+document.getElementById('cf-subcategories').value = (c.subcategories || []).join(', ');
+} else {
+document.getElementById('cf-name').value = '';
+document.getElementById('cf-icon').value = '';
+document.getElementById('cf-subcategories').value = '';
+}
+openModal('modal-category');
+}
+
+function handleCategorySubmit(e) {
+e.preventDefault();
+const name = document.getElementById('cf-name').value.trim();
+const icon = document.getElementById('cf-icon').value.trim();
+const subs = document.getElementById('cf-subcategories').value.split(',').map(s => s.trim()).filter(Boolean);
+if (editingCategoryId) {
+const c = getCat(editingCategoryId);
+if (c) { c.name = name; c.icon = icon; c.subcategories = subs; }
+toast('Kategori berhasil diupdate!');
+} else {
+categories.push({ id: nextId(categories), name, icon, subcategories: subs });
+toast('Kategori berhasil ditambahkan!');
+}
+saveCategories();
+closeModal('modal-category');
+renderAdminPage();
+renderCatalog();
+}
+
+/* â”€â”€â”€ Import / Export â”€â”€â”€ */
+function renderAdminImport(mc) {
+mc.innerHTML =
+'<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">' +
+'<div class="bg-dark-900 rounded-2xl border border-dark-border p-6"><div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4"><i class="fa-solid fa-file-import text-primary text-lg"></i></div><h3 class="text-white font-bold mb-1">Import Produk (CSV)</h3><p class="text-white/40 text-sm mb-4">Upload file CSV untuk menambahkan produk secara massal.</p><button onclick="openModal(\'modal-import\');resetImport()" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition"><i class="fa-solid fa-upload mr-1"></i> Upload CSV</button></div>' +
+'<div class="bg-dark-900 rounded-2xl border border-dark-border p-6"><div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4"><i class="fa-solid fa-file-export text-primary text-lg"></i></div><h3 class="text-white font-bold mb-1">Export Produk (CSV)</h3><p class="text-white/40 text-sm mb-4">Download seluruh data produk dalam format CSV.</p><button onclick="exportCSV()" class="px-5 py-2.5 rounded-xl bg-dark-700 hover:bg-dark-600 text-white text-sm font-bold border border-dark-border transition"><i class="fa-solid fa-download mr-1"></i> Download CSV</button></div>' +
+'</div>' +
+'<div class="bg-dark-900 rounded-2xl border border-dark-border p-6 mt-4"><h3 class="text-white font-bold mb-3">Format CSV</h3><div class="bg-dark-800 rounded-xl p-4 font-mono text-xs text-white/60 overflow-x-auto">nama,sku,kategori,subkategori,deskripsi,spesifikasi,status<br/>LED Headlamp H4,WR-001,LED Headlamp,H4,Deskripsi...,Wattage:30W;Voltase:12V,aktif</div></div>';
+}
+
+function handleCSVUpload(e) {
+const file = e.target.files[0];
+if (!file) return;
+const reader = new FileReader();
+reader.onload = function(ev) {
+const text = ev.target.result;
+parseCSV(text);
+};
+reader.readAsText(file);
+}
+
+function parseCSV(text) {
+const lines = text.split(/\r?\n/).filter(l => l.trim());
+if (lines.length < 2) { toast('File CSV kosong atau tidak valid.', 'error'); return; }
+const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+const rows = [];
+const errors = [];
+const warnings = [];
+for (let i = 1; i < lines.length; i++) {
+const cols = parseCSVLine(lines[i]);
+if (cols.length < 3) { errors.push('Baris ' + (i + 1) + ': kolom kurang dari 3'); continue; }
+const row = {};
+header.forEach((h, j) => { row[h] = (cols[j] || '').trim(); });
+if (!row.nama) { errors.push('Baris ' + (i + 1) + ': nama kosong'); continue; }
+if (!row.sku) { warnings.push('Baris ' + (i + 1) + ': SKU kosong, akan digenerate'); row.sku = 'WR-IMP-' + i; }
+if (!row.kategori) { errors.push('Baris ' + (i + 1) + ': kategori kosong'); continue; }
+const cat = categories.find(c => c.name.toLowerCase() === row.kategori.toLowerCase());
+if (!cat) { warnings.push('Baris ' + (i + 1) + ': kategori "' + row.kategori + '" tidak ditemukan, akan dibuat baru'); }
+rows.push(row);
+}
+importData = { rows, errors, warnings };
+showImportPreview(rows, errors, warnings);
+}
+
+function parseCSVLine(line) {
+const result = [];
+let cur = '', inQ = false;
+for (let i = 0; i < line.length; i++) {
+const ch = line[i];
+if (ch === '"') { inQ = !inQ; }
+else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
+else { cur += ch; }
+}
+result.push(cur);
+return result;
+}
+
+function showImportPreview(rows, errors, warnings) {
+document.getElementById('import-step-1').classList.add('hidden');
+document.getElementById('import-step-2').classList.remove('hidden');
+document.getElementById('imp-valid').textContent = rows.length;
+document.getElementById('imp-warning').textContent = warnings.length;
+document.getElementById('imp-error').textContent = errors.length;
+document.getElementById('imp-errors').innerHTML = [
+...errors.map(e => '<div class="flex items-center gap-2 text-xs text-red-400 bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2"><i class="fa-solid fa-circle-xmark"></i> ' + escapeHtml(e) + '</div>'),
+...warnings.map(w => '<div class="flex items-center gap-2 text-xs text-yellow-400 bg-yellow-500/5 border border-yellow-500/10 rounded-lg px-3 py-2"><i class="fa-solid fa-circle-exclamation"></i> ' + escapeHtml(w) + '</div>')
+].join('');
+document.getElementById('imp-preview').innerHTML = rows.slice(0, 50).map(r => '<tr class="border-t border-dark-border"><td class="px-3 py-2">' + escapeHtml(r.nama) + '</td><td class="px-3 py-2 font-mono">' + escapeHtml(r.sku) + '</td><td class="px-3 py-2">' + escapeHtml(r.kategori) + '</td><td class="px-3 py-2">' + (r.status || 'aktif') + '</td></tr>').join('');
+}
+
+function resetImport() {
+document.getElementById('import-step-1').classList.remove('hidden');
+document.getElementById('import-step-2').classList.add('hidden');
+document.getElementById('import-step-3').classList.add('hidden');
+document.getElementById('csv-file').value = '';
+importData = null;
+}
+
+function confirmImport() {
+if (!importData) return;
+let imported = 0;
+let createdCats = 0;
+importData.rows.forEach(r => {
+let cat = categories.find(c => c.name.toLowerCase() === r.kategori.toLowerCase());
+if (!cat) {
+cat = { id: nextId(categories), name: r.kategori, icon: 'fa-tag', subcategories: r.subkategori ? [r.subkategori] : [] };
+categories.push(cat);
+createdCats++;
+saveCategories();
+}
+const existing = products.find(p => p.sku === r.sku);
+if (existing) return;
+const specs = (r.spesifikasi || '').split(';').filter(Boolean).map(s => {
+const parts = s.split(':');
+return { label: (parts[0] || '').trim(), value: (parts[1] || '').trim() };
+}).filter(s => s.label && s.value);
+products.push({ id: nextId(products), name: r.nama, sku: r.sku, categoryId: cat.id, subcategory: r.subkategori || '', status: r.status || 'aktif', description: r.deskripsi || '', specs, createdAt: new Date().toISOString().slice(0, 10) });
+imported++;
+});
+saveProducts();
+document.getElementById('import-step-2').classList.add('hidden');
+document.getElementById('import-step-3').classList.remove('hidden');
+document.getElementById('imp-result').textContent = imported + ' produk berhasil diimport' + (createdCats ? ', ' + createdCats + ' kategori baru dibuat' : '') + '.';
+toast(imported + ' produk berhasil diimport!');
+renderCatalog();
+}
+
+function exportCSV() {
+const header = 'nama,sku,kategori,subkategori,deskripsi,spesifikasi,status';
+const rows = products.map(p => {
+const specs = (p.specs || []).map(s => s.label + ':' + s.value).join(';');
+return [escapeCSV(p.name), escapeCSV(p.sku), escapeCSV(getCatName(p.categoryId)), escapeCSV(p.subcategory || ''), escapeCSV(p.description || ''), escapeCSV(specs), p.status].join(',');
+});
+const csv = header + '\n' + rows.join('\n');
+const blob = new Blob([csv], { type: 'text/csv' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url; a.download = 'werace-products.csv'; a.click();
+URL.revokeObjectURL(url);
+toast('CSV berhasil diexport!');
+}
+function escapeCSV(s) { return '"' + (s || '').replace(/"/g, '""') + '"'; }
+
+function downloadTemplate() {
+const csv = 'nama,sku,kategori,subkategori,deskripsi,spesifikasi,status\nContoh Produk,WR-999,LED Headlamp,H4,Deskripsi produk,Wattage:30W;Voltase:12V,aktif';
+const blob = new Blob([csv], { type: 'text/csv' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url; a.download = 'template-import.csv'; a.click();
+URL.revokeObjectURL(url);
+}
+
+/* â”€â”€â”€ Settings â”€â”€â”€ */
+function renderAdminSettings(mc) {
+mc.innerHTML =
+'<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start max-w-4xl">' +
+'<div class="bg-dark-900 rounded-2xl border border-dark-border p-6"><h3 class="text-white font-bold mb-4">Pengaturan Umum</h3>' +
+'<div class="space-y-4"><div><label class="text-xs font-bold text-white/50 mb-1 block">Nama Website</label><input id="set-name" value="' + escapeHtml(settings.siteName) + '" class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" /></div>' +
+'<div><label class="text-xs font-bold text-white/50 mb-1 block">Nomor WhatsApp (format: 62xxx)</label><input id="set-wa" value="' + escapeHtml(settings.whatsapp) + '" class="w-full px-4 py-2.5 rounded-xl bg-dark-800 border border-dark-border text-white text-sm" /></div>' +
+'<button onclick="saveSettingsForm()" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition">Simpan Pengaturan</button></div></div>' +
+'<div class="bg-dark-900 rounded-2xl border border-dark-border p-6"><h3 class="text-white font-bold mb-2">Reset Data</h3><p class="text-white/40 text-sm mb-4">Kembalikan semua data ke kondisi awal (sample data).</p><button onclick="if(confirm(\'Reset semua data?\')) resetAllData()" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold transition">Reset ke Default</button></div>' +
+'</div>';
+}
+
+function saveSettingsForm() {
+settings.siteName = document.getElementById('set-name').value.trim() || 'WERACE Indonesia';
+settings.whatsapp = document.getElementById('set-wa').value.trim() || '6285799455079';
+saveSettings();
+toast('Pengaturan berhasil disimpan!');
+}
+
+function resetAllData() {
+localStorage.removeItem('werace_products');
+localStorage.removeItem('werace_categories');
+localStorage.removeItem('werace_settings');
+location.reload();
+}
+
+/* â”€â”€â”€ Init â”€â”€â”€ */
+renderCatalog();
+if (sessionStorage.getItem('werace_auth') === '1') showAdmin();
+</script>
+</body>
+</html>

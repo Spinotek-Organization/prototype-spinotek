@@ -1,0 +1,11 @@
+{
+    "name": "WERACE — Katalog Produk Otomotif",
+    "description": "Katalog produk LED otomotif (tanpa cart/checkout) dengan halaman katalog publik, pencarian, kategori, detail produk + WhatsApp CTA, dan Dashboard Admin (CRUD, import/export CSV).",
+    "icon": "🚗",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": ["html", "css", "javascript", "tailwindcss"],
+    "demo_url": "https://demo.spinotek.com/katalog-produk-otomotif",
+    "repo_url": null,
+    "added_at": "2026-10-14"
+}

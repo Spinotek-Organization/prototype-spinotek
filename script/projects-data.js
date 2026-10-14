@@ -5,6 +5,19 @@
  */
 window.PROJECTS_DATA = [
   {
+    "slug": "katalog-produk-otomotif",
+    "name": "WERACE — Katalog Produk Otomotif",
+    "description": "Katalog produk LED otomotif (tanpa cart/checkout) dengan halaman katalog publik, pencarian, kategori, detail produk + WhatsApp CTA, dan Dashboard Admin (CRUD, import/export CSV).",
+    "category": "Web App",
+    "status": "IN DEVELOPMENT",
+    "tech": ["html", "css", "javascript", "tailwindcss"],
+    "icon": "🚗",
+    "demo_url": "katalog-produk-otomotif/index.html",
+    "repo_url": null,
+    "image": "katalog-produk-otomotif/card.png",
+    "added_at": "2026-10-14"
+  },
+  {
     "slug": "penerbitan-distributor-buku",
     "name": "Penerbitan & Distributor Buku",
     "description": "Sistem Penerbitan, Distribusi & Keuangan Buku — Manajemen naskah, produksi, produk, relasi, barang datang, penjualan, retur, kuitansi, stok, kas, laporan, dan user.",
