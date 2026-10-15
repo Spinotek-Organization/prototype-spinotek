@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8" />
@@ -8,6 +8,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="preload" as="image" href="assets/hero.jpg" />
 <script>
 tailwind.config = {
 theme: {
@@ -25,7 +26,10 @@ lt: { bg: '#F7F7F5', surface: '#FFFFFF', muted: '#F1F1EF', border: '#E5E5E2', te
 <style>
 :root { --op: #E79000; }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar { display: none; }
+#site-header { background: transparent; border-bottom: 1px solid transparent; }
+#site-header.solid { background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom-color: #1c1c1c; }
 section[id] { scroll-margin-top: 5rem; }
 body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 .ns::-webkit-scrollbar { display: none; }
@@ -58,78 +62,229 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 .exp-btn .exp-label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; display: inline-block; margin-left: 0; transition: max-width .3s ease, opacity .25s ease, margin .3s ease; }
 .exp-btn:hover { width: var(--exp-w); padding: 0 .75rem; justify-content: flex-start; }
 .exp-btn:hover .exp-label { max-width: 8rem; opacity: 1; margin-left: .375rem; }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+.reveal-in { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; transition: none; } }
 </style>
 </head>
 <body class="bg-lt-bg text-lt-text antialiased">
 
 <div id="toast-container" class="toast-wrap"></div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PUBLIC CATALOG â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<div id="catalog-view">
-
-<!-- Header -->
-<header class="bg-dark-900 sticky top-0 z-40 border-b border-dark-border">
+<!-- ===== PUBLIC LANDING ===== -->
+<header id="site-header" class="sticky top-0 z-40 transition-colors duration-300">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex items-center justify-between h-16">
 <a href="#" onclick="showCatalog();return false;" class="flex items-center gap-2 shrink-0">
 <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"><i class="fa-solid fa-bolt text-dark-950 text-sm"></i></div>
-<span class="text-white font-extrabold text-lg tracking-tight">WERACE</span>
+<span class="text-lg font-extrabold tracking-tight text-white"><span class="text-primary">WE</span>RACE</span>
 </a>
 <nav class="hidden md:flex items-center gap-6">
-<a href="#produk" class="text-white/70 hover:text-primary text-sm font-medium transition">Produk</a>
-<a href="#kategori" onclick="event.preventDefault();scrollToCategories()" class="text-white/70 hover:text-primary text-sm font-medium transition">Kategori</a>
-<a href="#tentang" class="text-white/70 hover:text-primary text-sm font-medium transition">Tentang</a>
+<a href="#" onclick="event.preventDefault();showCatalog()" class="text-white/80 hover:text-primary text-sm font-medium transition">Dashboard</a>
+<a href="#kategori" onclick="event.preventDefault();scrollToSection('kategori')" class="text-white/80 hover:text-primary text-sm font-medium transition">Kategori</a>
+<a href="#featured" onclick="event.preventDefault();scrollToSection('featured')" class="text-white/80 hover:text-primary text-sm font-medium transition">Produk</a>
+<a href="#tentang" onclick="event.preventDefault();scrollToSection('tentang')" class="text-white/80 hover:text-primary text-sm font-medium transition">Tentang</a>
 </nav>
 <div class="flex items-center gap-3">
 <button onclick="focusSearch()" class="w-9 h-9 rounded-lg bg-dark-700 hover:bg-dark-600 flex items-center justify-center text-white/70 hover:text-primary transition" aria-label="Cari"><i class="fa-solid fa-magnifying-glass text-sm"></i></button>
 <button onclick="showLogin()" class="w-9 h-9 rounded-lg bg-dark-700 hover:bg-dark-600 flex items-center justify-center text-white/70 hover:text-primary transition" aria-label="Admin"><i class="fa-solid fa-user-shield text-sm"></i></button>
-<a href="https://wa.me/6285799455079" target="_blank" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan</a>
+<a href="https://wa.me/6281234567890" target="_blank" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan</a>
 <button onclick="toggleMobileMenu()" class="md:hidden w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-white/70" aria-label="Menu"><i id="burger-icon" class="fa-solid fa-bars text-sm transition-transform duration-300"></i></button>
 </div>
 </div>
 <div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-<div class="pt-3 pb-4 space-y-1">
-<a href="#produk" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Produk</a>
-<a href="#kategori" onclick="event.preventDefault();toggleMobileMenu();scrollToCategories()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Kategori</a>
-<a href="#tentang" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Tentang</a>
-<a href="https://wa.me/6285799455079" target="_blank" class="block px-3 py-2 rounded-lg bg-primary text-dark-950 text-sm font-bold text-center mt-2"><i class="fa-brands fa-whatsapp mr-1"></i> Tanyakan Produk</a>
+<div class="pt-3 pb-4 space-y-1 bg-dark-900/95 backdrop-blur">
+<a href="#" onclick="event.preventDefault();showCatalog()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Dashboard</a>
+<a href="#kategori" onclick="event.preventDefault();scrollToSection('kategori')" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Kategori</a>
+<a href="#featured" onclick="event.preventDefault();scrollToSection('featured')" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Produk</a>
+<a href="#tentang" onclick="event.preventDefault();scrollToSection('tentang')" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Tentang</a>
+<a href="https://wa.me/6281234567890" target="_blank" class="block px-3 py-2 rounded-lg bg-primary text-dark-950 text-sm font-bold text-center mt-2"><i class="fa-brands fa-whatsapp mr-1"></i> Tanyakan Produk</a>
 </div>
 </div>
 </div>
 </header>
 
+<div id="catalog-view">
+
 <!-- Hero -->
-<section class="bg-dark-900 relative overflow-hidden">
-<div class="absolute inset-0 pat-diamond"></div>
+<section class="bg-dark-900 relative overflow-hidden min-h-[100svh] flex items-center -mt-16">
+<img src="assets/hero.jpg" alt="" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover object-center lg:object-[65%_center]" onerror="this.remove()" />
+<div class="absolute inset-0 bg-dark-950/70 lg:hidden"></div>
+<div class="absolute inset-0 hidden lg:block bg-gradient-to-r from-dark-950/95 via-dark-950/70 to-dark-950/25"></div>
+<div class="absolute inset-0 pat-diamond opacity-70"></div>
+<div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-dark-950/95 via-dark-950/60 to-transparent pointer-events-none"></div>
 <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 relative">
-<div class="max-w-2xl">
+<div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
+<div class="max-w-2xl reveal">
 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-5">
 <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
 <span class="text-primary text-xs font-semibold">LED Otomotif Premium</span>
 </div>
-<h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">Ilight Your Ride,<br /><span class="text-primary">Feel The Race.</span></h1>
-<p class="text-white/60 text-base sm:text-lg leading-relaxed mb-8">Katalog lengkap LED motor &amp; mobil &mdash; headlamp, bulb, strip, work light, dan aksesoris. 400+ produk siap dikirim.</p>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">Light Your Ride,<br /><span class="text-primary">Feel The Race.</span></h1>
+<p class="text-white/60 text-base sm:text-lg leading-relaxed mb-8">Katalog lengkap LED motor &amp; mobil &mdash; headlamp, bulb, strip, work light, dan aksesoris. Produk berkualitas siap dikirim ke seluruh Indonesia.</p>
 <div class="flex flex-wrap gap-3">
-<a href="#produk" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-solid fa-table-cells-large"></i> Telusuri Produk</a>
-<a href="https://wa.me/6285799455079" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-dark-700 hover:bg-dark-600 text-white font-bold text-sm border border-dark-border transition"><i class="fa-brands fa-whatsapp text-primary"></i> Chat WhatsApp</a>
+<button onclick="showShop()" class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-solid fa-table-cells-large"></i> Telusuri Produk</button>
+<a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-dark-700 hover:bg-dark-600 text-white font-bold text-sm border border-dark-border transition"><i class="fa-brands fa-whatsapp text-primary"></i> Tanyakan via WhatsApp</a>
+</div>
+</div>
+<div class="flex items-center gap-3 mt-8">
+<div class="bg-dark-950/80 border border-dark-border rounded-xl px-3.5 py-2 backdrop-blur">
+<p class="text-primary text-sm font-extrabold" id="hero-stat-products">60+</p>
+<p class="text-white/50 text-[10px] uppercase tracking-wider">Produk</p>
+</div>
+<div class="bg-dark-950/80 border border-dark-border rounded-xl px-3.5 py-2 backdrop-blur">
+<p class="text-primary text-sm font-extrabold" id="hero-stat-categories">6</p>
+<p class="text-white/50 text-[10px] uppercase tracking-wider">Kategori</p>
 </div>
 </div>
 </div>
 </section>
+
+<!-- Discovery Panel -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 -mt-7 sm:-mt-9">
+<form onsubmit="discoverySubmit(event)" class="reveal bg-white rounded-2xl border border-lt-border p-4 sm:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+<div class="flex flex-col sm:flex-row gap-3">
+<div class="relative flex-1">
+<i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-lt-mut text-sm"></i>
+<input id="discovery-input" type="text" placeholder="Cari produk, kode, atau kategori..." class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-lt-border bg-lt-bg text-sm" />
+</div>
+<button type="submit" class="px-6 py-3.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition whitespace-nowrap"><i class="fa-solid fa-magnifying-glass mr-2"></i> Cari Produk</button>
+</div>
+<p class="text-xs text-lt-mut mt-3">Contoh pencarian: LED Headlamp H4, WR-001, RGB Strip</p>
+</form>
+</div>
 
 <!-- Kategori -->
-<section id="kategori" class="py-10 sm:py-14 bg-lt-bg">
+<section id="kategori" class="pt-10 pb-12 sm:pt-14 sm:pb-16 bg-lt-bg">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-end justify-between gap-4 mb-6 reveal">
+<div>
 <h2 class="text-xl sm:text-2xl font-bold mb-1">Kategori Produk</h2>
-<p class="text-lt-mut text-sm mb-6">Pilih kategori untuk mempermudah pencarian</p>
-<div id="category-pills" class="flex flex-wrap gap-2"></div>
+<p class="text-lt-mut text-sm">Pilih kategori untuk mempermudah pencarian</p>
+</div>
+<button onclick="showShop()" class="shrink-0 text-sm font-bold text-primary hover:text-primary-dark transition">Lihat Semua <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></button>
+</div>
+<div id="landing-cats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"></div>
 </div>
 </section>
 
-<!-- Produk -->
-<section id="produk" class="pb-16 bg-lt-bg">
+<!-- Produk Pilihan -->
+<section id="featured" class="py-14 sm:py-20 bg-white border-t border-lt-border">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-end justify-between gap-4 mb-6 reveal">
+<div>
+<h2 class="text-xl sm:text-2xl font-bold mb-1">Produk Pilihan</h2>
+<p class="text-lt-mut text-sm">Koleksi unggulan pilihan kami</p>
+</div>
+<button onclick="showShop()" class="shrink-0 text-sm font-bold text-primary hover:text-primary-dark transition">Lihat Semua Produk <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></button>
+</div>
+<div id="featured-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"></div>
+</div>
+</section>
+
+<!-- Trust Strip -->
+<section class="bg-dark-950 border-y border-dark-border py-8 sm:py-10 relative overflow-hidden">
+<div class="absolute inset-0 pat-speed"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0">
+<div class="flex flex-col items-center text-center px-4 lg:px-6 py-2 lg:border-r lg:border-dark-border reveal">
+<i class="fa-solid fa-layer-group text-primary text-3xl sm:text-4xl mb-3"></i>
+<h3 class="text-white font-bold text-sm">Pilihan Produk</h3>
+<p class="text-white/50 text-xs mt-0.5">Lengkap &amp; variatif</p>
+</div>
+<div class="flex flex-col items-center text-center px-4 lg:px-6 py-2 lg:border-r lg:border-dark-border reveal">
+<i class="fa-solid fa-bolt text-primary text-3xl sm:text-4xl mb-3"></i>
+<h3 class="text-white font-bold text-sm">Respon Cepat</h3>
+<p class="text-white/50 text-xs mt-0.5">Via WhatsApp</p>
+</div>
+<div class="flex flex-col items-center text-center px-4 lg:px-6 py-2 lg:border-r lg:border-dark-border reveal">
+<i class="fa-solid fa-headset text-primary text-3xl sm:text-4xl mb-3"></i>
+<h3 class="text-white font-bold text-sm">Konsultasi</h3>
+<p class="text-white/50 text-xs mt-0.5">Gratis &amp; ramah</p>
+</div>
+<div class="flex flex-col items-center text-center px-4 lg:px-6 py-2 reveal">
+<i class="fa-solid fa-shield-halved text-primary text-3xl sm:text-4xl mb-3"></i>
+<h3 class="text-white font-bold text-sm">Kualitas Produk</h3>
+<p class="text-white/50 text-xs mt-0.5">Teruji &amp; awet</p>
+</div>
+</div>
+</section>
+
+<!-- Tentang / Solutions -->
+<section id="tentang" class="py-14 sm:py-20 bg-lt-bg relative overflow-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+<div class="reveal">
+<p class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Tentang WERACE</p>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-lt-text mb-4">Solusi LED untuk Setiap Kendaraan</h2>
+<p class="text-lt-sec text-sm leading-relaxed mb-6">WERACE Indonesia adalah penyedia produk LED otomotif untuk motor dan mobil. Kami menyediakan berbagai jenis LED headlamp, bulb, strip, work light, dan aksesoris berkualitas tinggi dengan harga kompetitif. Konsultasikan kebutuhan LED kendaraan Anda langsung via WhatsApp.</p>
+<ul class="space-y-3 mb-7">
+<li class="flex items-start gap-2.5 text-sm text-lt-sec"><i class="fa-solid fa-circle-check text-primary mt-0.5"></i> Pilihan produk lengkap untuk motor &amp; mobil</li>
+<li class="flex items-start gap-2.5 text-sm text-lt-sec"><i class="fa-solid fa-circle-check text-primary mt-0.5"></i> Konsultasi gratis sebelum membeli</li>
+<li class="flex items-start gap-2.5 text-sm text-lt-sec"><i class="fa-solid fa-circle-check text-primary mt-0.5"></i> Pengiriman ke seluruh Indonesia</li>
+</ul>
+<a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan via WhatsApp</a>
+</div>
+<div class="reveal relative">
+<div class="relative aspect-[4/3] rounded-2xl overflow-hidden border border-lt-border bg-gradient-to-br from-dark-800 to-dark-700">
+<div class="absolute inset-0 pat-grid opacity-70"></div>
+<img src="assets/about.jpg" alt="Solusi LED WERACE" class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()" />
+<div class="absolute inset-0 bg-gradient-to-t from-dark-950/70 via-transparent to-transparent"></div>
+</div>
+<div class="absolute left-4 right-4 bottom-4 grid grid-cols-3 text-center">
+<div class="px-2">
+<p class="text-lg sm:text-xl font-extrabold text-primary" id="stat-products">60+</p>
+<p class="text-white/50 text-[10px] uppercase tracking-wider">Produk</p>
+</div>
+<div class="px-2 border-x border-white/20">
+<p class="text-lg sm:text-xl font-extrabold text-primary" id="stat-categories">6</p>
+<p class="text-white/50 text-[10px] uppercase tracking-wider">Kategori</p>
+</div>
+<div class="px-2">
+<p class="text-lg sm:text-xl font-extrabold text-primary">24/7</p>
+<p class="text-white/50 text-[10px] uppercase tracking-wider">WhatsApp</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+
+<!-- Final CTA -->
+<section class="relative overflow-hidden bg-dark-950">
+<img src="assets/cta.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-90" onerror="this.remove()" />
+<div class="absolute inset-0 bg-gradient-to-r from-dark-950 via-dark-950/75 to-dark-950/25"></div>
+<div class="absolute inset-0 pat-diamond opacity-40"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative">
+<div class="max-w-xl reveal">
+<h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Siap Terangi Kendaraanmu?</h2>
+<p class="text-white/60 text-sm sm:text-base leading-relaxed mb-6">Konsultasikan kebutuhan LED motor atau mobil Anda. Tim kami siap membantu memilih produk yang tepat.</p>
+<div class="flex flex-wrap gap-3">
+<button onclick="showShop()" class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-solid fa-table-cells-large"></i> Telusuri Produk</button>
+<a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-dark-700 hover:bg-dark-600 text-white font-bold text-sm border border-dark-border transition"><i class="fa-brands fa-whatsapp text-primary"></i> Tanyakan via WhatsApp</a>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- ===== SHOP VIEW ===== -->
+<div id="shop-view" class="hidden">
+<section id="produk" class="py-10 sm:py-14 bg-lt-bg min-h-[60vh]">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+<div class="mb-5 flex items-start gap-3">
+<button onclick="showCatalog()" class="mt-0.5 w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-white border border-lt-border flex items-center justify-center text-lt-mut hover:text-primary hover:border-primary/40 transition" aria-label="Kembali ke beranda"><i class="fa-solid fa-arrow-left"></i></button>
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Katalog Produk</p>
+<h1 class="text-xl sm:text-2xl font-bold mb-1">Semua Produk</h1>
+<p class="text-lt-mut text-sm">Gunakan pencarian dan filter untuk menemukan produk yang Anda butuhkan.</p>
+</div>
+</div>
+
+<div id="category-pills" class="flex flex-wrap gap-2 mb-5"></div>
 
 <!-- Search + Filter Bar -->
 <div class="bg-white rounded-2xl border border-lt-border p-4 sm:p-5 mb-6 shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
@@ -175,45 +330,57 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 <div id="pagination" class="flex items-center justify-center gap-2 mt-8"></div>
 </div>
 </section>
-
-<!-- Tentang -->
-<section id="tentang" class="py-16 bg-dark-900 relative overflow-hidden">
-<div class="absolute inset-0 pat-speed"></div>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-<div class="max-w-2xl">
-<h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Tentang WERACE</h2>
-<p class="text-white/60 text-sm leading-relaxed mb-6">WERACE Indonesia adalah penyedia produk LED otomotif untuk motor dan mobil. Kami menyediakan berbagai jenis LED headlamp, bulb, strip, work light, dan aksesoris berkualitas tinggi dengan harga kompetitif. Konsultasikan kebutuhan LED kendaraan Anda langsung via WhatsApp.</p>
-<div class="flex flex-wrap gap-6">
-<div><p class="text-2xl font-extrabold text-primary" id="stat-products">400+</p><p class="text-white/50 text-xs">Produk</p></div>
-<div><p class="text-2xl font-extrabold text-primary" id="stat-categories">6</p><p class="text-white/50 text-xs">Kategori</p></div>
-<div><p class="text-2xl font-extrabold text-primary">24/7</p><p class="text-white/50 text-xs">WhatsApp Support</p></div>
 </div>
-</div>
-</div>
-</section>
 
 <!-- Footer -->
-<footer class="bg-dark-950 relative overflow-hidden">
+<footer id="site-footer" class="bg-dark-950 relative overflow-hidden">
 <div class="absolute inset-0 pat-diamond opacity-50"></div>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
-<div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-<div class="flex items-center gap-2">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="col-span-2 lg:col-span-1">
+<div class="flex items-center gap-2 mb-3">
 <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center"><i class="fa-solid fa-bolt text-dark-950 text-xs"></i></div>
 <span class="text-white font-bold text-sm">WERACE Indonesia</span>
 </div>
-<p class="text-white/40 text-xs text-center">&copy; 2026 WERACE &mdash; LED Motor Mobil. All rights reserved.</p>
+<p class="text-white/50 text-xs leading-relaxed mb-4">Penyedia produk LED otomotif untuk motor dan mobil. Terang, hemat daya, tahan lama.</p>
 <div class="bg-white rounded-lg p-2 inline-block">
 <img src="assets/spinotek-logo.png" alt="Spinotek" class="h-5 rounded px-1" onerror="this.style.display='none'" />
 </div>
 </div>
-<div class="mt-4 pt-4 border-t border-white/10 text-center">
+<div>
+<h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Produk</h4>
+<ul class="space-y-2 text-xs">
+<li><a href="#produk" onclick="event.preventDefault();showShop()" class="text-white/50 hover:text-primary transition">Katalog Produk</a></li>
+<li><a href="#featured" onclick="event.preventDefault();scrollToSection('featured')" class="text-white/50 hover:text-primary transition">Produk Pilihan</a></li>
+<li><a href="#kategori" onclick="event.preventDefault();scrollToSection('kategori')" class="text-white/50 hover:text-primary transition">Kategori</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Informasi</h4>
+<ul class="space-y-2 text-xs">
+<li><a href="#tentang" onclick="event.preventDefault();scrollToSection('tentang')" class="text-white/50 hover:text-primary transition">Tentang WERACE</a></li>
+<li><button onclick="showLogin()" class="text-white/50 hover:text-primary transition">Login Admin</button></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Kontak</h4>
+<ul class="space-y-2 text-xs">
+<li><a href="https://wa.me/6281234567890" target="_blank" class="text-white/50 hover:text-primary transition"><i class="fa-brands fa-whatsapp mr-1.5 text-primary"></i> Chat WhatsApp</a></li>
+<li><a href="https://www.instagram.com/werace.indonesia/" target="_blank" class="text-white/50 hover:text-primary transition"><i class="fa-brands fa-instagram mr-1.5 text-primary"></i> @werace.indonesia</a></li>
+<li class="text-white/50"><i class="fa-solid fa-location-dot mr-1.5 text-primary"></i> Indonesia</li>
+</ul>
+</div>
+</div>
+<div class="mt-8 pt-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+<p class="text-white/40 text-xs text-center">&copy; 2026 WERACE &mdash; LED Motor Mobil. All rights reserved.</p>
 <p class="text-white/30 text-[10px]">Developed by Spinotek Corp.</p>
 </div>
 </div>
 </footer>
-</div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN LOGIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<a id="sticky-wa" href="https://wa.me/6281234567890" target="_blank" class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#1EBE5A] text-white border-2 border-white flex items-center justify-center shadow-[0_8px_24px_rgba(37,211,102,0.45)] transition" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp text-2xl"></i></a>
+
+<!-- Admin Login -->
 <div id="login-view" class="hidden min-h-screen bg-dark-950 flex items-center justify-center relative overflow-hidden">
 <div class="absolute inset-0 pat-grid"></div>
 <div class="relative z-10 w-full max-w-sm px-4">
@@ -244,7 +411,7 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN DASHBOARD â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ADMIN DASHBOARD -->
 <div id="admin-view" class="hidden dark-theme">
 <div class="flex min-h-screen">
 
@@ -290,7 +457,7 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 </div>
 </div>
 <div class="flex items-center gap-2">
-<button onclick="showCatalog()" style="--exp-w:8rem" class="exp-btn bg-dark-700 hover:bg-dark-600 text-white/70 hover:text-primary text-xs font-medium" aria-label="Lihat Katalog"><i class="fa-solid fa-globe text-sm shrink-0"></i><span class="exp-label">Lihat Katalog</span></button>
+<button onclick="showShop()" style="--exp-w:8rem" class="exp-btn bg-dark-700 hover:bg-dark-600 text-white/70 hover:text-primary text-xs font-medium" aria-label="Lihat Katalog"><i class="fa-solid fa-globe text-sm shrink-0"></i><span class="exp-label">Lihat Katalog</span></button>
 <button onclick="handleLogout()" style="--exp-w:5.25rem" class="exp-btn bg-dark-700 hover:bg-dark-600 text-white/70 hover:text-red-400 text-xs font-medium" aria-label="Keluar"><i class="fa-solid fa-right-from-bracket text-sm shrink-0"></i><span class="exp-label">Keluar</span></button>
 </div>
 </div>
@@ -302,7 +469,7 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• MODALS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- MODALS -->
 <!-- Product Detail Modal -->
 <div id="modal-detail" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-detail')">
 <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto slide-up">
@@ -466,10 +633,11 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 </div>
 </div>
 </div>
+</div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• JAVASCRIPT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- JAVASCRIPT -->
 <script>
-/* â”€â”€â”€ Design Data â”€â”€â”€ */
+/* Design Data */
 const DEFAULT_CATEGORIES = [
 { id: 1, name: 'LED Headlamp', icon: 'fa-lightbulb', subcategories: ['H4', 'H7', 'H11', '9005', '9006'] },
 { id: 2, name: 'LED Bulb', icon: 'fa-lightbulb', subcategories: ['T10', 'W5W', 'P21W', 'SMD'] },
@@ -567,7 +735,7 @@ createdAt: '2026-01-' + String((i % 28) + 1).padStart(2, '0')
 });
 }
 
-/* â”€â”€â”€ localStorage Backend â”€â”€â”€ */
+/* localStorage Backend */
 function dbGet(key, fallback) {
 try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
 }
@@ -575,7 +743,10 @@ function dbSet(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
 let products = dbGet('werace_products', null);
 let categories = dbGet('werace_categories', null);
-let settings = dbGet('werace_settings', { whatsapp: '6285799455079', siteName: 'WERACE Indonesia' });
+let settings = dbGet('werace_settings', null) || { whatsapp: '6281234567890', siteName: 'WERACE Indonesia' };
+if (!settings.whatsapp || settings.whatsapp === '6285799455079') settings.whatsapp = '6281234567890';
+if (!settings.siteName) settings.siteName = 'WERACE Indonesia';
+dbSet('werace_settings', settings);
 
 if (!categories) { categories = DEFAULT_CATEGORIES.slice(); dbSet('werace_categories', categories); }
 if (!products) { products = generateSampleProducts(); dbSet('werace_products', products); }
@@ -587,7 +758,7 @@ function nextId(arr) { return arr.length ? Math.max(...arr.map(x => x.id)) + 1 :
 function getCat(id) { return categories.find(c => c.id === id); }
 function getCatName(id) { const c = getCat(id); return c ? c.name : '-'; }
 
-/* â”€â”€â”€ Toast â”€â”€â”€ */
+/* Toast */
 function toast(msg, type = 'success') {
 const el = document.createElement('div');
 el.className = 'toast toast-' + type;
@@ -598,31 +769,71 @@ document.getElementById('toast-container').appendChild(el);
 setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 3000);
 }
 
-/* â”€â”€â”€ Modals â”€â”€â”€ */
+/* Modals */
 function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-/* â”€â”€â”€ Router â”€â”€â”€ */
+/* Router */
 let currentView = 'catalog';
+function updateHeaderStyle() {
+const h = document.getElementById('site-header');
+h.classList.toggle('solid', currentView === 'shop' || window.scrollY > 40);
+}
+window.addEventListener('scroll', updateHeaderStyle, { passive: true });
+function showSiteChrome(show) {
+document.getElementById('site-header').classList.toggle('hidden', !show);
+document.getElementById('site-footer').classList.toggle('hidden', !show);
+setStickyWA(show);
+updateHeaderStyle();
+}
+function setStickyWA(show) {
+const el = document.getElementById('sticky-wa');
+if (el) el.classList.toggle('hidden', !show);
+}
+function closeMobileMenuIfOpen() {
+const m = document.getElementById('mobile-menu');
+if (m && m.classList.contains('max-h-96')) toggleMobileMenu();
+}
 function showCatalog() {
 currentView = 'catalog';
+document.getElementById('shop-view').classList.add('hidden');
 document.getElementById('catalog-view').classList.remove('hidden');
 document.getElementById('login-view').classList.add('hidden');
 document.getElementById('admin-view').classList.add('hidden');
+showSiteChrome(true);
+closeMobileMenuIfOpen();
+window.scrollTo(0, 0);
+renderCatalog();
+}
+function showShop() {
+currentView = 'shop';
+document.getElementById('catalog-view').classList.add('hidden');
+document.getElementById('shop-view').classList.remove('hidden');
+document.getElementById('login-view').classList.add('hidden');
+document.getElementById('admin-view').classList.add('hidden');
+showSiteChrome(true);
+closeMobileMenuIfOpen();
 window.scrollTo(0, 0);
 renderCatalog();
 }
 function showLogin() {
 currentView = 'login';
 document.getElementById('catalog-view').classList.add('hidden');
+document.getElementById('shop-view').classList.add('hidden');
 document.getElementById('login-view').classList.remove('hidden');
 document.getElementById('admin-view').classList.add('hidden');
+showSiteChrome(false);
+closeMobileMenuIfOpen();
+window.scrollTo(0, 0);
 }
 function showAdmin() {
 currentView = 'admin';
 document.getElementById('catalog-view').classList.add('hidden');
+document.getElementById('shop-view').classList.add('hidden');
 document.getElementById('login-view').classList.add('hidden');
 document.getElementById('admin-view').classList.remove('hidden');
+showSiteChrome(false);
+closeMobileMenuIfOpen();
 adminNav('dashboard');
 }
 function toggleMobileMenu() {
@@ -631,10 +842,34 @@ const open = m.classList.toggle('max-h-96');
 const icon = document.getElementById('burger-icon');
 if (icon) icon.className = 'fa-solid ' + (open ? 'fa-xmark' : 'fa-bars') + ' text-sm transition-transform duration-300' + (open ? ' rotate-90' : '');
 }
-function focusSearch() { document.getElementById('search-input').focus(); document.getElementById('produk').scrollIntoView({ behavior: 'smooth' }); }
-function scrollToCategories() { document.getElementById('kategori').scrollIntoView({ behavior: 'smooth' }); }
+function scrollToSection(id) {
+closeMobileMenuIfOpen();
+if (currentView !== 'catalog') showCatalog();
+const el = document.getElementById(id);
+if (!el) return;
+setTimeout(() => { if (el.offsetParent !== null) el.scrollIntoView({ behavior: 'smooth' }); }, 60);
+}
+function focusSearch() {
+if (currentView === 'shop') {
+const s = document.getElementById('search-input');
+if (s) { s.focus(); s.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+return;
+}
+if (currentView !== 'catalog') showCatalog();
+const d = document.getElementById('discovery-input');
+if (d) { d.focus(); d.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+}
+function discoverySubmit(e) {
+e.preventDefault();
+catState.search = document.getElementById('discovery-input').value.trim().toLowerCase();
+catState.category = '';
+catState.page = 1;
+showShop();
+const si = document.getElementById('search-input');
+if (si) si.value = catState.search;
+}
 
-/* â”€â”€â”€ Login â”€â”€â”€ */
+/* ---- Login ---- */
 function handleLogin(e) {
 e.preventDefault();
 const email = document.getElementById('login-email').value;
@@ -656,17 +891,74 @@ showCatalog();
 toast('Berhasil keluar.', 'info');
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CATALOG â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* CATALOG */
 let catState = { search: '', category: '', sort: 'name-asc', page: 1, perPage: 12 };
 
 function renderCatalog() {
 renderCategoryPills();
 renderFilterOptions();
 renderProducts();
-document.getElementById('stat-products').textContent = products.length + '+';
-document.getElementById('stat-categories').textContent = categories.length;
+renderLandingCats();
+renderFeatured();
+setTxt('stat-products', products.length + '+');
+setTxt('stat-categories', String(categories.length));
+setTxt('hero-stat-products', products.length + '+');
+setTxt('hero-stat-categories', String(categories.length));
+}
+function setTxt(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+
+function productCardHtml(p) {
+const cat = getCat(p.categoryId);
+return '<div class="bg-white rounded-2xl border border-lt-border overflow-hidden hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition group cursor-pointer flex flex-col" onclick="openDetail(' + p.id + ')">' +
+'<div class="aspect-square bg-lt-muted flex items-center justify-center relative overflow-hidden">' +
+'<div class="text-center"><i class="fa-solid ' + (cat && cat.icon ? cat.icon : 'fa-lightbulb') + ' text-4xl text-primary/30 group-hover:text-primary/50 transition"></i><p class="text-[10px] text-lt-mut mt-2 uppercase font-semibold">' + (cat ? cat.name : '') + '</p></div>' +
+'<span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-dark-900/80 text-white text-[10px] font-bold">' + p.sku + '</span>' +
+'</div>' +
+'<div class="p-3 sm:p-4 flex flex-col flex-1">' +
+'<p class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">' + getCatName(p.categoryId) + (p.subcategory ? ' &middot; ' + p.subcategory : '') + '</p>' +
+'<h3 class="font-bold text-sm text-lt-text leading-snug mb-2 line-clamp-2 group-hover:text-primary transition">' + escapeHtml(p.name) + '</h3>' +
+'<a href="' + buildWhatsAppLink(p) + '" target="_blank" onclick="event.stopPropagation()" class="mt-auto inline-flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-primary hover:bg-primary-dark text-dark-950 text-xs font-bold transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan Produk</a>' +
+'</div></div>';
 }
 
+function renderLandingCats() {
+const el = document.getElementById('landing-cats');
+if (!el) return;
+const ranked = categories.map(c => ({ c: c, count: products.filter(p => p.categoryId === c.id && p.status === 'aktif').length }))
+.sort((a, b) => b.count - a.count).slice(0, 3);
+el.innerHTML = ranked.map(item => {
+const c = item.c;
+const slug = c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+return '<button onclick="filterByCat(\'' + c.name.replace(/'/g, "\\'") + '\')" class="group text-left bg-white rounded-2xl border border-lt-border overflow-hidden hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition">' +
+'<div class="relative aspect-[4/3] bg-gradient-to-br from-dark-900 to-dark-700 overflow-hidden">' +
+'<div class="absolute inset-0 pat-racing opacity-60"></div>' +
+'<img src="assets/category-' + slug + '.jpg" alt="' + c.name + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.remove()" />' +
+'<div class="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent"></div>' +
+'<div class="absolute left-4 right-4 bottom-4 flex items-center justify-between gap-2">' +
+'<span class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shrink-0"><i class="fa-solid ' + (c.icon || 'fa-tag') + ' text-dark-950 text-sm"></i></span>' +
+'<span class="text-white text-[11px] font-bold bg-dark-950/70 border border-dark-border px-2.5 py-1 rounded-full">' + item.count + ' produk</span>' +
+'</div></div>' +
+'<div class="p-4 flex items-center justify-between gap-2">' +
+'<div class="min-w-0"><h3 class="font-bold text-sm text-lt-text group-hover:text-primary transition truncate">' + c.name + '</h3><p class="text-lt-mut text-xs">' + (c.subcategories || []).length + ' subkategori</p></div>' +
+'<i class="fa-solid fa-arrow-right text-lt-mut group-hover:text-primary group-hover:translate-x-1 transition text-sm shrink-0"></i>' +
+'</div></button>';
+}).join('');
+}
+
+function renderFeatured() {
+const el = document.getElementById('featured-grid');
+if (!el) return;
+const active = products.filter(p => p.status === 'aktif');
+const picked = [];
+if (active.length) {
+const stride = Math.max(1, Math.floor(active.length / 4));
+for (let i = 0; i < active.length && picked.length < 4; i += stride) picked.push(active[i]);
+for (let i = 0; i < active.length && picked.length < 4; i++) {
+if (picked.indexOf(active[i]) === -1) picked.push(active[i]);
+}
+}
+el.innerHTML = picked.map(productCardHtml).join('');
+}
 function renderCategoryPills() {
 const el = document.getElementById('category-pills');
 el.innerHTML = '<button onclick="filterByCat(\'\')" class="px-4 py-2 rounded-xl text-sm font-semibold transition ' + (!catState.category ? 'bg-primary text-dark-950' : 'bg-white border border-lt-border text-lt-sec hover:border-primary') + '">Semua</button>' +
@@ -682,8 +974,10 @@ sel.innerHTML = '<option value="">Semua Kategori</option>' + categories.map(c =>
 function filterByCat(name) {
 catState.category = name;
 catState.page = 1;
+if (currentView !== 'shop') { showShop(); return; }
 renderCatalog();
-document.getElementById('produk').scrollIntoView({ behavior: 'smooth' });
+const sec = document.getElementById('produk');
+if (sec) sec.scrollIntoView({ behavior: 'smooth' });
 }
 
 function handleSearch() {
@@ -743,19 +1037,7 @@ return;
 }
 empty.classList.add('hidden');
 
-grid.innerHTML = pageItems.map(p => {
-const cat = getCat(p.categoryId);
-return '<div class="bg-white rounded-2xl border border-lt-border overflow-hidden hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition group cursor-pointer flex flex-col" onclick="openDetail(' + p.id + ')">' +
-'<div class="aspect-square bg-lt-muted flex items-center justify-center relative overflow-hidden">' +
-'<div class="text-center"><i class="fa-solid ' + (cat && cat.icon ? cat.icon : 'fa-lightbulb') + ' text-4xl text-primary/30 group-hover:text-primary/50 transition"></i><p class="text-[10px] text-lt-mut mt-2 uppercase font-semibold">' + (cat ? cat.name : '') + '</p></div>' +
-'<span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-dark-900/80 text-white text-[10px] font-bold">' + p.sku + '</span>' +
-'</div>' +
-'<div class="p-3 sm:p-4 flex flex-col flex-1">' +
-'<p class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">' + getCatName(p.categoryId) + (p.subcategory ? ' &middot; ' + p.subcategory : '') + '</p>' +
-'<h3 class="font-bold text-sm text-lt-text leading-snug mb-2 line-clamp-2 group-hover:text-primary transition">' + p.name + '</h3>' +
-'<a href="' + buildWhatsAppLink(p) + '" target="_blank" onclick="event.stopPropagation()" class="mt-auto inline-flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-primary hover:bg-primary-dark text-dark-950 text-xs font-bold transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan Produk</a>' +
-'</div></div>';
-}).join('');
+grid.innerHTML = pageItems.map(productCardHtml).join('');
 
 renderPagination(totalPages);
 }
@@ -793,7 +1075,7 @@ sel.classList.toggle('hidden');
 sel.classList.toggle('sm:block');
 }
 
-/* â”€â”€â”€ Product Detail â”€â”€â”€ */
+/* Product Detail */
 function openDetail(id) {
 const p = products.find(x => x.id === id);
 if (!p) return;
@@ -820,7 +1102,7 @@ return 'https://wa.me/' + settings.whatsapp + '?text=' + encodeURIComponent(msg)
 
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ADMIN */
 let adminPage = 'dashboard';
 let adminState = { search: '', category: '', page: 1, perPage: 15, sort: 'name-asc' };
 let editingProductId = null;
@@ -850,7 +1132,7 @@ else if (adminPage === 'settings') renderAdminSettings(mc);
 function openAdminSidebar() { document.getElementById('admin-sidebar').classList.remove('-translate-x-full'); document.getElementById('admin-overlay').classList.remove('hidden'); }
 function closeAdminSidebar() { document.getElementById('admin-sidebar').classList.add('-translate-x-full'); document.getElementById('admin-overlay').classList.add('hidden'); }
 
-/* â”€â”€â”€ Admin Dashboard â”€â”€â”€ */
+/* Admin Dashboard */
 function renderAdminDashboard(mc) {
 const totalProducts = products.length;
 const totalCats = categories.length;
@@ -885,7 +1167,7 @@ const colors = { primary: 'bg-primary/10 text-primary', green: 'bg-green-500/10 
 return '<div class="bg-dark-900 rounded-2xl border border-dark-border p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl ' + colors[color] + ' flex items-center justify-center"><i class="fa-solid ' + icon + '"></i></div></div><p class="text-2xl font-extrabold text-white">' + value + '</p><p class="text-xs text-white/40 mt-1">' + label + '</p></div>';
 }
 
-/* â”€â”€â”€ Admin Products â”€â”€â”€ */
+/* Admin Products */
 function renderAdminProducts(mc) {
 mc.innerHTML =
 '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">' +
@@ -960,7 +1242,7 @@ adminState.page = Math.max(1, Math.min(p, totalPages));
 renderAdminProductRows();
 }
 
-/* â”€â”€â”€ Product Form â”€â”€â”€ */
+/* Product Form */
 function openForm(id) {
 editingProductId = id || null;
 document.getElementById('form-title').textContent = id ? 'Edit Produk' : 'Tambah Produk';
@@ -1042,7 +1324,7 @@ renderAdminPage();
 renderCatalog();
 }
 
-/* â”€â”€â”€ Delete Confirm â”€â”€â”€ */
+/* Delete Confirm */
 function confirmDelete(type, id) {
 confirmAction = { type, id };
 if (type === 'product') {
@@ -1076,7 +1358,7 @@ renderAdminPage();
 renderCatalog();
 }
 
-/* â”€â”€â”€ Categories â”€â”€â”€ */
+/* Categories */
 function renderAdminCategories(mc) {
 mc.innerHTML =
 '<div class="flex items-center justify-end mb-5"><button onclick="openCatForm()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 text-sm font-bold transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Kategori</button></div>' +
@@ -1126,7 +1408,7 @@ renderAdminPage();
 renderCatalog();
 }
 
-/* â”€â”€â”€ Import / Export â”€â”€â”€ */
+/* Import / Export */
 function renderAdminImport(mc) {
 mc.innerHTML =
 '<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">' +
@@ -1258,7 +1540,7 @@ a.href = url; a.download = 'template-import.csv'; a.click();
 URL.revokeObjectURL(url);
 }
 
-/* â”€â”€â”€ Settings â”€â”€â”€ */
+/* Settings */
 function renderAdminSettings(mc) {
 mc.innerHTML =
 '<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start max-w-4xl">' +
@@ -1272,8 +1554,9 @@ mc.innerHTML =
 
 function saveSettingsForm() {
 settings.siteName = document.getElementById('set-name').value.trim() || 'WERACE Indonesia';
-settings.whatsapp = document.getElementById('set-wa').value.trim() || '6285799455079';
+settings.whatsapp = document.getElementById('set-wa').value.trim() || '6281234567890';
 saveSettings();
+syncWALinks();
 toast('Pengaturan berhasil disimpan!');
 }
 
@@ -1284,9 +1567,31 @@ localStorage.removeItem('werace_settings');
 location.reload();
 }
 
-/* â”€â”€â”€ Init â”€â”€â”€ */
+/* Init */
 renderCatalog();
+function syncWALinks() {
+const base = 'https://wa.me/' + settings.whatsapp;
+document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
+const href = a.getAttribute('href') || '';
+if (href.indexOf('?text=') === -1) a.setAttribute('href', base);
+});
+}
+let revealObs = null;
+function initReveal() {
+const els = document.querySelectorAll('.reveal');
+if (!els.length) return;
+if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('reveal-in')); return; }
+revealObs = new IntersectionObserver(entries => {
+entries.forEach(en => {
+if (en.isIntersecting) { en.target.classList.add('reveal-in'); revealObs.unobserve(en.target); }
+});
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+els.forEach(e => revealObs.observe(e));
+}
+initReveal();
+syncWALinks();
 if (sessionStorage.getItem('werace_auth') === '1') showAdmin();
+
 </script>
 </body>
 </html>
