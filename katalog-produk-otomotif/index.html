@@ -41,6 +41,14 @@ body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparen
 .pat-diamond { background-image: repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(231,144,0,.08) 18px, rgba(231,144,0,.08) 19px); }
 .pat-racing { background-image: repeating-linear-gradient(-45deg, transparent, transparent 14px, rgba(231,144,0,.10) 14px, rgba(231,144,0,.10) 15px); }
 .pat-grid { background-image: linear-gradient(rgba(231,144,0,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(231,144,0,.06) 1px, transparent 1px); background-size: 24px 24px; }
+@media (max-width: 1023px) {
+#landing-cats { display: flex !important; overflow-x: auto; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 2px; }
+#landing-cats::-webkit-scrollbar { display: none; }
+#landing-cats > * { flex: 0 0 72%; scroll-snap-align: start; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+#landing-cats > * { flex-basis: 44%; }
+}
 .pat-speed { background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(231,144,0,.07) 40px, rgba(231,144,0,.07) 42px); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .fade-in { animation: fadeIn .25s ease forwards; }
@@ -92,8 +100,8 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 <button onclick="toggleMobileMenu()" class="md:hidden w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-white/70" aria-label="Menu"><i id="burger-icon" class="fa-solid fa-bars text-sm transition-transform duration-300"></i></button>
 </div>
 </div>
-<div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-<div class="pt-3 pb-4 space-y-1 bg-dark-900/95 backdrop-blur">
+<div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-dark-900">
+<div class="pt-3 pb-4 space-y-1">
 <a href="#" onclick="event.preventDefault();showCatalog()" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Dashboard</a>
 <a href="#kategori" onclick="event.preventDefault();scrollToSection('kategori')" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Kategori</a>
 <a href="#featured" onclick="event.preventDefault();scrollToSection('featured')" class="block px-3 py-2 rounded-lg text-white/70 hover:text-primary hover:bg-dark-700 text-sm">Produk</a>
@@ -212,17 +220,17 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 <!-- Tentang / Solutions -->
 <section id="tentang" class="py-14 sm:py-20 bg-lt-bg relative overflow-hidden">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+<div class="grid grid-cols-[1.2fr_1fr] sm:grid-cols-2 gap-4 sm:gap-8 lg:gap-14 items-end lg:items-center">
 <div class="reveal">
 <p class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Tentang WERACE</p>
-<h2 class="text-2xl sm:text-3xl font-extrabold text-lt-text mb-4">Solusi LED untuk Setiap Kendaraan</h2>
+<h2 class="text-xl sm:text-3xl font-extrabold text-lt-text mb-4">Solusi LED untuk Setiap Kendaraan</h2>
 <p class="text-lt-sec text-sm leading-relaxed mb-6">WERACE Indonesia adalah penyedia produk LED otomotif untuk motor dan mobil. Kami menyediakan berbagai jenis LED headlamp, bulb, strip, work light, dan aksesoris berkualitas tinggi dengan harga kompetitif. Konsultasikan kebutuhan LED kendaraan Anda langsung via WhatsApp.</p>
 <ul class="space-y-3 mb-7">
 <li class="flex items-start gap-2.5 text-sm text-lt-sec"><i class="fa-solid fa-circle-check text-primary mt-0.5"></i> Pilihan produk lengkap untuk motor &amp; mobil</li>
 <li class="flex items-start gap-2.5 text-sm text-lt-sec"><i class="fa-solid fa-circle-check text-primary mt-0.5"></i> Konsultasi gratis sebelum membeli</li>
 <li class="flex items-start gap-2.5 text-sm text-lt-sec"><i class="fa-solid fa-circle-check text-primary mt-0.5"></i> Pengiriman ke seluruh Indonesia</li>
 </ul>
-<a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-sm transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan via WhatsApp</a>
+<a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center gap-2 px-4 sm:px-6 h-11 sm:h-12 rounded-xl bg-primary hover:bg-primary-dark text-dark-950 font-bold text-xs sm:text-sm transition"><i class="fa-brands fa-whatsapp"></i> Tanyakan via WhatsApp</a>
 </div>
 <div class="reveal relative">
 <div class="relative aspect-[4/3] rounded-2xl overflow-hidden border border-lt-border bg-gradient-to-br from-dark-800 to-dark-700">
@@ -230,18 +238,18 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; back
 <img src="assets/about.jpg" alt="Solusi LED WERACE" class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()" />
 <div class="absolute inset-0 bg-gradient-to-t from-dark-950/70 via-transparent to-transparent"></div>
 </div>
-<div class="absolute left-4 right-4 bottom-4 grid grid-cols-3 text-center">
-<div class="px-2">
-<p class="text-lg sm:text-xl font-extrabold text-primary" id="stat-products">60+</p>
-<p class="text-white/50 text-[10px] uppercase tracking-wider">Produk</p>
+<div class="absolute left-2 right-2 bottom-2 sm:left-4 sm:right-4 sm:bottom-4 grid grid-cols-3 text-center">
+<div class="px-1 sm:px-2">
+<p class="text-base sm:text-xl font-extrabold text-primary" id="stat-products">60+</p>
+<p class="text-white/50 text-[8px] sm:text-[10px] uppercase tracking-wider">Produk</p>
 </div>
-<div class="px-2 border-x border-white/20">
-<p class="text-lg sm:text-xl font-extrabold text-primary" id="stat-categories">6</p>
-<p class="text-white/50 text-[10px] uppercase tracking-wider">Kategori</p>
+<div class="px-1 sm:px-2 border-x border-white/20">
+<p class="text-base sm:text-xl font-extrabold text-primary" id="stat-categories">6</p>
+<p class="text-white/50 text-[8px] sm:text-[10px] uppercase tracking-wider">Kategori</p>
 </div>
-<div class="px-2">
-<p class="text-lg sm:text-xl font-extrabold text-primary">24/7</p>
-<p class="text-white/50 text-[10px] uppercase tracking-wider">WhatsApp</p>
+<div class="px-1 sm:px-2">
+<p class="text-base sm:text-xl font-extrabold text-primary">24/7</p>
+<p class="text-white/50 text-[8px] sm:text-[10px] uppercase tracking-wider">WhatsApp</p>
 </div>
 </div>
 </div>
@@ -841,6 +849,8 @@ const m = document.getElementById('mobile-menu');
 const open = m.classList.toggle('max-h-96');
 const icon = document.getElementById('burger-icon');
 if (icon) icon.className = 'fa-solid ' + (open ? 'fa-xmark' : 'fa-bars') + ' text-sm transition-transform duration-300' + (open ? ' rotate-90' : '');
+const head = document.getElementById('site-header');
+if (open) head.classList.add('solid'); else updateHeaderStyle();
 }
 function scrollToSection(id) {
 closeMobileMenuIfOpen();
