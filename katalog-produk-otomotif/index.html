@@ -931,6 +931,7 @@ return '<div class="bg-white rounded-2xl border border-lt-border overflow-hidden
 '</div></div>';
 }
 
+const CAT_IMAGES = { 'LED Headlamp': 'assets/led-headlamp.jpg', 'LED Bulb': 'assets/led-bulb.webp', 'LED Strip': 'assets/led-strip.jpg' };
 function renderLandingCats() {
 const el = document.getElementById('landing-cats');
 if (!el) return;
@@ -942,7 +943,7 @@ const slug = c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g
 return '<button onclick="filterByCat(\'' + c.name.replace(/'/g, "\\'") + '\')" class="group text-left bg-white rounded-2xl border border-lt-border overflow-hidden hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition">' +
 '<div class="relative aspect-[4/3] bg-gradient-to-br from-dark-900 to-dark-700 overflow-hidden">' +
 '<div class="absolute inset-0 pat-racing opacity-60"></div>' +
-'<img src="assets/category-' + slug + '.jpg" alt="' + c.name + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.remove()" />' +
+'<img src="' + (CAT_IMAGES[c.name] || 'assets/category-' + slug + '.jpg') + '" alt="' + c.name + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.remove()" />' +
 '<div class="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent"></div>' +
 '<div class="absolute left-4 right-4 bottom-4 flex items-center justify-between gap-2">' +
 '<span class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shrink-0"><i class="fa-solid ' + (c.icon || 'fa-tag') + ' text-dark-950 text-sm"></i></span>' +
